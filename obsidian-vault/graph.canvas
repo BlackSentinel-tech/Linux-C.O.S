@@ -1,0 +1,463 @@
+{
+  "nodes": [
+    {
+      "id": "g0",
+      "type": "group",
+      "label": "Linux-C.O.S",
+      "x": 0,
+      "y": 0,
+      "width": 660,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_readme_building",
+      "type": "file",
+      "file": "Building.md",
+      "x": 20,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_layout",
+      "type": "file",
+      "file": "Layout.md",
+      "x": 220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_linux_c_o_s",
+      "type": "file",
+      "file": "Linux-C.O.S.md",
+      "x": 420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_todo_known_gaps_in_rough_priority_order",
+      "type": "file",
+      "file": "TODO (known gaps, in rough priority order).md",
+      "x": 20,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_testing_the_iso",
+      "type": "file",
+      "file": "Testing the ISO.md",
+      "x": 220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme",
+      "type": "file",
+      "file": "buildREADME.md",
+      "x": 420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g1",
+      "type": "group",
+      "label": "cos-stacks",
+      "x": 740,
+      "y": 0,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_bin_cos_stacks",
+      "type": "file",
+      "file": "cos-stacks.md",
+      "x": 760,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "type": "file",
+      "file": "cos-stacks script.md",
+      "x": 960,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "type": "file",
+      "file": "usage().md",
+      "x": 760,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g2",
+      "type": "group",
+      "label": "Why BlackArch is a container, not native packages",
+      "x": 1420,
+      "y": 0,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_docs_blackarch_integration",
+      "type": "file",
+      "file": "BLACKARCH-INTEGRATION.md",
+      "x": 1440,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_docs_blackarch_integration_the_one_real_tradeoff_size_vs_zero_download_after_boot",
+      "type": "file",
+      "file": "The one real tradeoff size vs. zero download after boot.md",
+      "x": 1640,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "type": "file",
+      "file": "Why BlackArch is a container, not native packages.md",
+      "x": 1440,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g3",
+      "type": "group",
+      "label": "Status",
+      "x": 2100,
+      "y": 0,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_readme_real_bugs_found_and_fixed_getting_here_keep_this_list_every_one_of",
+      "type": "file",
+      "file": "Real bugs found and fixed getting here (keep this list -- every one of.md",
+      "x": 2120,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_status",
+      "type": "file",
+      "file": "Status.md",
+      "x": 2320,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
+      "type": "file",
+      "file": "these will bite again if a fix gets reverted by accident).md",
+      "x": 2120,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g4",
+      "type": "group",
+      "label": "config",
+      "x": 0,
+      "y": 480,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_auto_config",
+      "type": "file",
+      "file": "config.md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_auto_config__entry",
+      "type": "file",
+      "file": "config script.md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g5",
+      "type": "group",
+      "label": "build.sh",
+      "x": 740,
+      "y": 480,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_build",
+      "type": "file",
+      "file": "build.sh.md",
+      "x": 760,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_build_sh__entry",
+      "type": "file",
+      "file": "build.sh script.md",
+      "x": 960,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g6",
+      "type": "group",
+      "label": "build-inside.sh",
+      "x": 1420,
+      "y": 480,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_build_inside",
+      "type": "file",
+      "file": "build-inside.sh.md",
+      "x": 1440,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_build_inside_sh__entry",
+      "type": "file",
+      "file": "build-inside.sh script.md",
+      "x": 1640,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g7",
+      "type": "group",
+      "label": "wazuh/README.md",
+      "x": 2100,
+      "y": 480,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_wazuh_manager_stack",
+      "type": "file",
+      "file": "Wazuh manager stack.md",
+      "x": 2120,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme",
+      "type": "file",
+      "file": "wazuhREADME.md",
+      "x": 2320,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g8",
+      "type": "group",
+      "label": "blackarch-shell",
+      "x": 0,
+      "y": 960,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_bin_blackarch_shell",
+      "type": "file",
+      "file": "blackarch-shell.md",
+      "x": 20,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_bin_blackarch_shell__entry",
+      "type": "file",
+      "file": "blackarch-shell script.md",
+      "x": 220,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g9",
+      "type": "group",
+      "label": "linux-cos-firstboot",
+      "x": 740,
+      "y": 960,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_sbin_linux_cos_firstboot",
+      "type": "file",
+      "file": "linux-cos-firstboot.md",
+      "x": 760,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_config_includes_chroot_usr_local_sbin_linux_cos_firstboot__entry",
+      "type": "file",
+      "file": "linux-cos-firstboot script.md",
+      "x": 960,
+      "y": 1040,
+      "width": 180,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_readme_readme_linux_c_o_s",
+      "fromNode": "n_readme",
+      "toNode": "n_readme_linux_c_o_s",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_building_readme_linux_c_o_s",
+      "fromNode": "n_readme_building",
+      "toNode": "n_readme_linux_c_o_s",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_layout_readme_linux_c_o_s",
+      "fromNode": "n_readme_layout",
+      "toNode": "n_readme_linux_c_o_s",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_linux_c_o_s_readme_testing_the_iso",
+      "fromNode": "n_readme_linux_c_o_s",
+      "toNode": "n_readme_testing_the_iso",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_linux_c_o_s_readme_status",
+      "fromNode": "n_readme_linux_c_o_s",
+      "toNode": "n_readme_status",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_linux_c_o_s_readme_todo_known_gaps_in_rough_priority_order",
+      "fromNode": "n_readme_linux_c_o_s",
+      "toNode": "n_readme_todo_known_gaps_in_rough_priority_order",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_usr_local_bin_cos_stacks_config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "fromNode": "n_config_includes_chroot_usr_local_bin_cos_stacks",
+      "toNode": "n_config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_usr_local_bin_cos_stacks_config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "fromNode": "n_config_includes_chroot_usr_local_bin_cos_stacks",
+      "toNode": "n_config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "label": "defines [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_usr_local_bin_cos_stacks__entry_config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "fromNode": "n_config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "toNode": "n_config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_docs_blackarch_integration_docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "fromNode": "n_docs_blackarch_integration",
+      "toNode": "n_docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_docs_blackarch_integration_the_one_real_tradeoff_size_vs_zero_download_after_boot_docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "fromNode": "n_docs_blackarch_integration_the_one_real_tradeoff_size_vs_zero_download_after_boot",
+      "toNode": "n_docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_real_bugs_found_and_fixed_getting_here_keep_this_list_every_one_of_readme_status",
+      "fromNode": "n_readme_real_bugs_found_and_fixed_getting_here_keep_this_list_every_one_of",
+      "toNode": "n_readme_status",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_readme_status_readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
+      "fromNode": "n_readme_status",
+      "toNode": "n_readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_auto_config_auto_config__entry",
+      "fromNode": "n_auto_config",
+      "toNode": "n_auto_config__entry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_build_build_sh__entry",
+      "fromNode": "n_build",
+      "toNode": "n_build_sh__entry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_build_inside_build_inside_sh__entry",
+      "fromNode": "n_build_inside",
+      "toNode": "n_build_inside_sh__entry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_wazuh_manager_stack",
+      "fromNode": "n_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme",
+      "toNode": "n_config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_wazuh_manager_stack",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_usr_local_bin_blackarch_shell_config_includes_chroot_usr_local_bin_blackarch_shell__entry",
+      "fromNode": "n_config_includes_chroot_usr_local_bin_blackarch_shell",
+      "toNode": "n_config_includes_chroot_usr_local_bin_blackarch_shell__entry",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_config_includes_chroot_usr_local_sbin_linux_cos_firstboot_config_includes_chroot_usr_local_sbin_linux_cos_firstboot__entry",
+      "fromNode": "n_config_includes_chroot_usr_local_sbin_linux_cos_firstboot",
+      "toNode": "n_config_includes_chroot_usr_local_sbin_linux_cos_firstboot__entry",
+      "label": "contains [EXTRACTED]"
+    }
+  ]
+}

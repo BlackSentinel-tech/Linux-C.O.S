@@ -1,0 +1,39 @@
+#!/bin/sh
+# Linux-C.O.S -- runs once on the first real boot of an INSTALLED system
+# (not the live session -- see linux-cos-firstboot.service). Anything that
+# needs a real disk, a real network, or shouldn't run twice belongs here
+# instead of in a build-time hook.
+set -e
+
+MARKER=/var/lib/linux-cos/firstboot-done
+[ -f "$MARKER" ] && exit 0
+mkdir -p /var/lib/linux-cos
+
+echo "[linux-cos] first boot: enabling firewall"
+# This is the actual ufw setup -- can't run any of it at build time (see
+# config/hooks/normal/0050-hardening.hook.chroot for why), so it all
+# happens here instead, now that there's a real kernel netfilter stack.
+ufw default deny incoming || true
+ufw default allow outgoing || true
+ufw --force enable || true
+
+echo "[linux-cos] first boot: loading the BlackArch tool container"
+if command -v docker >/dev/null 2>&1; then
+  systemctl start docker || true
+  if [ -f /opt/linux-cos/blackarch-image.tar ]; then
+    # Baked into the ISO at build time (see build/blackarch-container/) --
+    # no network needed, this is the "preinstalled day one" path.
+    docker load -i /opt/linux-cos/blackarch-image.tar \
+      && echo "[linux-cos] BlackArch image loaded from the ISO"
+  else
+    # Dev/fallback path: ISO was built without baking the image in (see
+    # docs/BLACKARCH-INTEGRATION.md for why that's a real tradeoff), so pull
+    # it once here instead.
+    ( docker pull blackarchlinux/blackarch:latest \
+        && docker tag blackarchlinux/blackarch:latest linux-cos/blackarch:latest \
+        || echo "[linux-cos] BlackArch image pull failed -- no network yet? re-run: blackarch-shell --update" \
+    ) >/var/log/linux-cos-blackarch-pull.log 2>&1 &
+  fi
+fi
+
+date > "$MARKER"

@@ -1,0 +1,13 @@
+[Unit]
+Description=Linux-C.O.S first boot setup
+After=network-online.target docker.service
+Wants=network-online.target
+ConditionPathExists=!/var/lib/linux-cos/firstboot-done
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/linux-cos-firstboot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,40 @@
+# Linux-C.O.S -- defensive / blue-team layer, tier 1: plain Debian/Kali apt
+# packages (no extra repo needed). Kali's own kali-tools-detect / -protect /
+# -respond / -recover / -identify categories already cover a slice of this
+# (see kali-security.list.chroot) -- this file is the rest of the classic
+# blue-team stack that Kali doesn't ship as a menu category.
+suricata
+suricata-update
+yara
+clamav
+clamav-daemon
+clamav-freshclam
+aide
+aide-common
+lynis
+rkhunter
+tiger
+wireshark
+tshark
+tcpdump
+osquery
+wazuh-agent
+
+# NOT in this list on purpose -- falco and sysdig both ship a DKMS/eBPF
+# kernel driver that their postinst tries to *compile* right there in the
+# package install step, against whatever kernel is running. Inside a
+# live-build chroot that's the build container's own kernel (Docker
+# Desktop's linuxkit VM on this Mac) -- not the kernel the finished image
+# will actually boot with -- so the compile fails and dpkg aborts the whole
+# build. This is a real "the driver must be built where it will run"
+# problem, not a naming/pinning mistake: install these two AFTER boot on
+# the target machine instead (`apt-get install falco sysdig` -- both repos
+# are already configured on the image), where DKMS can build against the
+# real running kernel.
+
+# Not in this list either -- Debian doesn't package these under these names
+# at all (zeek, ntopng, snort each need their own upstream apt repo, the
+# same way falco/osquery/wazuh do above; nobody's wired those repos up yet,
+# see build/README.md TODO). Don't just apt-get these in a hook without
+# adding a config/archives/*.list.chroot for them first -- see git history
+# on this file for exactly that mistake and how it was fixed.

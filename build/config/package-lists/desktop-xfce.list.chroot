@@ -1,0 +1,20 @@
+# Linux-C.O.S -- desktop layer (XFCE, same DE Kali ships by default: light on
+# RAM/GPU so it doesn't compete with Metasploit/Burp/VMs/John running at once)
+xfce4
+xfce4-goodies
+xfce4-terminal
+lightdm
+lightdm-gtk-greeter
+network-manager-applet
+pavucontrol
+pulseaudio
+xarchiver
+gvfs
+gvfs-backends
+thunar-archive-plugin
+thunar-volman
+fonts-firacode
+papirus-icon-theme
+arc-theme
+plymouth
+plymouth-themes

@@ -1,0 +1,18 @@
+# Linux-C.O.S -- graphify's "second brain" of THIS project, not of the
+# vendored external tools we cloned into tools/ (graphify, claude-code-router,
+# repomix, aider, ccusage each have their own huge upstream source tree --
+# graphing those would bury the actual project signal in noise).
+tools/
+
+# live-build's own generated chroot/binary artifacts if they ever appear here
+# again (see build/README.md's "Real bugs found" list -- this has happened
+# before from a stray host-side lb config run).
+build/chroot/
+build/cache/
+build/output/*.iso
+build/output/*.log
+build/output/build.out
+
+# drawio backups -- same diagram, not independent signal
+*.drawio.bkp
+*.backup-*.drawio

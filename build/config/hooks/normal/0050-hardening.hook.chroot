@@ -1,0 +1,86 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- baseline hardening. This is the "defensiva" half
+# of the OS applied to the OS itself, not just tools you run against other
+# targets: a pentest box is also a box someone will try to pop.
+set -e
+
+echo "[linux-cos] applying baseline hardening"
+
+# --- kernel / sysctl hardening -------------------------------------------
+cat > /etc/sysctl.d/99-linux-cos-hardening.conf <<'EOF'
+# network
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.tcp_syncookies = 1
+net.ipv6.conf.all.accept_redirects = 0
+net.ipv6.conf.all.accept_source_route = 0
+
+# kernel
+kernel.kptr_restrict = 2
+kernel.dmesg_restrict = 1
+kernel.yama.ptrace_scope = 1
+kernel.unprivileged_bpf_disabled = 1
+kernel.kexec_load_disabled = 1
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+fs.suid_dumpable = 0
+EOF
+
+# --- mandatory access control ---------------------------------------------
+# apparmor ships enabled by default on Debian; make sure it's actually
+# enforcing, not just installed. Guarded: on a package set this size
+# (kali-linux-everything pulls hundreds of transitive deps) an individual
+# package occasionally loses a large combined apt transaction to a conflict
+# elsewhere without erroring the whole build -- don't let a hardening nice-
+# to-have take the build down; note it and move on.
+if command -v apparmor_status >/dev/null 2>&1 || dpkg -s apparmor >/dev/null 2>&1; then
+    systemctl enable apparmor.service || true
+else
+    echo "[linux-cos] WARNING: apparmor not installed, skipping -- check package-lists/base.list.chroot resolved"
+fi
+
+# --- firewall -------------------------------------------------------------
+# ufw itself is NOT touched here at all -- every ufw subcommand, even just
+# `ufw default deny incoming`, shells out to iptables to check its version,
+# and there's no real kernel netfilter stack to query inside a build-time
+# chroot (doubly true under QEMU user-mode emulation). That's not a "leave
+# it disabled for safety" choice, it's a hard requirement: this actually
+# fails the build if attempted here. All ufw setup (default-deny policy +
+# enable) happens for real in linux-cos-firstboot instead, once the image
+# is running on a real kernel. Just make sure ufw.service itself doesn't
+# race to start before firstboot has set sane rules:
+systemctl disable ufw.service || true
+
+# --- ssh: if the user turns sshd on, don't let it default to something dumb
+mkdir -p /etc/ssh/sshd_config.d
+cat > /etc/ssh/sshd_config.d/99-linux-cos.conf <<'EOF'
+PermitRootLogin no
+PasswordAuthentication yes
+X11Forwarding no
+MaxAuthTries 3
+LoginGraceTime 20
+EOF
+systemctl disable ssh.service || true
+
+# --- auditd: a minimal, real ruleset instead of shipping an empty one ------
+mkdir -p /etc/audit/rules.d
+cat > /etc/audit/rules.d/linux-cos.rules <<'EOF'
+-w /etc/passwd -p wa -k identity
+-w /etc/shadow -p wa -k identity
+-w /etc/sudoers -p wa -k scope
+-w /etc/ssh/sshd_config -p wa -k sshd
+-a always,exit -F arch=b64 -S execve -k exec
+EOF
+
+# --- unattended security upgrades on the Debian base -----------------------
+cat > /etc/apt/apt.conf.d/50unattended-upgrades-linux-cos <<'EOF'
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Debian,codename=${distro_codename}-security";
+};
+Unattended-Upgrade::Automatic-Reboot "false";
+EOF

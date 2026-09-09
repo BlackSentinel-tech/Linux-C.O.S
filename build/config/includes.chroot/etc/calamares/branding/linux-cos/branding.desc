@@ -1,0 +1,32 @@
+---
+componentName: linux-cos
+
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+
+strings:
+    productName:         "Linux-C.O.S"
+    shortProductName:    "Linux-C.O.S"
+    version:              "0.1"
+    shortVersion:         "0.1"
+    versionedName:        "Linux-C.O.S 0.1 \"Génesis\""
+    shortVersionedName:   "Linux-C.O.S 0.1"
+    bootloaderEntryName:  "Linux-C.O.S"
+    productUrl:           "https://github.com/"
+    supportUrl:           "https://github.com/"
+    knownIssuesUrl:       "https://github.com/"
+    releaseNotesUrl:      "https://github.com/"
+
+images:
+    productLogo:          "logo.png"
+    productIcon:          "icon.png"
+    productWelcome:       "slide-1.png"
+
+slideshow:                "show.qml"
+slideshowAPI:              2
+
+style:
+   sidebarBackground:     "#0a1f5c"
+   sidebarText:           "#eef2ff"
+   sidebarTextSelect:     "#d6273c"
+   sidebarTextHighlight:  "#1c3faa"

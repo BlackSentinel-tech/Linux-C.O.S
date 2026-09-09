@@ -1,0 +1,42 @@
+# Linux-C.O.S blue-team stack: MISP (threat intel platform).
+# Bring up with: cos-stacks up misp
+# First run: change every password below before exposing this beyond
+# localhost -- these placeholders are intentionally not secure defaults.
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: change-me-root
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: change-me-misp
+    volumes:
+      - misp-db:/var/lib/mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  misp:
+    image: coolacid/misp-docker:core-latest
+    depends_on: [db, redis]
+    ports: ["8443:443"]
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: misp
+      MYSQL_USER: misp
+      MYSQL_PASSWORD: change-me-misp
+      MISP_ADMIN_EMAIL: admin@linux-cos.local
+      MISP_ADMIN_PASSPHRASE: change-me-admin
+      MISP_BASEURL: https://localhost:8443
+      REDIS_FQDN: redis
+    volumes:
+      - misp-data:/var/www/MISP
+    restart: unless-stopped
+
+volumes:
+  misp-db:
+  misp-data:

@@ -1,0 +1,33 @@
+#!/bin/sh
+# Linux-C.O.S -- drops you into the pre-baked BlackArch container: every one
+# of the 2,858 BlackArch tools, running natively (real pacman-built Arch
+# binaries, not emulated), with your home directory bind-mounted so files
+# you touch there are the same files you see from the Debian side.
+set -e
+
+IMG=linux-cos/blackarch:latest
+NAME=blackarch-tools
+
+if [ "$1" = "--update" ]; then
+  docker pull blackarchlinux/blackarch:latest
+  docker tag blackarchlinux/blackarch:latest "$IMG"
+  exit 0
+fi
+
+if ! docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "BlackArch image not loaded yet (first boot may still be pulling it -- check: journalctl -u linux-cos-firstboot)"
+  echo "or run: blackarch-shell --update"
+  exit 1
+fi
+
+if docker ps --format '{{.Names}}' | grep -qx "$NAME"; then
+  exec docker exec -it "$NAME" zsh
+fi
+
+exec docker run -it --rm \
+  --name "$NAME" \
+  --network host \
+  --cap-add NET_RAW --cap-add NET_ADMIN \
+  -v "$HOME:$HOME" \
+  -w "$HOME" \
+  "$IMG" zsh

@@ -1,0 +1,9 @@
+# Parrot forks the same base libraries Kali does, with different patches --
+# running both repos unpinned is the classic way to end up with a broken
+# chroot. Priority 1-99 means "only installed if no other version exists"
+# (real apt pinning semantics), so this repo is a pure fallback: it only
+# supplies the ~36 Parrot-exclusive package names in
+# parrot-exclusive.list.chroot that plain Debian/Kali don't have.
+Package: *
+Pin: release o=Parrot
+Pin-Priority: 1

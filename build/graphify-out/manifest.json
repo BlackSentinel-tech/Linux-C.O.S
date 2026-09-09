@@ -1,0 +1,152 @@
+{
+  "auto/config": {
+    "mtime": 1788917435.9054532,
+    "seen": 1788969086.176268,
+    "ast_hash": "851aa2102e64b08fdbf6e211d1397964",
+    "semantic_hash": ""
+  },
+  "build-inside.sh": {
+    "mtime": 1788688888.5177016,
+    "seen": 1788969086.1762738,
+    "ast_hash": "cef25d6e7c4cae500bed92553114f75d",
+    "semantic_hash": ""
+  },
+  "build.sh": {
+    "mtime": 1788640001.1568675,
+    "seen": 1788969086.176277,
+    "ast_hash": "29e5b873a298465fd4dfd5c39d0b9552",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/local/bin/blackarch-shell": {
+    "mtime": 1788638433.881537,
+    "seen": 1788969086.176278,
+    "ast_hash": "4ffbd109313a28ede17b3498eef999b4",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/local/bin/cos-stacks": {
+    "mtime": 1788638440.8858507,
+    "seen": 1788969086.176279,
+    "ast_hash": "5d26782ad6af5e720f93f66d272edb5e",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/local/sbin/linux-cos-firstboot": {
+    "mtime": 1788678578.8957613,
+    "seen": 1788969086.176281,
+    "ast_hash": "b9530e9609a2ed82e8b4601294b65b2c",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1788917641.7446592,
+    "seen": 1788969086.1762822,
+    "ast_hash": "8b475b447291c7e2425b61ef04742585",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/blueteam-stacks/misp/docker-compose.yml": {
+    "mtime": 1788638463.1902,
+    "seen": 1788969086.176283,
+    "ast_hash": "804350bb8207cdf6d788c70144608186",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/blueteam-stacks/thehive-cortex/docker-compose.yml": {
+    "mtime": 1788638455.2621639,
+    "seen": 1788969086.1762838,
+    "ast_hash": "617a86d5ec486a61ba012b168c23c4e5",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/README.md": {
+    "mtime": 1788638472.8593583,
+    "seen": 1788969086.176285,
+    "ast_hash": "b399bbc5b280d3e5e9fdc085d4a813c3",
+    "semantic_hash": ""
+  },
+  "docs/BLACKARCH-INTEGRATION.md": {
+    "mtime": 1788638573.5042315,
+    "seen": 1788969086.176286,
+    "ast_hash": "52693795ec7558bee20a752dc268f1fe",
+    "semantic_hash": ""
+  },
+  "branding/logo/linux-cos-logo.svg": {
+    "mtime": 1788639335.9934595,
+    "seen": 1788969086.176287,
+    "ast_hash": "8e6bf1d4d0c201507035acd877c6dcc6",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-128.png": {
+    "mtime": 1788639425.340918,
+    "seen": 1788969086.176288,
+    "ast_hash": "cdc1691ffb9b15b3716cc3a1d31c1911",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-16.png": {
+    "mtime": 1788639425.3273544,
+    "seen": 1788969086.176289,
+    "ast_hash": "9060139daab6bc4633f1bb96294fcdee",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-256.png": {
+    "mtime": 1788639425.3470533,
+    "seen": 1788969086.17629,
+    "ast_hash": "e6f18ad2561349e46068c5d085ff8d49",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-32.png": {
+    "mtime": 1788639425.3321455,
+    "seen": 1788969086.176291,
+    "ast_hash": "619063d01ffd487ee86ac77d19aa916b",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-512.png": {
+    "mtime": 1788639425.358072,
+    "seen": 1788969086.176291,
+    "ast_hash": "4a75bb5c0ef8122e81dcb22b7f9824e7",
+    "semantic_hash": ""
+  },
+  "branding/logo/logo-64.png": {
+    "mtime": 1788639425.3364,
+    "seen": 1788969086.1762922,
+    "ast_hash": "e41a919268057d1b97cf7e98ca1bfc85",
+    "semantic_hash": ""
+  },
+  "branding/wallpapers/default.png": {
+    "mtime": 1788639476.0994964,
+    "seen": 1788969086.1762938,
+    "ast_hash": "a6e6fb9b550b776cd9d7e2cc5dd0a19d",
+    "semantic_hash": ""
+  },
+  "branding/wallpapers/default.svg": {
+    "mtime": 1788639448.3134117,
+    "seen": 1788969086.1762948,
+    "ast_hash": "af5ff7b80ced8e60e70e9ed5267d2f61",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/etc/calamares/branding/linux-cos/icon.png": {
+    "mtime": 1788639634.432412,
+    "seen": 1788969086.1762948,
+    "ast_hash": "cdc1691ffb9b15b3716cc3a1d31c1911",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/etc/calamares/branding/linux-cos/logo.png": {
+    "mtime": 1788639634.4301612,
+    "seen": 1788969086.176296,
+    "ast_hash": "e6f18ad2561349e46068c5d085ff8d49",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/etc/calamares/branding/linux-cos/slide-1.png": {
+    "mtime": 1788639634.434437,
+    "seen": 1788969086.176298,
+    "ast_hash": "a6e6fb9b550b776cd9d7e2cc5dd0a19d",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/share/backgrounds/linux-cos/default.png": {
+    "mtime": 1788639502.4741387,
+    "seen": 1788969086.176298,
+    "ast_hash": "a6e6fb9b550b776cd9d7e2cc5dd0a19d",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/share/backgrounds/linux-cos/logo.png": {
+    "mtime": 1788639502.4758768,
+    "seen": 1788969086.176299,
+    "ast_hash": "e6f18ad2561349e46068c5d085ff8d49",
+    "semantic_hash": ""
+  }
+}

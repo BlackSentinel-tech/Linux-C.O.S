@@ -1,0 +1,37 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- boot splash. Writing a Plymouth theme from
+# scratch (a real animation engine, "script") is a project on its own;
+# every practical custom-distro does the same thing we're doing here
+# instead: clone a solid stock theme (`spinner`, ships in plymouth-themes,
+# already in desktop-xfce.list.chroot) and swap its watermark for our logo.
+set -e
+
+SRC=/usr/share/plymouth/themes/spinner
+DST=/usr/share/plymouth/themes/linux-cos
+
+if [ ! -d "$SRC" ]; then
+  echo "[linux-cos] WARNING: spinner plymouth theme not found, skipping boot splash branding"
+  exit 0
+fi
+
+echo "[linux-cos] building the linux-cos plymouth theme from spinner"
+cp -r "$SRC" "$DST"
+mv "$DST/spinner.plymouth" "$DST/linux-cos.plymouth"
+mv "$DST/spinner.script" "$DST/linux-cos.script" 2>/dev/null || true
+
+sed -i \
+  -e 's/^Name=.*/Name=Linux-C.O.S/' \
+  -e 's/^Description=.*/Description=Linux-C.O.S boot splash/' \
+  -e 's/ImageDir=.*/ImageDir=\/usr\/share\/plymouth\/themes\/linux-cos/' \
+  -e 's/ScriptFile=.*/ScriptFile=\/usr\/share\/plymouth\/themes\/linux-cos\/linux-cos.script/' \
+  "$DST/linux-cos.plymouth"
+
+cp /usr/share/backgrounds/linux-cos/logo.png "$DST/watermark.png"
+# background: solid near-black to match the wallpaper/lightdm theme instead
+# of spinner's default grey
+sed -i 's/Window\.SetBackgroundTopColor(.*/Window.SetBackgroundTopColor(0.02, 0.03, 0.05);/' \
+  "$DST/linux-cos.script" 2>/dev/null || true
+sed -i 's/Window\.SetBackgroundBottomColor(.*/Window.SetBackgroundBottomColor(0.02, 0.03, 0.05);/' \
+  "$DST/linux-cos.script" 2>/dev/null || true
+
+plymouth-set-default-theme -R linux-cos

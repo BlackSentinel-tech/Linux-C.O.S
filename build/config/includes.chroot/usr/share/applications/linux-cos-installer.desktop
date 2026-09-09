@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Install Linux-C.O.S
+Comment=Install Linux-C.O.S to disk
+Exec=pkexec /usr/bin/calamares
+Icon=/usr/share/backgrounds/linux-cos/logo.png
+Terminal=false
+Categories=System;

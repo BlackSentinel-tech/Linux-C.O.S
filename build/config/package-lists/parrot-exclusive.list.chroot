@@ -1,0 +1,39 @@
+# Linux-C.O.S -- tools Parrot ships that are NOT already covered by any
+# kali-tools-* category (computed by diffing the two catalogs). Most of these
+# are plain Debian packages; apt will only reach for parrot.org's repo
+# (added in the hook below, at low pin priority) for the handful that aren't.
+2ping
+awscli
+azure-cli
+backdoor-factory
+can-utils
+device-pharmer
+etherape
+etherwake
+libfreefare-bin
+libnfc-bin
+mfcuk
+mfoc
+mfterm
+netcat-openbsd
+node-aws4
+ow-shell
+ow-tools
+proxychains
+python3-shodan
+rsync
+scantool
+smali
+smartmontools
+smbclient
+
+# Removed after a real build attempt confirmed these 6 don't resolve from
+# Parrot's current 'lory' repo under these names (renamed/dropped upstream,
+# or parrot-meta-sdr specifically is itself a metapackage that isn't
+# published as an installable .deb): convoc2, king-phisher, logseq,
+# parrot-meta-sdr, rocket, rtlsdr-scanner.
+
+# Also removed (Kali-rolling base, second real build attempt): afl, bluez-hcidump,
+# gscanbus, pev, rclone, s3backer -- not resolvable by these names from
+# Parrot's repo layered on Kali either (renamed/dropped/moved upstream).
+# afl is superseded by aflplusplus anyway (already in kali-tools-vulnerability).

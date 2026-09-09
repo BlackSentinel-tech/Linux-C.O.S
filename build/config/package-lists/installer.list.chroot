@@ -1,0 +1,6 @@
+# Linux-C.O.S -- Calamares installer. calamares-settings-debian pulls in the
+# right QML/branding runtime deps; our own files under
+# includes.chroot/etc/calamares/ (settings.conf, modules/*, branding/linux-cos/)
+# are copied in afterwards and take priority over its defaults.
+calamares
+calamares-settings-debian

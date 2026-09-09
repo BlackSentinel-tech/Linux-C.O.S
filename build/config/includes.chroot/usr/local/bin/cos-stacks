@@ -1,0 +1,25 @@
+#!/bin/sh
+# Linux-C.O.S -- launcher for the heavy blue-team platforms (TheHive+Cortex,
+# MISP, Wazuh manager). These are shipped as docker-compose bundles instead
+# of baked-in running services: they need real certs/storage/passwords
+# decided at deploy time, exactly like Security Onion's own setup wizard
+# does it -- baking a live SIEM into a squashfs image is how you end up with
+# every install sharing the same default admin password.
+set -e
+STACKS_DIR=/opt/linux-cos/blueteam-stacks
+
+usage() {
+  echo "usage: cos-stacks list | up <stack> | down <stack> | logs <stack>"
+  echo "stacks available:"
+  ls -1 "$STACKS_DIR" 2>/dev/null | sed 's/^/  - /'
+}
+
+[ -z "$1" ] && { usage; exit 1; }
+
+case "$1" in
+  list) usage ;;
+  up)   cd "$STACKS_DIR/$2" && docker compose up -d ;;
+  down) cd "$STACKS_DIR/$2" && docker compose down ;;
+  logs) cd "$STACKS_DIR/$2" && docker compose logs -f ;;
+  *) usage; exit 1 ;;
+esac

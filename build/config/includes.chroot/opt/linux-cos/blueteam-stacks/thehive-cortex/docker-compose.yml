@@ -1,0 +1,63 @@
+# Linux-C.O.S blue-team stack: TheHive (case management) + Cortex (IOC
+# analysis/enrichment). Bring up with: cos-stacks up thehive-cortex
+# First run: open http://localhost:9001 for Cortex, create an org + analyzer
+# API keys, then paste them into TheHive's application.conf before use.
+version: "3.8"
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    environment:
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=256M
+      - CASSANDRA_CLUSTER_NAME=thehive
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.23
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+
+  cortex:
+    image: thehiveproject/cortex:3.1.7
+    depends_on: [elasticsearch]
+    ports: ["9001:9001"]
+    environment:
+      - job_directory=/tmp/cortex-jobs
+    volumes:
+      - cortex-data:/tmp/cortex-jobs
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  thehive:
+    image: thehiveproject/thehive4:latest
+    depends_on: [cassandra, elasticsearch, cortex]
+    ports: ["9000:9000"]
+    command:
+      - --cql-hostnames
+      - cassandra
+      - --index-backend
+      - elasticsearch
+      - --es-hostnames
+      - elasticsearch
+      - --cortex-hostnames
+      - cortex
+      - --cortex-port
+      - "9001"
+    volumes:
+      - thehive-data:/opt/thp/thehive/data
+      - thehive-index:/opt/thp/thehive/index
+    restart: unless-stopped
+
+volumes:
+  cassandra-data:
+  es-data:
+  cortex-data:
+  thehive-data:
+  thehive-index:

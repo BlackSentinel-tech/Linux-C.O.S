@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+echo "[linux-cos] enabling services"
+
+# scripts themselves are written by 0035-usrlocal-scripts.hook.chroot (which
+# runs before this one and already chmods them)
+systemctl enable linux-cos-firstboot.service
+systemctl enable linux-cos-live-password.service
+systemctl enable docker.service
+systemctl enable lightdm.service
+
+# security daemons: on by default, since this box needs to defend itself too
+systemctl enable auditd.service || true
+systemctl enable clamav-freshclam.service || true
+systemctl enable apparmor.service || true
+
+# heavy/noisy by default -- available, but opt-in (enable manually if this
+# box's job is to actively monitor a network segment). Not zeek/falco: they
+# aren't installed by default at all -- see blueteam-native.list.chroot.
+systemctl disable suricata.service 2>/dev/null || true

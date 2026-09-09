@@ -1,0 +1,583 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "readme",
+      "label": "build/README.md",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "build/readme.md",
+      "source_file": "build/README.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "readme_building",
+      "label": "Building",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "building",
+      "source_file": "build/README.md",
+      "source_location": "L126"
+    },
+    {
+      "id": "readme_layout",
+      "label": "Layout",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "layout",
+      "source_file": "build/README.md",
+      "source_location": "L106"
+    },
+    {
+      "id": "readme_linux_c_o_s",
+      "label": "Linux-C.O.S",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "linux-c.o.s",
+      "source_file": "build/README.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "readme_testing_the_iso",
+      "label": "Testing the ISO",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "testing the iso",
+      "source_file": "build/README.md",
+      "source_location": "L147"
+    },
+    {
+      "id": "readme_todo_known_gaps_in_rough_priority_order",
+      "label": "TODO (known gaps, in rough priority order)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "todo (known gaps, in rough priority order)",
+      "source_file": "build/README.md",
+      "source_location": "L175"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "label": "cos-stacks",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "cos-stacks",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "label": "cos-stacks script",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "cos-stacks script",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "label": "usage()",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "usage()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L11"
+    },
+    {
+      "id": "docs_blackarch_integration",
+      "label": "BLACKARCH-INTEGRATION.md",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Why BlackArch is a container, not native packages",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "blackarch-integration.md",
+      "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_blackarch_integration_the_one_real_tradeoff_size_vs_zero_download_after_boot",
+      "label": "The one real tradeoff: size vs. \"zero download after boot\"",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Why BlackArch is a container, not native packages",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "the one real tradeoff: size vs. \"zero download after boot\"",
+      "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L20"
+    },
+    {
+      "id": "docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "label": "Why BlackArch is a container, not native packages",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "Why BlackArch is a container, not native packages",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "why blackarch is a container, not native packages",
+      "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "readme_real_bugs_found_and_fixed_getting_here_keep_this_list_every_one_of",
+      "label": "Real bugs found and fixed getting here (keep this list -- every one of",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Status",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "real bugs found and fixed getting here (keep this list -- every one of",
+      "source_file": "build/README.md",
+      "source_location": "L43"
+    },
+    {
+      "id": "readme_status",
+      "label": "Status",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Status",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "status",
+      "source_file": "build/README.md",
+      "source_location": "L17"
+    },
+    {
+      "id": "readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
+      "label": "these will bite again if a fix gets reverted by accident)",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "Status",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "these will bite again if a fix gets reverted by accident)",
+      "source_file": "build/README.md",
+      "source_location": "L44"
+    },
+    {
+      "id": "auto_config",
+      "label": "config",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "config",
+      "source_file": "build/auto/config",
+      "source_location": "L1"
+    },
+    {
+      "id": "auto_config__entry",
+      "label": "config script",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "config",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "config script",
+      "source_file": "build/auto/config",
+      "source_location": "L1"
+    },
+    {
+      "id": "build",
+      "label": "build.sh",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "build.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "build.sh",
+      "source_file": "build/build.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "build_sh__entry",
+      "label": "build.sh script",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "build.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "build.sh script",
+      "source_file": "build/build.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "build_inside",
+      "label": "build-inside.sh",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "build-inside.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "build-inside.sh",
+      "source_file": "build/build-inside.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "build_inside_sh__entry",
+      "label": "build-inside.sh script",
+      "_origin": "ast",
+      "community": 6,
+      "community_name": "build-inside.sh",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "build-inside.sh script",
+      "source_file": "build/build-inside.sh",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme",
+      "label": "wazuh/README.md",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "wazuh/README.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "wazuh/readme.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/README.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_wazuh_manager_stack",
+      "label": "Wazuh manager stack",
+      "_origin": "ast",
+      "community": 7,
+      "community_name": "wazuh/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "wazuh manager stack",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/README.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_blackarch_shell",
+      "label": "blackarch-shell",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "blackarch-shell",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "blackarch-shell",
+      "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_blackarch_shell__entry",
+      "label": "blackarch-shell script",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "blackarch-shell",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "blackarch-shell script",
+      "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_sbin_linux_cos_firstboot",
+      "label": "linux-cos-firstboot",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "linux-cos-firstboot",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "linux-cos-firstboot",
+      "source_file": "build/config/includes.chroot/usr/local/sbin/linux-cos-firstboot",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_sbin_linux_cos_firstboot__entry",
+      "label": "linux-cos-firstboot script",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "linux-cos-firstboot",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_entrypoint"
+      },
+      "norm_label": "linux-cos-firstboot script",
+      "source_file": "build/config/includes.chroot/usr/local/sbin/linux-cos-firstboot",
+      "source_location": "L1"
+    }
+  ],
+  "links": [
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "auto_config",
+      "target": "auto_config__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/auto/config",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "build",
+      "target": "build_sh__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/build.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "build_inside",
+      "target": "build_inside_sh__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/build-inside.sh",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme",
+      "target": "config_includes_chroot_opt_linux_cos_blueteam_stacks_wazuh_readme_wazuh_manager_stack",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/README.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_blackarch_shell",
+      "target": "config_includes_chroot_usr_local_bin_blackarch_shell__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_sbin_linux_cos_firstboot",
+      "target": "config_includes_chroot_usr_local_sbin_linux_cos_firstboot__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/sbin/linux-cos-firstboot",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_blackarch_integration",
+      "target": "docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_blackarch_integration_why_blackarch_is_a_container_not_native_packages",
+      "target": "docs_blackarch_integration_the_one_real_tradeoff_size_vs_zero_download_after_boot",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "readme",
+      "target": "readme_linux_c_o_s",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_linux_c_o_s",
+      "target": "readme_layout",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_linux_c_o_s",
+      "target": "readme_building",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L126",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_linux_c_o_s",
+      "target": "readme_testing_the_iso",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_linux_c_o_s",
+      "target": "readme_status",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_linux_c_o_s",
+      "target": "readme_todo_known_gaps_in_rough_priority_order",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L175",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_status",
+      "target": "readme_real_bugs_found_and_fixed_getting_here_keep_this_list_every_one_of",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_status",
+      "target": "readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L11",
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": []
+}

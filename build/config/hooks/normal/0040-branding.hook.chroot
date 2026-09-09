@@ -1,0 +1,47 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- distro identity. This is what makes it "its own
+# OS" rather than "Debian with extra tools": /etc/os-release, hostname,
+# login banner and MOTD all say Linux-C.O.S, not Debian/Kali/Parrot.
+set -e
+
+echo "[linux-cos] applying distro identity"
+
+echo "linux-cos" > /etc/hostname
+
+cat > /etc/os-release <<'EOF'
+PRETTY_NAME="Linux-C.O.S"
+NAME="Linux-C.O.S"
+VERSION="0.1 (Génesis)"
+VERSION_ID="0.1"
+VERSION_CODENAME=genesis
+ID=linux-cos
+ID_LIKE=debian
+HOME_URL="https://github.com/"
+SUPPORT_URL="https://github.com/"
+BUG_REPORT_URL="https://github.com/"
+EOF
+# Kali (like Debian) already ships /etc/os-release as a symlink to
+# /usr/lib/os-release -- writing the file above already updated both.
+# Copying one onto the other here would just be `cp` erroring that they're
+# the same file.
+
+cat > /etc/issue <<'EOF'
+Linux-C.O.S 0.1 "Génesis" \n \l
+
+Cyber Offensive & defensive Security -- red team, blue team, forensics,
+all in one. Built on Kali + Parrot (native) + BlackArch (containerized).
+
+EOF
+cp /etc/issue /etc/issue.net
+
+mkdir -p /etc/update-motd.d
+cat > /etc/update-motd.d/00-linux-cos <<'EOF'
+#!/bin/sh
+echo ""
+echo "  Linux-C.O.S -- Cyber Offensive & defensive Security"
+echo "  Ofensivo: apt list --installed | grep kali-tools  |  BlackArch: blackarch-shell"
+echo "  Defensivo: sudo systemctl status wazuh-agent suricata  |  falco/sysdig: sudo apt install falco sysdig (compilan su driver contra ESTE kernel)"
+echo "  Stacks pesados (TheHive/Cortex/MISP): cos-stacks list"
+echo ""
+EOF
+chmod +x /etc/update-motd.d/00-linux-cos

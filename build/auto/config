@@ -1,0 +1,62 @@
+#!/bin/sh
+# Linux-C.O.S -- live-build configuration. Run via `lb config` (no args) so
+# the packaged auto/{config,clean,build} convention keeps this reproducible
+# instead of a wall of flags someone has to remember to retype.
+#
+# Base distribution is Kali's own kali-rolling, not Debian bookworm. A first
+# real build attempt tried bookworm-as-base + Kali-as-secondary-repo and hit
+# the classic "Frankendebian" wall: kali-tools-* is compiled against a much
+# newer glibc/libstdc++/etc. than bookworm ships, so no amount of apt pinning
+# makes those dependencies resolve -- you can't keep the older base libs AND
+# install binaries that need the newer ones. Kali's own repo is a complete,
+# internally-consistent base (it's a full Debian testing/unstable remix,
+# not a thin overlay), so bootstrapping directly from it sidesteps the
+# mismatch entirely. Parrot's small exclusive-tools repo layers on top of
+# THIS base instead (see config/archives/parrot.*) -- much safer since
+# Parrot tracks close to Debian testing too, unlike bookworm-stable.
+#
+# --debian-installer none: live-build's own "Debian Installer" integration
+# is a different, older installer mechanism than what we're using here --
+# it also unconditionally requires grub-efi-amd64-signed/shim-signed, which
+# Kali's repo doesn't carry, unrelated to --uefi-secure-boot entirely. We
+# ship Calamares instead (config/includes.chroot/etc/calamares/ +
+# package-lists/installer.list.chroot), running from the live desktop
+# session -- also how Kali's own live images do it. Leaving d-i enabled
+# just builds a second, redundant, broken installer.
+set -e
+
+lb config noauto \
+    --architecture amd64 \
+    --bootstrap-qemu-arch amd64 \
+    --bootstrap-qemu-static /usr/bin/qemu-x86_64-static \
+    --debootstrap-options "--include=ca-certificates,gnupg --keyring=/usr/share/keyrings/kali-archive-keyring.gpg" \
+    --distribution kali-rolling \
+    --distribution-chroot kali-rolling \
+    --distribution-binary kali-rolling \
+    --parent-distribution kali-rolling \
+    --parent-distribution-chroot kali-rolling \
+    --parent-distribution-binary kali-rolling \
+    --archive-areas "main contrib non-free non-free-firmware" \
+    --parent-archive-areas "main contrib non-free non-free-firmware" \
+    --security false \
+    --updates false \
+    --uefi-secure-boot disable \
+    --mirror-bootstrap "https://http.kali.org/kali" \
+    --mirror-chroot "https://http.kali.org/kali" \
+    --mirror-binary "https://http.kali.org/kali" \
+    --parent-mirror-bootstrap "https://http.kali.org/kali" \
+    --parent-mirror-chroot "https://http.kali.org/kali" \
+    --parent-mirror-binary "https://http.kali.org/kali" \
+    --keyring-packages "kali-archive-keyring" \
+    --debian-installer none \
+    --iso-application "Linux-C.O.S" \
+    --iso-publisher "Linux-C.O.S project" \
+    --iso-volume "LINUX-C.O.S" \
+    --linux-packages "linux-image" \
+    --memtest none \
+    --bootappend-live "boot=live components username=kali hostname=linux-cos" \
+    --apt-recommends true \
+    --apt-source-archives false \
+    --cache true \
+    --cache-packages true \
+    "${@}"

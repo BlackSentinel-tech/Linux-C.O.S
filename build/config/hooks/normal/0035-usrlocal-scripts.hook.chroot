@@ -1,0 +1,146 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- writes our /usr/local/bin and /usr/local/sbin
+# scripts directly instead of relying on includes.chroot for them.
+#
+# Every real build attempt so far has shown config/includes.chroot copying
+# correctly into every other location (etc/, usr/share/, etc/systemd/) --
+# except /usr/local/bin and /usr/local/sbin specifically end up empty every
+# time, on both a session-interrupted run and a fully clean uninterrupted
+# one, so it isn't the earlier session hiccup. Root cause not pinned down
+# (something in live-build's Chroot_copy_dir / rsync -K handling of those
+# two paths specifically, on a still-forming FHS tree -- not conclusively
+# diagnosed). These 3 scripts are small enough that a heredoc here, using
+# the exact mechanism every other hook in this project already relies on
+# successfully (0040-branding, 0050-hardening, etc.), is more reliable than
+# chasing that mystery further. If a *future* live-build upgrade fixes the
+# underlying issue, these three source files still live under
+# config/includes.chroot/usr/local/{bin,sbin}/ for reference -- this hook
+# just stops depending on them actually landing there.
+set -e
+
+echo "[linux-cos] writing /usr/local/bin and /usr/local/sbin scripts"
+
+mkdir -p /usr/local/bin /usr/local/sbin
+
+cat > /usr/local/bin/blackarch-shell <<'EOF'
+#!/bin/sh
+# Linux-C.O.S -- drops you into the pre-baked BlackArch container: every one
+# of the 2,858 BlackArch tools, running natively (real pacman-built Arch
+# binaries, not emulated), with your home directory bind-mounted so files
+# you touch there are the same files you see from the Debian side.
+set -e
+
+IMG=linux-cos/blackarch:latest
+NAME=blackarch-tools
+
+if [ "$1" = "--update" ]; then
+  docker pull blackarchlinux/blackarch:latest
+  docker tag blackarchlinux/blackarch:latest "$IMG"
+  exit 0
+fi
+
+if ! docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "BlackArch image not loaded yet (first boot may still be pulling it -- check: journalctl -u linux-cos-firstboot)"
+  echo "or run: blackarch-shell --update"
+  exit 1
+fi
+
+if docker ps --format '{{.Names}}' | grep -qx "$NAME"; then
+  exec docker exec -it "$NAME" zsh
+fi
+
+exec docker run -it --rm \
+  --name "$NAME" \
+  --network host \
+  --cap-add NET_RAW --cap-add NET_ADMIN \
+  -v "$HOME:$HOME" \
+  -w "$HOME" \
+  "$IMG" zsh
+EOF
+
+cat > /usr/local/bin/cos-stacks <<'EOF'
+#!/bin/sh
+# Linux-C.O.S -- launcher for the heavy blue-team platforms (TheHive+Cortex,
+# MISP, Wazuh manager). These are shipped as docker-compose bundles instead
+# of baked-in running services: they need real certs/storage/passwords
+# decided at deploy time, exactly like Security Onion's own setup wizard
+# does it -- baking a live SIEM into a squashfs image is how you end up with
+# every install sharing the same default admin password.
+set -e
+STACKS_DIR=/opt/linux-cos/blueteam-stacks
+
+usage() {
+  echo "usage: cos-stacks list | up <stack> | down <stack> | logs <stack>"
+  echo "stacks available:"
+  ls -1 "$STACKS_DIR" 2>/dev/null | sed 's/^/  - /'
+}
+
+[ -z "$1" ] && { usage; exit 1; }
+
+case "$1" in
+  list) usage ;;
+  up)   cd "$STACKS_DIR/$2" && docker compose up -d ;;
+  down) cd "$STACKS_DIR/$2" && docker compose down ;;
+  logs) cd "$STACKS_DIR/$2" && docker compose logs -f ;;
+  *) usage; exit 1 ;;
+esac
+EOF
+
+cat > /usr/local/sbin/linux-cos-firstboot <<'EOF'
+#!/bin/sh
+# Linux-C.O.S -- runs once on the first real boot of an INSTALLED system
+# (not the live session -- see linux-cos-firstboot.service). Anything that
+# needs a real disk, a real network, or shouldn't run twice belongs here
+# instead of in a build-time hook.
+set -e
+
+MARKER=/var/lib/linux-cos/firstboot-done
+[ -f "$MARKER" ] && exit 0
+mkdir -p /var/lib/linux-cos
+
+echo "[linux-cos] first boot: enabling firewall"
+# This is the actual ufw setup -- can't run any of it at build time (see
+# config/hooks/normal/0050-hardening.hook.chroot for why), so it all
+# happens here instead, now that there's a real kernel netfilter stack.
+ufw default deny incoming || true
+ufw default allow outgoing || true
+ufw --force enable || true
+
+echo "[linux-cos] first boot: loading the BlackArch tool container"
+if command -v docker >/dev/null 2>&1; then
+  systemctl start docker || true
+  if [ -f /opt/linux-cos/blackarch-image.tar ]; then
+    # Baked into the ISO at build time (see build/blackarch-container/) --
+    # no network needed, this is the "preinstalled day one" path.
+    docker load -i /opt/linux-cos/blackarch-image.tar \
+      && echo "[linux-cos] BlackArch image loaded from the ISO"
+  else
+    # Dev/fallback path: ISO was built without baking the image in (see
+    # docs/BLACKARCH-INTEGRATION.md for why that's a real tradeoff), so pull
+    # it once here instead.
+    ( docker pull blackarchlinux/blackarch:latest \
+        && docker tag blackarchlinux/blackarch:latest linux-cos/blackarch:latest \
+        || echo "[linux-cos] BlackArch image pull failed -- no network yet? re-run: blackarch-shell --update" \
+    ) >/var/log/linux-cos-blackarch-pull.log 2>&1 &
+  fi
+fi
+
+date > "$MARKER"
+EOF
+
+cat > /usr/local/sbin/linux-cos-live-password <<'EOF'
+#!/bin/sh
+# Linux-C.O.S -- live-config creates the live session's "kali" user fresh
+# on every single boot (username=kali, see auto/config's --bootappend-live)
+# with no usable password, and lightdm's PAM stack refuses a blank one at
+# the graphical greeter. Give it a real, documented one -- kali/kali, the
+# same convention Kali's own live images use -- every boot, not just the
+# first (there's no persistent state to remember "already set" across
+# live-session boots the way there is on an installed system).
+set -e
+if id kali >/dev/null 2>&1; then
+  echo "kali:kali" | chpasswd
+fi
+EOF
+
+chmod +x /usr/local/bin/blackarch-shell /usr/local/bin/cos-stacks /usr/local/sbin/linux-cos-firstboot /usr/local/sbin/linux-cos-live-password
