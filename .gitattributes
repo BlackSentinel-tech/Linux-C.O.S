@@ -1,0 +1,26 @@
+# Normalize line endings: store and check out text as LF everywhere so a
+# Windows checkout (autocrlf) can't corrupt shell/build scripts, diffs, or tooling.
+* text=auto eol=lf
+
+# Scripts that must keep a specific ending regardless of platform.
+*.sh text eol=lf
+*.bash text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary assets: never apply EOL conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.enc binary
