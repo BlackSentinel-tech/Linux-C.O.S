@@ -1,0 +1,9 @@
+# OS-specific cruft — keep the repo clean across macOS, Windows and Linux.
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
