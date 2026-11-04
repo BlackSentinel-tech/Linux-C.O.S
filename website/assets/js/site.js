@@ -174,8 +174,20 @@
     document.querySelectorAll('.code').forEach(function (block) {
       var pre = block.querySelector('pre');
       if (!pre) return;
-      // long lines scroll horizontally: make that reachable by keyboard
-      pre.setAttribute('tabindex', '0');
+      // a block whose lines scroll horizontally must be reachable by
+      // keyboard -- but only then (no pointless tab stops)
+      var syncScrollable = function () {
+        if (pre.scrollWidth > pre.clientWidth + 1) {
+          pre.setAttribute('tabindex', '0');
+          pre.setAttribute('role', 'region');
+          pre.setAttribute('aria-label', lang() === 'es' ? 'Código (desplazable)' : 'Code (scrollable)');
+        } else {
+          pre.removeAttribute('tabindex'); pre.removeAttribute('role'); pre.removeAttribute('aria-label');
+        }
+      };
+      syncScrollable();
+      window.addEventListener('resize', syncScrollable);
+      document.addEventListener('cos:langchange', syncScrollable);
       // reference listings (several independent commands) get no copy
       // button: pasted at once they would all run, one after the other
       if (block.classList.contains('ref') || block.querySelector('.copy-btn')) return;

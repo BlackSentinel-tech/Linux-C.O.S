@@ -30,6 +30,11 @@ case "$1" in
     fi
     exit 0 ;;
   image) [ -n "${MOCK_IMAGE:-}" ] && exit 0; exit 1 ;;
+  container)  # MOCK_CONTAINER: unset = none, running, stopped
+    case "${MOCK_CONTAINER:-}" in
+      running) echo true ;; stopped) echo false ;; *) exit 1 ;;
+    esac
+    exit 0 ;;
   ps)
     case " $* " in
       *"label=com.docker.compose.project"*) [ -n "${MOCK_RUNNING:-}" ] && echo abc123 ;;
@@ -105,10 +110,17 @@ check "blackarch-shell without image explains" 1 "blackarch-shell --update" sh "
 check "blackarch-shell --status (missing)" 0 "image: +missing" sh "$BA" --status
 : > "$MOCK_LOG"
 check "blackarch-shell runs a one-off command" 0 - env MOCK_IMAGE=1 sh "$BA" nmap -h
-check "one-off command uses docker run, no TTY" 0 "docker run -i --rm --name blackarch-tools .* linux-cos/blackarch:latest nmap -h" cat "$MOCK_LOG"
+check "first use creates a persistent (not --rm) container" 0 "docker run -d --name blackarch-tools-[a-z0-9_-]+ .* linux-cos/blackarch:latest sleep infinity" cat "$MOCK_LOG"
+check "no --rm: pacman installs survive the session" 1 - grep -q -- "--rm" "$MOCK_LOG"
+check "one-off command runs through exec, no TTY" 0 "docker exec -i -w .* blackarch-tools-[a-z0-9_-]+ nmap -h" cat "$MOCK_LOG"
 : > "$MOCK_LOG"
-check "blackarch-shell joins a running container" 0 - env MOCK_IMAGE=1 MOCK_CONTAINER=1 sh "$BA" id
-check "join uses docker exec" 0 "docker exec -i -w .* blackarch-tools id" cat "$MOCK_LOG"
+check "blackarch-shell joins a running container" 0 - env MOCK_IMAGE=1 MOCK_CONTAINER=running sh "$BA" id
+check "join does not create another container" 1 - grep -q "docker run" "$MOCK_LOG"
+: > "$MOCK_LOG"
+check "a stopped container is restarted, not recreated" 0 - env MOCK_IMAGE=1 MOCK_CONTAINER=stopped sh "$BA" id
+check "restart uses docker start" 0 "docker start blackarch-tools" cat "$MOCK_LOG"
+check "--reset removes the container" 0 "Removed blackarch-tools" env MOCK_CONTAINER=stopped sh "$BA" --reset
+check "--status reports a stopped container" 0 "container: stopped" env MOCK_IMAGE=1 MOCK_CONTAINER=stopped sh "$BA" --status
 
 check "cos-help English" 0 "Offense" env LANG=en_US.UTF-8 sh "$BIN/cos-help"
 check "cos-help Spanish" 0 "Ofensiva" env LANG=es_ES.UTF-8 sh "$BIN/cos-help"
@@ -117,6 +129,7 @@ check "cos-help bad topic" 1 "Unknown topic: \"nope\"" env LANG=C sh "$BIN/cos-h
 check "cos-help output fits 80 columns" 0 - sh -c "for l in C es_ES.UTF-8; do LANG=\$l sh '$BIN/cos-help'; done | awk 'length > 80 { exit 1 }'"
 check "blackarch-shell -- ends options" 0 - env MOCK_IMAGE=1 sh "$BA" -- ls -la
 check "cos-pause keeps the exit status" 3 "Press Enter" sh -c "printf '\n' | sh '$BIN/cos-pause' sh -c 'exit 3'"
+check "cos-pause survives Ctrl+C in its command" 0 "Press Enter" sh -c "printf '\n' | sh '$BIN/cos-pause' sh -c 'kill -INT \$PPID; sleep 0.2; exit 0'"
 
 echo
 echo "cli tests: $pass passed, $failed failed"

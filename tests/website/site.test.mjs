@@ -366,7 +366,7 @@ test('catalog data: real categories, commands, only shipped Parrot tools', async
   // BlackArch-only tools say how to run them
   await page.goto(`${base}/tools.html?src=blackarch&q=0d1n`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#tool-list .tool');
-  assert.match(await page.locator('#tool-list .tool-run').first().innerText(), /blackarch-shell 0d1n/);
+  assert.match(await page.locator('#tool-list .tool-run').first().innerText(), /In blackarch-shell: pacman -S 0d1n/);
   // empty result in one source offers the others
   await page.goto(`${base}/tools.html?src=kali&q=0d1n`, { waitUntil: 'networkidle' });
   await page.waitForSelector('#empty-src:not([hidden])');

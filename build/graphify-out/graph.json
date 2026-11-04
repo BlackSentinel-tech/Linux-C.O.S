@@ -124,26 +124,11 @@
       "source_location": "L245"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "label": "cos-stacks",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "file"
-      },
-      "norm_label": "cos-stacks",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L1"
-    },
-    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
       "label": "cos-stacks script",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -154,26 +139,11 @@
       "source_location": "L1"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
-      "label": "cmd_creds()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "cmd_creds()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L274"
-    },
-    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
       "label": "cmd_info()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -181,14 +151,14 @@
       },
       "norm_label": "cmd_info()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L198"
+      "source_location": "L271"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_list",
       "label": "cmd_list()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -196,14 +166,29 @@
       },
       "norm_label": "cmd_list()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L189"
+      "source_location": "L260"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cols",
+      "label": "cols()",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "cos-stacks script",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cols()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L165"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_cmd",
       "label": "docker_cmd()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -211,14 +196,14 @@
       },
       "norm_label": "docker_cmd()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L59"
+      "source_location": "L64"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
       "label": "docker_up()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -226,29 +211,14 @@
       },
       "norm_label": "docker_up()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L136"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
-      "label": "env_file()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "env_file()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L170"
+      "source_location": "L93"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
       "label": "menu()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -256,14 +226,14 @@
       },
       "norm_label": "menu()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L287"
+      "source_location": "L350"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_meta",
       "label": "meta()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -271,44 +241,14 @@
       },
       "norm_label": "meta()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L98"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_project",
-      "label": "project()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "project()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L122"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_random_secret",
-      "label": "random_secret()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "random_secret()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L166"
+      "source_location": "L115"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_running_count",
       "label": "running_count()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -316,14 +256,14 @@
       },
       "norm_label": "running_count()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L129"
+      "source_location": "L146"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
       "label": "stacks()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -331,14 +271,14 @@
       },
       "norm_label": "stacks()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L91"
+      "source_location": "L108"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_status_word",
       "label": "status_word()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -353,7 +293,7 @@
       "label": "usage()",
       "_origin": "ast",
       "community": 1,
-      "community_name": "cos-stacks",
+      "community_name": "cos-stacks script",
       "file_type": "code",
       "metadata": {
         "language": "bash",
@@ -361,7 +301,7 @@
       },
       "norm_label": "usage()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L35"
+      "source_location": "L40"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme",
@@ -409,7 +349,7 @@
       "node_kind": "heading",
       "norm_label": "3. defensive stack",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L36"
+      "source_location": "L38"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_installing_to_disk",
@@ -421,7 +361,7 @@
       "node_kind": "heading",
       "norm_label": "4. installing to disk",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L68"
+      "source_location": "L88"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_hardening_reference",
@@ -433,7 +373,7 @@
       "node_kind": "heading",
       "norm_label": "5. hardening reference",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L78"
+      "source_location": "L104"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_help_bugs",
@@ -445,7 +385,7 @@
       "node_kind": "heading",
       "norm_label": "6. help & bugs",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L87"
+      "source_location": "L113"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_heavy_platforms_cos_stacks",
@@ -457,7 +397,7 @@
       "node_kind": "heading",
       "norm_label": "heavy platforms: `cos-stacks`",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L48"
+      "source_location": "L62"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
@@ -514,7 +454,7 @@
       },
       "norm_label": "defense()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L60"
+      "source_location": "L70"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_install_topic",
@@ -529,7 +469,7 @@
       },
       "norm_label": "install_topic()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L74"
+      "source_location": "L84"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_line",
@@ -544,7 +484,7 @@
       },
       "norm_label": "line()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L52"
+      "source_location": "L56"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_offense",
@@ -559,7 +499,7 @@
       },
       "norm_label": "offense()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L54"
+      "source_location": "L64"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_system",
@@ -574,7 +514,7 @@
       },
       "norm_label": "system()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L68"
+      "source_location": "L78"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_linux_cos_session_setup",
@@ -712,6 +652,246 @@
       "source_location": "L1"
     },
     {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "label": "cos-stacks",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "file"
+      },
+      "norm_label": "cos-stacks",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_project",
+      "label": "project()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "project()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L139"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_random_secret",
+      "label": "random_secret()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "random_secret()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L176"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_short",
+      "label": "short()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "short()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L171"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_version_ge",
+      "label": "version_ge()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "version_ge()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L88"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_warn",
+      "label": "warn()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "warn()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L38"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_tag",
+      "label": "wazuh_tag()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "wazuh_tag()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L212"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "label": "wazuh_up()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "wazuh_up()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L227"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
+      "label": "cmd_creds()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cmd_creds()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L330"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
+      "label": "cmd_up()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cmd_up()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L287"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
+      "label": "ensure_secrets()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "ensure_secrets()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L186"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
+      "label": "env_file()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "env_file()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L180"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
+      "label": "has_secrets()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "has_secrets()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L182"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_info",
+      "label": "info()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cmd_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "info()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L37"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
+      "label": "require_stack()",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "require_stack",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "require_stack()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L126"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_valid_stack",
+      "label": "valid_stack()",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "require_stack",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "valid_stack()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L119"
+    },
+    {
       "id": "docs_blackarch_integration",
       "label": "BLACKARCH-INTEGRATION.md",
       "_origin": "ast",
@@ -760,7 +940,7 @@
       },
       "norm_label": "cmd_down()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L241"
+      "source_location": "L299"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
@@ -775,7 +955,7 @@
       },
       "norm_label": "cmd_logs()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L253"
+      "source_location": "L308"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
@@ -790,22 +970,7 @@
       },
       "norm_label": "cmd_status()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L261"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
-      "label": "cmd_up()",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "cmd_down",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "cmd_up()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L229"
+      "source_location": "L317"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
@@ -820,7 +985,7 @@
       },
       "norm_label": "compose()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L69"
+      "source_location": "L74"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_die",
@@ -835,37 +1000,7 @@
       },
       "norm_label": "die()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L32"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
-      "label": "ensure_secrets()",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "cmd_down",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "ensure_secrets()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L172"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_info",
-      "label": "info()",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "cmd_down",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "info()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L33"
+      "source_location": "L36"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
@@ -880,22 +1015,7 @@
       },
       "norm_label": "need_docker()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L83"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
-      "label": "require_stack()",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "cmd_down",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "require_stack()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L109"
+      "source_location": "L100"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_stack_compose",
@@ -910,11 +1030,11 @@
       },
       "norm_label": "stack_compose()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L145"
+      "source_location": "L201"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_valid_stack",
-      "label": "valid_stack()",
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "label": "wazuh_compose()",
       "_origin": "ast",
       "community": 3,
       "community_name": "cmd_down",
@@ -923,24 +1043,9 @@
         "language": "bash",
         "kind": "bash_function"
       },
-      "norm_label": "valid_stack()",
+      "norm_label": "wazuh_compose()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L102"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
-      "label": "wazuh_up()",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "cmd_down",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "wazuh_up()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L211"
+      "source_location": "L221"
     },
     {
       "id": "auto_config",
@@ -1099,7 +1204,7 @@
       },
       "norm_label": "docker_cmd()",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L34"
+      "source_location": "L40"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_blackarch_shell_need_docker",
@@ -1114,7 +1219,7 @@
       },
       "norm_label": "need_docker()",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L44"
+      "source_location": "L50"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_blackarch_shell_usage",
@@ -1129,7 +1234,7 @@
       },
       "norm_label": "usage()",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L18"
+      "source_location": "L20"
     },
     {
       "id": "config_includes_chroot_usr_local_sbin_linux_cos_firstboot",
@@ -1172,7 +1277,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L57",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -1184,7 +1289,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L59",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -1196,7 +1301,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L61",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -1208,7 +1313,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L49",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -1220,7 +1325,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L82",
+      "source_location": "L100",
       "weight": 1.0
     },
     {
@@ -1232,7 +1337,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L83",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -1244,7 +1349,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L84",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -1256,7 +1361,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L85",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -1268,7 +1373,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L62",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -1280,7 +1385,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L76",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -1292,7 +1397,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L56",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -1304,7 +1409,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L70",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -1316,7 +1421,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L319",
+      "source_location": "L395",
       "weight": 1.0
     },
     {
@@ -1328,7 +1433,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L319",
+      "source_location": "L395",
       "weight": 1.0
     },
     {
@@ -1340,7 +1445,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L321",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -1352,7 +1457,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L322",
+      "source_location": "L398",
       "weight": 1.0
     },
     {
@@ -1364,7 +1469,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L323",
+      "source_location": "L399",
       "weight": 1.0
     },
     {
@@ -1376,7 +1481,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L324",
+      "source_location": "L400",
       "weight": 1.0
     },
     {
@@ -1388,7 +1493,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L325",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -1400,7 +1505,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L326",
+      "source_location": "L402",
       "weight": 1.0
     },
     {
@@ -1412,7 +1517,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L327",
+      "source_location": "L403",
       "weight": 1.0
     },
     {
@@ -1424,7 +1529,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L275",
+      "source_location": "L331",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_meta",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L340",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L341",
       "weight": 1.0
     },
     {
@@ -1436,7 +1565,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L279",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -1448,19 +1577,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L280",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_meta",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L282",
+      "source_location": "L343",
       "weight": 1.0
     },
     {
@@ -1472,7 +1589,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L242",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
@@ -1484,31 +1601,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L242",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_down",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L245",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_down",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L246",
+      "source_location": "L302",
       "weight": 1.0
     },
     {
@@ -1520,7 +1625,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L248",
+      "source_location": "L303",
       "weight": 1.0
     },
     {
@@ -1532,7 +1637,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L250",
+      "source_location": "L305",
       "weight": 1.0
     },
     {
@@ -1544,7 +1649,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L199",
+      "source_location": "L272",
       "weight": 1.0
     },
     {
@@ -1556,7 +1661,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L200",
+      "source_location": "L273",
       "weight": 1.0
     },
     {
@@ -1568,7 +1673,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L206",
+      "source_location": "L279",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cols",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L281",
       "weight": 1.0
     },
     {
@@ -1580,72 +1697,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L190",
+      "source_location": "L261",
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L254",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L254",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L256",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L256",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stack_compose",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L257",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_list",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cols",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -1656,6 +1713,66 @@
       "weight": 1.0
     },
     {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L309",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L312",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stack_compose",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L313",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L318",
+      "weight": 1.0
+    },
+    {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
       "target": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
       "relation": "calls",
@@ -1664,31 +1781,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L264",
+      "source_location": "L320",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L266",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_status",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L266",
+      "source_location": "L322",
       "weight": 1.0
     },
     {
@@ -1700,7 +1805,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L267",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -1712,7 +1817,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L270",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -1724,7 +1829,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L230",
+      "source_location": "L288",
       "weight": 1.0
     },
     {
@@ -1736,7 +1841,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L230",
+      "source_location": "L288",
       "weight": 1.0
     },
     {
@@ -1748,7 +1853,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L232",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
@@ -1760,7 +1865,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L234",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -1772,7 +1877,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L235",
+      "source_location": "L293",
       "weight": 1.0
     },
     {
@@ -1784,7 +1889,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L236",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -1796,143 +1901,11 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L70",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L79",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_cmd",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L138",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L173",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_info",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L179",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L289",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L303",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L305",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L309",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_down",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L310",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L311",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L312",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
       "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
       "relation": "calls",
       "_origin": "ast",
@@ -1944,6 +1917,162 @@
       "weight": 1.0
     },
     {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_cmd",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L187",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L191",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_info",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L352",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cols",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L353",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L372",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L374",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L382",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_down",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L383",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_logs",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L384",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L385",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
       "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
       "relation": "calls",
@@ -1952,7 +2081,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L85",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -1964,7 +2093,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L112",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -1976,7 +2105,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L115",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -1988,7 +2117,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L132",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -2000,7 +2129,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L147",
+      "source_location": "L203",
       "weight": 1.0
     },
     {
@@ -2012,7 +2141,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L148",
+      "source_location": "L204",
       "weight": 1.0
     },
     {
@@ -2024,7 +2153,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L149",
+      "source_location": "L205",
       "weight": 1.0
     },
     {
@@ -2052,6 +2181,30 @@
       "weight": 1.0
     },
     {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_compose",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
       "target": "config_includes_chroot_usr_local_bin_cos_stacks_die",
       "relation": "calls",
@@ -2060,19 +2213,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L212",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_info",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L214",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -2084,7 +2225,67 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L222",
+      "source_location": "L229",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_version_ge",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_tag",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L233",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_warn",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L239",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_info",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L243",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_up",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -2250,7 +2451,29 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L48",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_hardening_reference",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_help_bugs",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -2283,7 +2506,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L36",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -2294,29 +2517,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L68",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_hardening_reference",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L78",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_help_bugs",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L87",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -2448,7 +2649,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -2459,7 +2660,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L34",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -2470,7 +2671,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/blackarch-shell",
-      "source_location": "L44",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -2481,7 +2682,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L52",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -2492,7 +2693,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L54",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -2503,7 +2704,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L60",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -2514,7 +2715,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L68",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -2525,7 +2726,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L74",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_meta",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -2536,7 +2770,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L102",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -2547,7 +2781,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L109",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -2558,7 +2792,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L122",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -2569,29 +2803,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L129",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
-      "relation": "defines",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L136",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stack_compose",
-      "relation": "defines",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L145",
+      "source_location": "L146",
       "weight": 1.0
     },
     {
@@ -2607,13 +2819,35 @@
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cols",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_short",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
       "target": "config_includes_chroot_usr_local_bin_cos_stacks_random_secret",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L166",
+      "source_location": "L176",
       "weight": 1.0
     },
     {
@@ -2624,7 +2858,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L170",
+      "source_location": "L180",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
@@ -2635,29 +2880,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L172",
+      "source_location": "L186",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_list",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stack_compose",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L189",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_tag",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L198",
+      "source_location": "L212",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_wazuh_compose",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
@@ -2668,7 +2924,29 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L211",
+      "source_location": "L227",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_list",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L260",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -2679,7 +2957,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L229",
+      "source_location": "L287",
       "weight": 1.0
     },
     {
@@ -2690,7 +2968,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L241",
+      "source_location": "L299",
       "weight": 1.0
     },
     {
@@ -2701,7 +2979,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L253",
+      "source_location": "L308",
       "weight": 1.0
     },
     {
@@ -2712,7 +2990,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L261",
+      "source_location": "L317",
       "weight": 1.0
     },
     {
@@ -2723,7 +3001,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L274",
+      "source_location": "L330",
       "weight": 1.0
     },
     {
@@ -2734,7 +3012,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L287",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
@@ -2745,7 +3023,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L32",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -2756,7 +3034,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L33",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_warn",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -2767,7 +3056,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L35",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -2778,7 +3067,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L59",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -2789,40 +3078,29 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L69",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_need_docker",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_version_ge",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L83",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
+      "target": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L91",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_local_bin_cos_stacks",
-      "target": "config_includes_chroot_usr_local_bin_cos_stacks_meta",
-      "relation": "defines",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L98",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -2838,5 +3116,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "6d9a29884023680877d42dca646d9f5effecde40"
+  "built_at_commit": "4f58b84f530075d231471354b2a18182dbcf7857"
 }

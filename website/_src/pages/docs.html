@@ -65,8 +65,9 @@ nav: docs
     <div class="code ref"><pre>blackarch-shell              <span data-l="en"># open (or re-join) the shell</span><span data-l="es"># abrir (o volver a) la shell</span>
 blackarch-shell nmap -h      <span data-l="en"># run one command</span><span data-l="es"># ejecutar un solo comando</span>
 blackarch-shell --status     <span data-l="en"># image present? container running?</span><span data-l="es"># ¿hay imagen? ¿contenedor en marcha?</span>
-blackarch-shell --update     <span data-l="en"># download BlackArch's official image</span><span data-l="es"># descargar la imagen oficial de BlackArch</span></pre></div>
-    <p><span data-l="en">Inside the container: <code>pacman -Ss &lt;name&gt;</code> searches, <code>pacman -S &lt;name&gt;</code> installs.</span><span data-l="es">Dentro del contenedor: <code>pacman -Ss &lt;nombre&gt;</code> busca, <code>pacman -S &lt;nombre&gt;</code> instala.</span></p>
+blackarch-shell --update     <span data-l="en"># download BlackArch's official image</span><span data-l="es"># descargar la imagen oficial de BlackArch</span>
+blackarch-shell --reset      <span data-l="en"># start over with a fresh container</span><span data-l="es"># empezar de cero con un contenedor nuevo</span></pre></div>
+    <p><span data-l="en">Inside the container: <code>pacman -Ss &lt;name&gt;</code> searches, <code>pacman -S &lt;name&gt;</code> installs. Your container is kept between sessions, so what you install stays installed until <code>blackarch-shell --reset</code>.</span><span data-l="es">Dentro del contenedor: <code>pacman -Ss &lt;nombre&gt;</code> busca, <code>pacman -S &lt;nombre&gt;</code> instala. Tu contenedor se conserva entre sesiones, así que lo que instales sigue ahí hasta <code>blackarch-shell --reset</code>.</span></p>
 
     <h2 id="stacks">cos-stacks</h2>
     <p><span data-l="en">Starts and stops the heavy blue-team platforms. Run it without arguments for an interactive menu.</span><span data-l="es">Inicia y detiene las plataformas blue-team pesadas. Ejecútalo sin argumentos para ver un menú interactivo.</span></p>

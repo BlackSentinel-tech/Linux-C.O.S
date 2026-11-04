@@ -19,7 +19,7 @@
       allCats: 'All categories', openPage: 'Open the tool page for {name}',
       chartSub: 'Top {k} categories for the current source · a tool can be in several · select a bar to filter',
       chartTable: 'Show as table', chartBars: 'Show as chart', category: 'Category', count: 'Tools',
-      bar: '{cat}: {n} tools', run: 'Run:', runIn: 'Run in blackarch-shell:', anySource: 'Search all sources',
+      bar: '{cat}: {n} tools', run: 'Run:', pkg: 'Package:', runIn: 'In blackarch-shell:', anySource: 'Search all sources',
       emptySrc: 'Nothing in {src} — other sources may have it.',
     },
     es: {
@@ -28,7 +28,7 @@
       allCats: 'Todas las categorías', openPage: 'Abrir la página de {name}',
       chartSub: 'Las {k} categorías principales del origen actual · una herramienta puede estar en varias · elige una barra para filtrar',
       chartTable: 'Ver como tabla', chartBars: 'Ver como gráfico', category: 'Categoría', count: 'Herramientas',
-      bar: '{cat}: {n} herramientas', run: 'Ejecutar:', runIn: 'Ejecutar en blackarch-shell:', anySource: 'Buscar en todos los orígenes',
+      bar: '{cat}: {n} herramientas', run: 'Ejecutar:', pkg: 'Paquete:', runIn: 'En blackarch-shell:', anySource: 'Buscar en todos los orígenes',
       emptySrc: 'Nada en {src} — puede estar en otros orígenes.',
     },
   });
@@ -196,15 +196,22 @@
       var cat = document.createElement('span');
       cat.textContent = cats(row).map(function (i) { return catLabel(data.categories[i]); }).join(' · ');
       meta.appendChild(cat);
-      // how to run it: native tools by name, BlackArch-only ones in the container
+      // how to get at it. Only claim a command when we know it (a package
+      // name often isn't one); BlackArch-only tools show the install step,
+      // which the default image needs and the full image answers instantly
       var run = document.createElement('div');
       run.className = 'tool-run';
       var native = row[1] & (BITS.kali | BITS.parrot);
-      var cmd = (commands(row) || [row[0]])[0];
+      var known = commands(row);
       var lab = document.createElement('span');
-      lab.textContent = native ? t('run') : t('runIn');
       var code = document.createElement('code');
-      code.textContent = native ? cmd : 'blackarch-shell ' + cmd;
+      if (native) {
+        lab.textContent = known ? t('run') : t('pkg');
+        code.textContent = known ? known.join(', ') : row[0];
+      } else {
+        lab.textContent = t('runIn');
+        code.textContent = 'pacman -S ' + row[0];
+      }
       run.appendChild(lab); run.appendChild(document.createTextNode(' ')); run.appendChild(code);
       li.appendChild(name); li.appendChild(meta); li.appendChild(run);
       frag.appendChild(li);

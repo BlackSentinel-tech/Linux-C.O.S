@@ -102,6 +102,7 @@
     <ol class="steps">
       <li>
         <h3><span data-l="en">Get the source</span><span data-l="es">Descarga el código</span></h3>
+        <p><span data-l="en"><strong>On Windows:</strong> install <a href="https://learn.microsoft.com/windows/wsl/install" rel="noopener">WSL2</a> (<code>wsl --install</code> in an administrator PowerShell, then reboot) and <a href="https://docs.docker.com/desktop/setup/install/windows-install/" rel="noopener">Docker Desktop</a> with the WSL2 backend. Run everything below inside the Ubuntu (WSL) terminal, which already has git. On macOS install Docker Desktop; on Linux, Docker and git from your package manager.</span><span data-l="es"><strong>En Windows:</strong> instala <a href="https://learn.microsoft.com/es-es/windows/wsl/install" rel="noopener">WSL2</a> (<code>wsl --install</code> en un PowerShell de administrador y reinicia) y <a href="https://docs.docker.com/desktop/setup/install/windows-install/" rel="noopener">Docker Desktop</a> con el backend WSL2. Ejecuta todo lo de abajo en la terminal de Ubuntu (WSL), que ya trae git. En macOS instala Docker Desktop; en Linux, Docker y git desde tu gestor de paquetes.</span></p>
         <div class="code"><pre>git clone https://github.com/BlackSentinel-tech/Linux-C.O.S.git
 cd Linux-C.O.S/build</pre></div>
       </li>
@@ -144,14 +145,14 @@ sudo dd if=live-image-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fs
       <div class="card">
         <h3><span data-l="en">Virtual machine</span><span data-l="es">Máquina virtual</span></h3>
         <ul>
-          <li><span data-l="en">VirtualBox, VMware, QEMU/KVM or Hyper-V: type Linux / Debian 64-bit, 4 GB RAM, 20 GB disk to test the installer.</span><span data-l="es">VirtualBox, VMware, QEMU/KVM o Hyper-V: tipo Linux / Debian 64-bit, 4 GB de RAM, disco de 20 GB para probar el instalador.</span></li>
+          <li><span data-l="en">VirtualBox, VMware, QEMU/KVM or Hyper-V: type Linux / Debian 64-bit, 4 GB RAM, 60 GB disk to test the installer (the live session alone needs no disk).</span><span data-l="es">VirtualBox, VMware, QEMU/KVM o Hyper-V: tipo Linux / Debian 64-bit, 4 GB de RAM, disco de 60 GB para probar el instalador (la sesión live sola no necesita disco).</span></li>
           <li><span data-l="en">Apple Silicon: use UTM in <strong>Emulate</strong> mode, architecture x86_64. Boot is slow (software emulation) — that's expected.</span><span data-l="es">Apple Silicon: usa UTM en modo <strong>Emular</strong>, arquitectura x86_64. El arranque es lento (emulación por software) — es normal.</span></li>
         </ul>
         <p><span data-l="en">Live login: <code>kali</code> / <code>kali</code> (autologin is on).</span><span data-l="es">Login live: <code>kali</code> / <code>kali</code> (con autologin).</span> <a href="docs.html#live"><span data-l="en">What next?</span><span data-l="es">¿Y ahora qué?</span></a></p>
       </div>
     </div>
 
-    <h3 id="usb-boot"><span data-l="en">Starting a laptop from the USB stick</span><span data-l="es">Arrancar un portátil desde la memoria USB</span></h3>
+    <h3 id="usb-boot" class="subsection"><span data-l="en">Starting a laptop from the USB stick</span><span data-l="es">Arrancar un portátil desde la memoria USB</span></h3>
     <ol class="steps">
       <li><h3><span data-l="en">Turn off Secure Boot</span><span data-l="es">Desactiva Secure Boot</span></h3><p><span data-l="en">Restart and open the firmware setup (usually <kbd>F2</kbd>, <kbd>Del</kbd> or <kbd>Esc</kbd> while the maker's logo shows; on Windows: Settings → Recovery → Advanced startup → UEFI Firmware Settings). Find <em>Secure Boot</em> (often under Boot or Security) and set it to <em>Disabled</em>, then save and exit.</span><span data-l="es">Reinicia y entra en la configuración del firmware (normalmente <kbd>F2</kbd>, <kbd>Supr</kbd> o <kbd>Esc</kbd> mientras aparece el logo del fabricante; desde Windows: Configuración → Recuperación → Inicio avanzado → Configuración de firmware UEFI). Busca <em>Secure Boot</em> (suele estar en Boot o Security), ponlo en <em>Disabled</em>, guarda y sal.</span></p></li>
       <li><h3><span data-l="en">Open the boot menu</span><span data-l="es">Abre el menú de arranque</span></h3><p><span data-l="en">With the stick plugged in, restart and press the boot-menu key: commonly <kbd>F12</kbd> (Dell, Lenovo), <kbd>F9</kbd> (HP), <kbd>Esc</kbd> or <kbd>F8</kbd> (ASUS), <kbd>F12</kbd> (Acer). Pick the USB stick — choose the “UEFI” entry if there are two.</span><span data-l="es">Con la memoria puesta, reinicia y pulsa la tecla del menú de arranque: suele ser <kbd>F12</kbd> (Dell, Lenovo), <kbd>F9</kbd> (HP), <kbd>Esc</kbd> o <kbd>F8</kbd> (ASUS), <kbd>F12</kbd> (Acer). Elige la memoria USB — si hay dos entradas, la que dice “UEFI”.</span></p></li>

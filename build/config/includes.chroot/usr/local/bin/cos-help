@@ -33,7 +33,7 @@ if [ "$L" = es ]; then
   T_INST="instalar en disco (solo en la sesión live)"
   T_DOC="guía completa"
   T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
-  T_TOPICS="Temas: cos-help [ofensiva|defensiva|instalar|sistema|guia]"
+  T_TOPICS="Temas: cos-help [ofensiva|defensiva|instalar|sistema|guia (o guide)]"
   T_UNKNOWN="Tema desconocido"
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
