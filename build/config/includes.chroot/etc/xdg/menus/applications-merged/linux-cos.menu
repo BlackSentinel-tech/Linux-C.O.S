@@ -1,0 +1,25 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/1.0/menu.dtd">
+<!-- Linux-C.O.S: a top-level "Linux-C.O.S" folder in the XFCE applications
+     menu (Kali's own kali-menu uses this same applications-merged hook).
+     Every entry carries the X-Linux-COS category. -->
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>Linux-C.O.S</Name>
+    <Directory>linux-cos.directory</Directory>
+    <Include>
+      <Category>X-Linux-COS</Category>
+    </Include>
+    <Layout>
+      <Filename>linux-cos-help.desktop</Filename>
+      <Filename>linux-cos-ai.desktop</Filename>
+      <Filename>linux-cos-blackarch-shell.desktop</Filename>
+      <Filename>linux-cos-stacks.desktop</Filename>
+      <Filename>linux-cos-guide.desktop</Filename>
+      <Separator/>
+      <Filename>linux-cos-installer.desktop</Filename>
+      <Merge type="all"/>
+    </Layout>
+  </Menu>
+</Menu>

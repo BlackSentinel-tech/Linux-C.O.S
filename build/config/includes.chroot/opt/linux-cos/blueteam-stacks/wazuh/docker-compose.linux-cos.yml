@@ -1,0 +1,22 @@
+# Linux-C.O.S override, merged over wazuh-docker's single-node
+# docker-compose.yml by `cos-stacks up wazuh` (compose >= 2.24.4 for !override).
+#
+# Upstream publishes the dashboard (443), the indexer (9200, OpenSearch with
+# admin/SecretPassword) and the manager API (55000) on every interface --
+# and Docker-published ports bypass ufw. Here only the two ports agents need
+# to enroll and report (1514, 1515) stay on the network; everything else is
+# 127.0.0.1. Reach the dashboard remotely through an SSH tunnel, or change
+# the binding deliberately after you have changed the default passwords.
+services:
+  wazuh.manager:
+    ports: !override
+      - "1514:1514"
+      - "1515:1515"
+      - "127.0.0.1:514:514/udp"
+      - "127.0.0.1:55000:55000"
+  wazuh.indexer:
+    ports: !override
+      - "127.0.0.1:9200:9200"
+  wazuh.dashboard:
+    ports: !override
+      - "127.0.0.1:443:5601"

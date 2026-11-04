@@ -16,9 +16,12 @@ VERSION_ID="0.1"
 VERSION_CODENAME=genesis
 ID=linux-cos
 ID_LIKE=debian
-HOME_URL="https://github.com/"
-SUPPORT_URL="https://github.com/"
-BUG_REPORT_URL="https://github.com/"
+HOME_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S"
+SUPPORT_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md"
+BUG_REPORT_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/issues"
+DOCUMENTATION_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md"
+LOGO=linux-cos
+ANSI_COLOR="1;34"
 EOF
 # Kali (like Debian) already ships /etc/os-release as a symlink to
 # /usr/lib/os-release -- writing the file above already updated both.
@@ -39,9 +42,15 @@ cat > /etc/update-motd.d/00-linux-cos <<'EOF'
 #!/bin/sh
 echo ""
 echo "  Linux-C.O.S -- Cyber Offensive & defensive Security"
-echo "  Ofensivo: apt list --installed | grep kali-tools  |  BlackArch: blackarch-shell"
-echo "  Defensivo: sudo systemctl status wazuh-agent suricata  |  falco/sysdig: sudo apt install falco sysdig (compilan su driver contra ESTE kernel)"
-echo "  Stacks pesados (TheHive/Cortex/MISP): cos-stacks list"
+echo "  Inicio rapido / quick start:  cos-help"
+echo "  Ofensiva / offense:           apt list --installed 'kali-tools-*'  |  blackarch-shell"
+echo "  Defensa / defense:            cos-stacks  |  sudo ufw status verbose"
+echo "  falco/sysdig: sudo apt install falco sysdig (build their driver against THIS kernel)"
 echo ""
 EOF
 chmod +x /etc/update-motd.d/00-linux-cos
+
+# LOGO=linux-cos in os-release: give icon themes a file to resolve it to
+mkdir -p /usr/share/icons/hicolor/256x256/apps
+cp /usr/share/backgrounds/linux-cos/logo.png /usr/share/icons/hicolor/256x256/apps/linux-cos.png
+gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true

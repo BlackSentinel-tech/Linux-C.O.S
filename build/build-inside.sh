@@ -29,7 +29,37 @@ rsync -a --delete \
     --exclude='output' --exclude='build.out' \
     /src/ /build/
 
+# The project website doubles as the offline, bilingual user guide
+# ("User Guide" in the menu, `cos-help guide`). Copied at build time instead
+# of being duplicated under config/includes.chroot in git.
+if [ -d /website ]; then
+  echo "[linux-cos] copying the website into the image as the offline guide"
+  mkdir -p /build/config/includes.chroot/usr/share/doc/linux-cos/site
+  rsync -a --delete --exclude='_src' /website/ /build/config/includes.chroot/usr/share/doc/linux-cos/site/
+fi
+
 cd /build
+
+# Build profile -- how much of Kali's tool set goes in. git ships the FULL
+# set (kali-linux-everything, ~41 GB installed / ~14.6 GB ISO); that needs a
+# big builder. "slim" and "min" fit on a free CI runner and still carry the
+# hardening, the blue-team stack, cos-* and cos-ai. We rewrite only the Kali
+# metapackage list in the build volume, so git stays "full" by default.
+COS_PROFILE=${COS_PROFILE:-full}
+KALI_LIST=/build/config/package-lists/kali-security.list.chroot
+case "$COS_PROFILE" in
+  full)
+    echo "[linux-cos] profile: full (kali-linux-everything -- large; needs a big builder)" ;;
+  slim|default)
+    echo "[linux-cos] profile: slim (kali-linux-default)"
+    printf '# Linux-C.O.S slim profile -- Kali default toolset (see build-inside.sh)\nkali-linux-default\n' > "$KALI_LIST" ;;
+  min|headless)
+    echo "[linux-cos] profile: min (kali-linux-headless -- smallest)"
+    printf '# Linux-C.O.S minimal profile -- Kali headless (see build-inside.sh)\nkali-linux-headless\n' > "$KALI_LIST" ;;
+  *)
+    echo "[linux-cos] ERROR: unknown COS_PROFILE=$COS_PROFILE (use full|slim|min)" >&2
+    exit 1 ;;
+esac
 
 echo "[linux-cos] lb config"
 lb config

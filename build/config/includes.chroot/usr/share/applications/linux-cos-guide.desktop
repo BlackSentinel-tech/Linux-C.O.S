@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=User Guide
+Name[es]=Guía de usuario
+Comment=The Linux-C.O.S guide in English and Spanish (works offline)
+Comment[es]=La guía de Linux-C.O.S en español e inglés (funciona sin conexión)
+Exec=cos-help guide
+Icon=help-contents
+Terminal=false
+Categories=X-Linux-COS;System;Documentation;
+Keywords=guide;guía;docs;manual;

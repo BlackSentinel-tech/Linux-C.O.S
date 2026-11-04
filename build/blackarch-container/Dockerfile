@@ -15,6 +15,10 @@
 #   network needed if it's present.
 FROM archlinux:base-devel
 
+# blackarch-shell --update checks this label and refuses to overwrite a full
+# image with BlackArch's (much smaller) upstream base image.
+LABEL org.linux-cos.blackarch=full
+
 RUN pacman -Syu --noconfirm --needed git curl sudo zsh
 
 # BlackArch's own strap script wires up their repo + keyring correctly

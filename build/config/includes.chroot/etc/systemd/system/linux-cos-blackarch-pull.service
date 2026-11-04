@@ -1,0 +1,15 @@
+[Unit]
+Description=Linux-C.O.S: load or download the BlackArch tool image (one time)
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+# never in the live session: the image would land in the RAM overlay
+ConditionPathExists=!/run/live/medium
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/linux-cos-blackarch-pull
+# big download on a possibly slow line: don't let systemd's default 90s kill it
+TimeoutStartSec=infinity
+Restart=on-failure
+RestartSec=5min

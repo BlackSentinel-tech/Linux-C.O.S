@@ -2,63 +2,588 @@
 # Linux-C.O.S build hook -- writes our /usr/local/bin and /usr/local/sbin
 # scripts directly instead of relying on includes.chroot for them.
 #
+# GENERATED FILE -- do not edit by hand. The source of truth is
+# config/includes.chroot/usr/local/{bin,sbin}/; regenerate this hook with
+#     python3 scripts/sync-usrlocal-hook.py
+# (CI runs it with --check and fails if this file is stale).
+#
 # Every real build attempt so far has shown config/includes.chroot copying
 # correctly into every other location (etc/, usr/share/, etc/systemd/) --
 # except /usr/local/bin and /usr/local/sbin specifically end up empty every
 # time, on both a session-interrupted run and a fully clean uninterrupted
-# one, so it isn't the earlier session hiccup. Root cause not pinned down
-# (something in live-build's Chroot_copy_dir / rsync -K handling of those
-# two paths specifically, on a still-forming FHS tree -- not conclusively
-# diagnosed). These 3 scripts are small enough that a heredoc here, using
-# the exact mechanism every other hook in this project already relies on
-# successfully (0040-branding, 0050-hardening, etc.), is more reliable than
-# chasing that mystery further. If a *future* live-build upgrade fixes the
-# underlying issue, these three source files still live under
-# config/includes.chroot/usr/local/{bin,sbin}/ for reference -- this hook
-# just stops depending on them actually landing there.
+# one. Root cause not pinned down (something in live-build's
+# Chroot_copy_dir / rsync -K handling of those two paths specifically, on a
+# still-forming FHS tree). Heredocs here, using the exact mechanism every
+# other hook in this project already relies on successfully, are more
+# reliable than chasing that mystery further.
 set -e
 
 echo "[linux-cos] writing /usr/local/bin and /usr/local/sbin scripts"
 
 mkdir -p /usr/local/bin /usr/local/sbin
 
-cat > /usr/local/bin/blackarch-shell <<'EOF'
+cat > /usr/local/bin/blackarch-shell <<'LINUX_COS_EOF'
 #!/bin/sh
-# Linux-C.O.S -- drops you into the pre-baked BlackArch container: every one
-# of the 2,858 BlackArch tools, running natively (real pacman-built Arch
-# binaries, not emulated), with your home directory bind-mounted so files
-# you touch there are the same files you see from the Debian side.
+# Linux-C.O.S -- drops you into the BlackArch container: BlackArch's tools
+# running natively (real pacman-built Arch binaries, not emulated), with
+# your home directory bind-mounted so files you touch there are the same
+# files you see from the Debian side.
+#
+# Which image you get depends on how the ISO was built (see
+# docs/BLACKARCH-INTEGRATION.md): the full `blackarch` group baked in at
+# build time, or BlackArch's official base image pulled on first boot, in
+# which case install what you need inside with `pacman -S <tool>` (or
+# `pacman -S blackarch` for everything -- tens of GB).
 set -e
 
 IMG=linux-cos/blackarch:latest
-NAME=blackarch-tools
+UPSTREAM=blackarchlinux/blackarch:latest
+# one persistent container per user: tools installed inside with pacman stay
+# installed between sessions (a --rm container would forget them on exit)
+NAME=blackarch-tools-$(id -un)
 
-if [ "$1" = "--update" ]; then
-  docker pull blackarchlinux/blackarch:latest
-  docker tag blackarchlinux/blackarch:latest "$IMG"
-  exit 0
-fi
+usage() {
+  cat <<'EOF'
+blackarch-shell -- open a shell with BlackArch's tools (Docker container)
 
-if ! docker image inspect "$IMG" >/dev/null 2>&1; then
-  echo "BlackArch image not loaded yet (first boot may still be pulling it -- check: journalctl -u linux-cos-firstboot)"
-  echo "or run: blackarch-shell --update"
+usage:
+  blackarch-shell             open (or re-join) the BlackArch shell
+  blackarch-shell <command>   run one command inside it, e.g. blackarch-shell nmap -h
+  blackarch-shell --update    pull BlackArch's official image (refuses to replace a
+                              full image baked into the ISO; --update --force does)
+  blackarch-shell --status    show whether the image is present / running
+  blackarch-shell --reset     delete your container (tools you installed with
+                              pacman are lost; your home directory is not)
+  blackarch-shell --help      this text
+
+Your home directory is mounted at the same path inside the container.
+Inside: `pacman -Ss <name>` searches tools, `pacman -S <name>` installs one --
+it stays installed until --reset (or --update, which needs a fresh container).
+EOF
+}
+
+docker_cmd() {
+  if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+    docker "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo docker "$@"
+  else
+    docker "$@"
+  fi
+}
+
+need_docker() {
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "blackarch-shell: docker is not installed -- run: sudo apt install docker.io" >&2
+    exit 1
+  fi
+  if ! docker_cmd info >/dev/null 2>&1; then
+    echo "blackarch-shell: the Docker daemon is not running -- start it with: sudo systemctl start docker" >&2
+    exit 1
+  fi
+}
+
+case "${1:-}" in
+  -h|--help|help)
+    usage; exit 0 ;;
+  --update)
+    need_docker
+    # The ISO may carry the FULL blackarch group (build/blackarch-container/,
+    # labelled org.linux-cos.blackarch=full). Re-tagging the upstream base
+    # image over it would silently drop the 2,858 preinstalled tools.
+    kind=$(docker_cmd image inspect -f '{{ index .Config.Labels "org.linux-cos.blackarch" }}' "$IMG" 2>/dev/null || true)
+    if [ "$kind" = full ] && [ "${2:-}" != --force ]; then
+      echo "Your BlackArch image is the full one baked into this ISO (every tool preinstalled)."
+      echo "Replacing it with the upstream base image would remove those tools. Instead, update"
+      echo "it in place:   blackarch-shell pacman -Syu"
+      echo "or replace it anyway:   blackarch-shell --update --force"
+      exit 1
+    fi
+    echo "Pulling $UPSTREAM (this can take a while on the first run)..."
+    docker_cmd pull "$UPSTREAM"
+    docker_cmd tag "$UPSTREAM" "$IMG"
+    if docker_cmd container inspect "$NAME" >/dev/null 2>&1; then
+      echo "Done. Your existing container still uses the old image; to switch, run:"
+      echo "  blackarch-shell --reset   (tools you installed with pacman are lost)"
+    else
+      echo "Done. Run: blackarch-shell"
+    fi
+    exit 0 ;;
+  --reset)
+    need_docker
+    if docker_cmd container inspect "$NAME" >/dev/null 2>&1; then
+      docker_cmd rm -f "$NAME" >/dev/null
+      echo "Removed $NAME. The next blackarch-shell starts a fresh one."
+    else
+      echo "No container to remove."
+    fi
+    exit 0 ;;
+  --status)
+    need_docker
+    if docker_cmd image inspect "$IMG" >/dev/null 2>&1; then
+      echo "image:     present ($IMG)"
+    else
+      echo "image:     missing -- run: blackarch-shell --update"
+    fi
+    case "$(docker_cmd container inspect -f '{{.State.Running}}' "$NAME" 2>/dev/null || true)" in
+      true)  echo "container: running ($NAME)" ;;
+      false) echo "container: stopped ($NAME, starts on the next blackarch-shell)" ;;
+      *)     echo "container: none yet (created on the first blackarch-shell)" ;;
+    esac
+    exit 0 ;;
+  --)
+    shift ;;
+  -*)
+    echo "blackarch-shell: unknown option '$1'" >&2
+    usage >&2
+    exit 1 ;;
+esac
+
+need_docker
+
+if ! docker_cmd image inspect "$IMG" >/dev/null 2>&1; then
+  echo "The BlackArch image is not on this machine yet."
+  if systemctl is-active --quiet linux-cos-blackarch-pull.service 2>/dev/null; then
+    echo "It is still downloading in the background -- follow it with:"
+    echo "  journalctl -fu linux-cos-blackarch-pull"
+  else
+    echo "Download it now with:  blackarch-shell --update"
+  fi
   exit 1
 fi
 
-if docker ps --format '{{.Names}}' | grep -qx "$NAME"; then
-  exec docker exec -it "$NAME" zsh
+# -t only when we really have a terminal, so `blackarch-shell nmap -h | less`
+# and scripts work too.
+if [ -t 0 ] && [ -t 1 ]; then TTY=-it; else TTY=-i; fi
+
+if [ $# -eq 0 ]; then set -- zsh; fi
+
+state=$(docker_cmd container inspect -f '{{.State.Running}}' "$NAME" 2>/dev/null || true)
+case "$state" in
+  true) ;;
+  false) docker_cmd start "$NAME" >/dev/null ;;
+  *)
+    # long-lived and idle; every shell or command is an `exec` into it
+    docker_cmd run -d \
+      --name "$NAME" \
+      --hostname blackarch \
+      --network host \
+      --cap-add NET_RAW --cap-add NET_ADMIN \
+      -v "$HOME:$HOME" \
+      -w "$HOME" \
+      "$IMG" sleep infinity >/dev/null ;;
+esac
+
+docker_cmd exec "$TTY" -w "$HOME" "$NAME" "$@"
+LINUX_COS_EOF
+
+cat > /usr/local/bin/cos-ai <<'LINUX_COS_EOF'
+#!/bin/sh
+# Linux-C.O.S -- local AI assistant for offensive and defensive security
+# work. It runs entirely on this machine against a free, open-weight model
+# served by Ollama (http://127.0.0.1:11434): no cloud, no API key, works
+# offline once a model is pulled.
+#
+# It is a COPILOT, not an autopilot. Every profile below helps a human
+# operator understand output, plan the next step, write detections or draft
+# a report -- and `cos-ai suggest` PRINTS commands for you to review and run
+# yourself. cos-ai never executes an attack (or any command) against a
+# target on its own. Use it only on systems you are authorized to test.
+#
+# Profiles (the "agents") live in $AI_DIR/profiles/<name>.md and are layered
+# on top of _base.md. Add your own by dropping a markdown file there.
+set -eu
+
+AI_DIR=${COS_AI_DIR:-/opt/linux-cos/ai}
+PROFILE_DIR="$AI_DIR/profiles"
+HOST=${OLLAMA_HOST:-http://127.0.0.1:11434}
+MODEL=${COS_AI_MODEL:-llama3.1:8b}
+STATE_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/linux-cos/ai
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); DIM=$(printf '\033[2m'); CY=$(printf '\033[36m')
+  GRN=$(printf '\033[32m'); YEL=$(printf '\033[33m'); RED=$(printf '\033[31m'); RST=$(printf '\033[0m')
+else
+  B=''; DIM=''; CY=''; GRN=''; YEL=''; RED=''; RST=''
 fi
 
-exec docker run -it --rm \
-  --name "$NAME" \
-  --network host \
-  --cap-add NET_RAW --cap-add NET_ADMIN \
-  -v "$HOME:$HOME" \
-  -w "$HOME" \
-  "$IMG" zsh
-EOF
+die()  { printf '%scos-ai: %s%s\n' "$RED" "$*" "$RST" >&2; exit 1; }
+info() { printf '%s==>%s %s\n' "$B" "$RST" "$*"; }
 
-cat > /usr/local/bin/cos-stacks <<'EOF'
+usage() {
+  cat <<EOF
+${B}cos-ai${RST} -- local security AI assistant (offensive + defensive)
+
+usage:
+  cos-ai                      chat with the default assistant (interactive)
+  cos-ai <profile> [prompt]   chat/ask using a specific profile (below)
+  cos-ai ask "<question>"     one-shot question, prints the answer
+  cos-ai explain              explain piped tool output
+                                e.g.  nmap -sV host | cos-ai explain
+  cos-ai suggest "<goal>"     suggest commands for an AUTHORIZED engagement
+                                (prints them; never runs them)
+  cos-ai profiles             list the available profiles
+  cos-ai models               list installed models
+  cos-ai pull <model>         download a model (e.g. qwen2.5-coder:7b)
+  cos-ai setup                install Ollama + pull the default model
+  cos-ai status               show Ollama / model status
+  cos-ai help                 this text
+
+profiles:
+EOF
+  list_profiles | sed 's/^/  /'
+  cat <<EOF
+
+options:
+  --model <name>   use another model for this run (default: $MODEL)
+  --profile <name> pick a profile explicitly
+
+The model runs locally via Ollama. Nothing leaves this machine. cos-ai
+assists; you review and run anything yourself, only on systems you may test.
+EOF
+}
+
+# --- profiles --------------------------------------------------------------
+list_profiles() {
+  for f in "$PROFILE_DIR"/*.md; do
+    b=$(basename "$f" .md)
+    case "$b" in _*) continue ;; esac
+    [ -f "$f" ] || continue
+    desc=$(sed -n 's/^> //p' "$f" | head -n 1)
+    printf '%-10s %s\n' "$b" "$desc"
+  done 2>/dev/null
+  return 0
+}
+
+valid_profile() {
+  case "$1" in ''|_*|*/*|.*) return 1 ;; esac
+  [ -f "$PROFILE_DIR/$1.md" ]
+}
+
+system_prompt() { # system_prompt <profile>
+  [ -f "$PROFILE_DIR/_base.md" ] && cat "$PROFILE_DIR/_base.md"
+  if [ -f "$PROFILE_DIR/$1.md" ]; then printf '\n\n'; cat "$PROFILE_DIR/$1.md"; fi
+}
+
+# --- ollama plumbing -------------------------------------------------------
+have_ollama() { command -v ollama >/dev/null 2>&1; }
+
+ollama_up() { curl -fsS --max-time 3 "$HOST/api/tags" >/dev/null 2>&1; }
+
+model_present() { # model_present <model> -- matches "name" or "name:tag"
+  curl -fsS --max-time 5 "$HOST/api/tags" 2>/dev/null \
+    | jq -e --arg m "$1" '[.models[]?.name] | any(. == $m or startswith($m + ":"))' >/dev/null 2>&1
+}
+
+need_backend() {
+  if ! have_ollama && ! ollama_up; then
+    cat >&2 <<EOF
+${RED}cos-ai: no local model backend yet.${RST}
+Set it up once (installs Ollama and downloads a model, a few GB):
+  cos-ai setup
+Already have Ollama elsewhere? Point cos-ai at it: OLLAMA_HOST=http://host:11434
+EOF
+    exit 1
+  fi
+  if ! ollama_up; then
+    info "starting the Ollama service"
+    if ! { command -v systemctl >/dev/null 2>&1 && sudo -n systemctl start ollama 2>/dev/null; }; then
+      ollama serve >/dev/null 2>&1 &
+    fi
+    i=0; while [ $i -lt 20 ] && ! ollama_up; do sleep 0.5; i=$((i + 1)); done
+    ollama_up || die "the Ollama service is not responding at $HOST"
+  fi
+  if ! model_present "$MODEL"; then
+    cat >&2 <<EOF
+${YEL}cos-ai: the model "$MODEL" is not downloaded yet.${RST}
+Get it (a few GB, one time):   cos-ai pull $MODEL
+Or pick one you already have:  cos-ai models
+EOF
+    exit 1
+  fi
+}
+
+# POST a messages array (on stdin as JSON) to /api/chat, print the reply text
+chat_call() { # chat_call  (reads messages JSON from stdin)
+  jq -nc --arg model "$MODEL" --slurpfile msgs /dev/stdin \
+      '{model: $model, messages: $msgs[0], stream: false, options: {temperature: 0.3}}' \
+    | curl -fsS --max-time 600 "$HOST/api/chat" -H 'Content-Type: application/json' -d @- \
+    | jq -r 'if .error then "cos-ai: model error: " + .error else (.message.content // "") end'
+}
+
+# one exchange: system + user -> answer
+one_shot() { # one_shot <profile> <user-text>
+  need_backend
+  sys=$(system_prompt "$1"); user=$2
+  jq -n --arg s "$sys" --arg u "$user" \
+      '[{role:"system",content:$s},{role:"user",content:$u}]' \
+    | chat_call
+}
+
+interactive() { # interactive <profile>
+  need_backend
+  prof=$1
+  mkdir -p "$STATE_DIR"
+  hist=$(mktemp "${TMPDIR:-/tmp}/cos-ai.XXXXXX")
+  trap 'rm -f "$hist"' EXIT INT TERM
+  jq -n --arg s "$(system_prompt "$prof")" '[{role:"system",content:$s}]' > "$hist"
+  printf '%s%s profile%s -- model %s. Type your question; Ctrl+D or "exit" to leave.\n' \
+    "$B" "$prof" "$RST" "$MODEL"
+  printf '%sReminder: only act on systems you are authorized to test.%s\n\n' "$DIM" "$RST"
+  while :; do
+    printf '%syou>%s ' "$CY" "$RST"
+    if ! IFS= read -r line; then echo; break; fi
+    case "$line" in ''|' ') continue ;; exit|quit|:q) break ;; esac
+    jq --arg u "$line" '. + [{role:"user",content:$u}]' "$hist" > "$hist.tmp" && mv "$hist.tmp" "$hist"
+    ans=$(chat_call < "$hist")
+    printf '%sai >%s %s\n\n' "$GRN" "$RST" "$ans"
+    jq --arg a "$ans" '. + [{role:"assistant",content:$a}]' "$hist" > "$hist.tmp" && mv "$hist.tmp" "$hist"
+  done
+}
+
+# --- setup / models --------------------------------------------------------
+cmd_setup() {
+  if ! have_ollama; then
+    info "installing Ollama (runs the official installer; needs sudo)"
+    echo "    This fetches https://ollama.com/install.sh -- review it first if you prefer:"
+    echo "    curl -fsSL https://ollama.com/install.sh | less"
+    printf 'Proceed? [y/N] '; read -r a; case "$a" in y|Y) ;; *) die "cancelled" ;; esac
+    curl -fsSL https://ollama.com/install.sh | sudo sh || die "Ollama install failed"
+  else
+    info "Ollama already installed"
+  fi
+  if command -v systemctl >/dev/null 2>&1; then sudo systemctl enable --now ollama 2>/dev/null || true; fi
+  i=0; while [ $i -lt 20 ] && ! ollama_up; do sleep 0.5; i=$((i + 1)); done
+  info "downloading the default model ($MODEL) -- a few GB, one time"
+  ollama pull "$MODEL" || die "could not pull $MODEL (network? try: cos-ai pull <model>)"
+  info "ready. Try:  cos-ai ask \"what does a SYN scan look like on the wire?\""
+}
+
+cmd_status() {
+  if have_ollama; then echo "ollama:  installed ($(ollama --version 2>/dev/null | head -n1))"; else echo "ollama:  not installed -- run: cos-ai setup"; fi
+  if ollama_up; then echo "service: up at $HOST"; else echo "service: not responding at $HOST"; fi
+  echo "model:   $MODEL $(model_present "$MODEL" 2>/dev/null && echo '(present)' || echo '(not downloaded -- cos-ai pull '"$MODEL"')')"
+  echo "profiles: $(list_profiles | wc -l | tr -d ' ') in $PROFILE_DIR"
+}
+
+cmd_models() {
+  have_ollama || ollama_up || die "no backend -- run: cos-ai setup"
+  if ollama_up; then
+    curl -fsS "$HOST/api/tags" | jq -r '.models[]? | "  " + .name + "  (" + (((.size // 0)/1073741824)|.*10|round/10|tostring) + " GB)"'
+  else
+    ollama list
+  fi
+}
+
+# --- argument parsing ------------------------------------------------------
+# global options first (--model / --profile), then a subcommand or profile
+PROFILE=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --model) MODEL=${2:?--model needs a value}; shift 2 ;;
+    --model=*) MODEL=${1#--model=}; shift ;;
+    --profile) PROFILE=${2:?--profile needs a value}; shift 2 ;;
+    --profile=*) PROFILE=${1#--profile=}; shift ;;
+    *) break ;;
+  esac
+done
+
+cmd=${1:-}
+case "$cmd" in
+  ''|chat)
+    p=${PROFILE:-assistant}
+    valid_profile "$p" || die "unknown profile \"$p\" (see: cos-ai profiles)"
+    if [ -t 0 ] && [ -t 1 ]; then interactive "$p"; else cat >&2; die "chat needs a terminal; use: cos-ai ask \"...\""; fi ;;
+  help|-h|--help) usage ;;
+  profiles) list_profiles ;;
+  status) cmd_status ;;
+  models) cmd_models ;;
+  setup) cmd_setup ;;
+  pull)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai pull <model>"
+    have_ollama || ollama_up || die "no backend -- run: cos-ai setup first"
+    ollama pull "$1" ;;
+  ask)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai ask \"<question>\""
+    one_shot "${PROFILE:-assistant}" "$*" ;;
+  explain)
+    [ -t 0 ] && die "pipe something in, e.g.:  nmap -sV host | cos-ai explain"
+    input=$(cat)
+    [ -n "$input" ] || die "nothing on stdin to explain"
+    one_shot "${PROFILE:-explain}" "Explain this security tool output for an authorized tester: what it means, what stands out, and what to look at next. Output:
+
+$input" ;;
+  suggest)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai suggest \"<goal>\""
+    printf '%sThese are SUGGESTIONS for an authorized engagement. Review each one; cos-ai does not run them.%s\n\n' "$DIM" "$RST"
+    one_shot "${PROFILE:-recon}" "For an authorized security assessment, suggest concrete commands to: $*
+List each command with one line on what it does and what to watch for. Do not run anything." ;;
+  *)
+    # bare profile name: `cos-ai blueteam`, or `cos-ai recon "enumerate ..."`
+    if valid_profile "$cmd"; then
+      prof=$cmd; shift
+      if [ $# -ge 1 ]; then one_shot "$prof" "$*"
+      elif [ -t 0 ] && [ -t 1 ]; then interactive "$prof"
+      else one_shot "$prof" "$(cat)"; fi
+    else
+      printf 'cos-ai: unknown command or profile "%s"\n\n' "$cmd" >&2
+      usage >&2; exit 1
+    fi ;;
+esac
+LINUX_COS_EOF
+
+cat > /usr/local/bin/cos-help <<'LINUX_COS_EOF'
+#!/bin/sh
+# Linux-C.O.S -- quick start in the terminal. The MOTD only shows on console
+# and SSH logins (pam_motd), never in an XFCE terminal, so this is the one
+# place a desktop user can always ask "what do I run here?".
+# Spanish when $LANG is es_*, English otherwise.
+set -e
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); C=$(printf '\033[36m'); R=$(printf '\033[0m')
+else
+  B=''; C=''; R=''
+fi
+
+topic=${1:-}
+case "${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}" in
+  es*) L=es ;;
+  *)   L=en ;;
+esac
+case "$topic" in
+  --es) L=es; topic=${2:-} ;;
+  --en) L=en; topic=${2:-} ;;
+esac
+
+if [ "$L" = es ]; then
+  T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
+  T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
+  T_KALI="categorías de Kali instaladas (herramientas: menú de aplicaciones)"
+  T_BA="shell con las herramientas de BlackArch (contenedor)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú)"
+  T_SVC="estado de los servicios de defensa"
+  T_FW="estado del firewall (deny entrante por defecto)"
+  T_UPD="actualizar todo el sistema"
+  T_INST="instalar en disco (solo en la sesión live)"
+  T_AI="Copiloto de IA local (ofensiva + defensiva)"
+  T_AIK="asistente general de seguridad (red + blue)"
+  T_AISET="instalar IA: Ollama + modelo (unos GB, una vez)"
+  T_AIX="explicar la salida de una herramienta"
+  T_AISG="red team: sugiere comandos (los ejecutas tú)"
+  T_DOC="guía completa"
+  T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
+  T_TOPICS="Temas: cos-help [ofensiva|defensiva|ia|instalar|sistema|guia (o guide)]"
+  T_UNKNOWN="Tema desconocido"
+else
+  T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
+  T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
+  T_KALI="installed Kali tool categories (the tools are in the applications menu)"
+  T_BA="shell with BlackArch's tools (container)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (menu)"
+  T_SVC="status of the defensive services"
+  T_FW="firewall status (default deny incoming)"
+  T_UPD="update the whole system"
+  T_INST="install to disk (live session only)"
+  T_AI="local AI copilot (offensive + defensive)"
+  T_AIK="general security assistant (red + blue)"
+  T_AISET="set up AI: Ollama + a model (a few GB, one time)"
+  T_AIX="explain a tool's output"
+  T_AISG="red team: suggests commands (you run them)"
+  T_DOC="full guide"
+  T_LIVE="Live session: user kali / password kali. Nothing is kept after shutdown."
+  T_TOPICS="Topics: cos-help [offense|defense|ai|install|system|guide]"
+  T_UNKNOWN="Unknown topic"
+fi
+
+# command + description on one line when it fits in 80 columns, otherwise
+# the description goes on its own indented line (no wrapping mid-command)
+line() {
+  if [ $(( 37 + ${#2} )) -le 80 ] && [ "${#1}" -le 34 ]; then
+    printf '  %s%-34s%s %s\n' "$C" "$1" "$R" "$2"
+  else
+    printf '  %s%s%s\n      %s\n' "$C" "$1" "$R" "$2"
+  fi
+}
+
+offense() {
+  printf '%s%s%s\n' "$B" "$T_OFF" "$R"
+  line "apt list --installed 'kali-tools-*'" "$T_KALI"
+  line "blackarch-shell" "$T_BA"
+  line "blackarch-shell --update" "docker pull blackarchlinux/blackarch"
+}
+defense() {
+  printf '%s%s%s\n' "$B" "$T_DEF" "$R"
+  line "cos-stacks" "$T_STACKS"
+  line "systemctl status auditd apparmor clamav-freshclam" "$T_SVC"
+  line "sudo ufw status verbose" "$T_FW"
+  line "sudo lynis audit system" "Lynis"
+  line "sudo apt install falco sysdig" "Falco/Sysdig (DKMS, post-boot)"
+}
+system() {
+  printf '%s%s%s\n' "$B" "$T_SYS" "$R"
+  line "sudo apt update && sudo apt full-upgrade" "$T_UPD"
+  [ -d /run/live/medium ] && line "Install Linux-C.O.S (desktop icon)" "$T_INST"
+  return 0
+}
+ai() {
+  printf '%s%s%s\n' "$B" "AI" "$R"
+  line "cos-ai" "$T_AIK"
+  line "cos-ai blueteam \"detect kerberoasting\"" "$T_AI"
+  line "nmap -sV host | cos-ai explain" "$T_AIX"
+  line "cos-ai suggest \"...\"" "$T_AISG"
+  line "cos-ai setup" "$T_AISET"
+}
+install_topic() {
+  printf '%s%s%s\n' "$B" "Calamares" "$R"
+  line "pkexec calamares" "$T_INST"
+  line "LUKS2 / ext4 / btrfs / xfs" "partition.conf"
+}
+
+# "guide": open the offline, bilingual HTML guide (the project website,
+# copied into the image by build-inside.sh); the Markdown guide as fallback
+if [ "$topic" = guide ] || [ "$topic" = guia ]; then
+  page=/usr/share/doc/linux-cos/site/docs.html
+  [ -f "$page" ] || page=/usr/share/doc/linux-cos/README.md
+  exec xdg-open "$page"
+fi
+
+printf '\n%s%s%s\n\n' "$B" "$T_TITLE" "$R"
+case "$topic" in
+  offense|ofensiva)  offense ;;
+  defense|defensiva) defense ;;
+  ai|ia)             ai ;;
+  install|instalar)  install_topic ;;
+  system|sistema)    system ;;
+  -h|--help|'')
+    offense; echo; defense; echo; ai; echo; system ;;
+  *) printf '%s: "%s"\n%s\n' "$T_UNKNOWN" "$topic" "$T_TOPICS"; exit 1 ;;
+esac
+
+echo
+[ -d /run/live/medium ] && printf '%s\n' "$T_LIVE"
+printf '%s%s:%s cos-help guide  (%s)\n' "$B" "$T_MORE" "$R" "$T_DOC"
+printf '%s\n\n' "$T_TOPICS"
+LINUX_COS_EOF
+
+cat > /usr/local/bin/cos-pause <<'LINUX_COS_EOF'
+#!/bin/sh
+# Linux-C.O.S -- runs a command, then waits for Enter before returning.
+# Menu launchers use it (Terminal=true entries in the XFCE "Linux-C.O.S"
+# folder) so a short command's output -- or an error such as "Docker is not
+# running" -- doesn't vanish with the terminal window the instant it exits.
+# Ctrl+C belongs to the command (e.g. stopping `cos-stacks logs`), not to
+# this wrapper: keep the window open afterwards either way
+trap ':' INT
+"$@"
+status=$?
+trap - INT
+printf '\nPress Enter to close / Pulsa Enter para cerrar '
+read -r _ || true
+exit "$status"
+LINUX_COS_EOF
+
+cat > /usr/local/bin/cos-stacks <<'LINUX_COS_EOF'
 #!/bin/sh
 # Linux-C.O.S -- launcher for the heavy blue-team platforms (TheHive+Cortex,
 # MISP, Wazuh manager). These are shipped as docker-compose bundles instead
@@ -66,69 +591,542 @@ cat > /usr/local/bin/cos-stacks <<'EOF'
 # decided at deploy time, exactly like Security Onion's own setup wizard
 # does it -- baking a live SIEM into a squashfs image is how you end up with
 # every install sharing the same default admin password.
+#
+# Passwords: for stacks whose secrets can be injected through environment
+# variables (MISP), the first `cos-stacks up <stack>` writes a per-user env
+# file with random values (mode 600) that every later run reuses. TheHive
+# and Wazuh keep their users in their own databases/config and start with
+# their upstream first-login defaults -- `cos-stacks creds <stack>` says so
+# and tells you to change them. Every web UI and API is bound to 127.0.0.1;
+# the only ports published on the network are Wazuh's agent ports.
+#
+# Each stack lives in $STACKS_DIR/<name>/ with:
+#   stack.meta         key=value: description, url, ram, kind (compose|wazuh)
+#   docker-compose.yml (compose stacks only)
+#   secrets.list       names of the variables to fill with random secrets
 set -e
-STACKS_DIR=/opt/linux-cos/blueteam-stacks
+
+STACKS_DIR=${COS_STACKS_DIR:-/opt/linux-cos/blueteam-stacks}
+STATE_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/linux-cos/stacks
+WAZUH_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/linux-cos/wazuh-docker
+# compose >= 2.24.4 understands the `!override` tag the Wazuh override uses
+COMPOSE_MIN=2.24.4
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); DIM=$(printf '\033[2m'); RED=$(printf '\033[31m')
+  GRN=$(printf '\033[32m'); YEL=$(printf '\033[33m'); RST=$(printf '\033[0m')
+else
+  B=''; DIM=''; RED=''; GRN=''; YEL=''; RST=''
+fi
+
+die()  { printf '%scos-stacks: %s%s\n' "$RED" "$*" "$RST" >&2; exit 1; }
+info() { printf '%s==>%s %s\n' "$B" "$RST" "$*"; }
+warn() { printf '%s!!  %s%s\n' "$YEL" "$*" "$RST"; }
 
 usage() {
-  echo "usage: cos-stacks list | up <stack> | down <stack> | logs <stack>"
-  echo "stacks available:"
-  ls -1 "$STACKS_DIR" 2>/dev/null | sed 's/^/  - /'
+  cat <<EOF
+${B}cos-stacks${RST} -- blue-team platforms on demand (Docker)
+
+usage:
+  cos-stacks                 interactive menu (when run in a terminal)
+  cos-stacks list            every stack, with its status
+  cos-stacks info   <stack>  what it is, where it listens, what it needs
+  cos-stacks up     <stack>  start it (MISP: generates random passwords)
+  cos-stacks down   <stack>  stop it (data volumes are kept)
+  cos-stacks status [stack]  running containers
+  cos-stacks logs   <stack>  follow the logs (Ctrl+C to stop)
+  cos-stacks creds  <stack>  credentials to log in with
+  cos-stacks help            this text
+
+Web UIs and APIs listen on 127.0.0.1 only (Docker-published ports bypass
+ufw). Exception: Wazuh's agent ports 1514/1515, so agents can enroll.
+EOF
 }
 
-[ -z "$1" ] && { usage; exit 1; }
+# --- docker access ---------------------------------------------------------
+# The installed user is in the docker group (Calamares users.conf) and so is
+# the live user (auto/config's user-default-groups), but a group change only
+# applies to new logins -- fall back to sudo instead of failing obscurely.
+docker_cmd() {
+  if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+    docker "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo docker "$@"
+  else
+    docker "$@"
+  fi
+}
 
-case "$1" in
-  list) usage ;;
-  up)   cd "$STACKS_DIR/$2" && docker compose up -d ;;
-  down) cd "$STACKS_DIR/$2" && docker compose down ;;
-  logs) cd "$STACKS_DIR/$2" && docker compose logs -f ;;
-  *) usage; exit 1 ;;
+compose() {
+  if docker_cmd compose version >/dev/null 2>&1; then
+    docker_cmd compose "$@"
+  elif command -v docker-compose >/dev/null 2>&1; then
+    if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+      docker-compose "$@"
+    else
+      sudo docker-compose "$@"
+    fi
+  else
+    die "docker compose is not installed -- run: sudo apt install docker-compose"
+  fi
+}
+
+version_ge() { # version_ge A B -- true when version A >= B (numeric, dotted)
+  [ "$(printf '%s\n%s\n' "$2" "$1" | sort -t. -k1,1n -k2,2n -k3,3n | head -n 1)" = "$2" ]
+}
+
+DOCKER_STATE='' # checked once per run: every docker call may be a sudo call
+docker_up() {
+  if [ -z "$DOCKER_STATE" ]; then
+    if docker_cmd info >/dev/null 2>&1; then DOCKER_STATE=up; else DOCKER_STATE=down; fi
+  fi
+  [ "$DOCKER_STATE" = up ]
+}
+
+need_docker() {
+  command -v docker >/dev/null 2>&1 || die "docker is not installed -- run: sudo apt install docker.io docker-compose"
+  if ! docker_up; then
+    die "the Docker daemon is not running -- start it with: sudo systemctl start docker"
+  fi
+}
+
+# --- stack metadata --------------------------------------------------------
+stacks() {
+  for d in "$STACKS_DIR"/*/; do
+    [ -f "${d}stack.meta" ] && basename "$d"
+  done
+  return 0
+}
+
+meta() { # meta <stack> <key>
+  sed -n "s/^$2=//p" "$STACKS_DIR/$1/stack.meta" 2>/dev/null | head -n 1
+}
+
+valid_stack() { # valid_stack <name> -- rejects empty names, typos, ../ tricks
+  case "$1" in
+    ''|*/*|.*) return 1 ;;
+  esac
+  [ -f "$STACKS_DIR/$1/stack.meta" ]
+}
+
+require_stack() {
+  if [ -z "$1" ]; then
+    printf 'cos-stacks: missing stack name. Available stacks:\n' >&2
+    stacks | sed 's/^/  - /' >&2
+    exit 1
+  fi
+  if ! valid_stack "$1"; then
+    printf '%scos-stacks: unknown stack "%s".%s Available stacks:\n' "$RED" "$1" "$RST" >&2
+    stacks | sed 's/^/  - /' >&2
+    exit 1
+  fi
+}
+
+project() { # compose project name of a stack
+  case "$(meta "$1" kind)" in
+    wazuh) echo single-node ;;  # upstream's directory name
+    *)     echo "cos-$1" ;;
+  esac
+}
+
+running_count() { # running containers of a stack, by compose label
+  # (not `compose ps`: that re-reads the compose file, whose ${VAR:?}
+  # secrets only exist in the env file -- it would always say "stopped")
+  docker_cmd ps -q --filter "label=com.docker.compose.project=$(project "$1")" 2>/dev/null | grep -c . || true
+}
+
+status_word() { # status_word <stack> [width] -- colored, padded to width
+  w=${2:-0}
+  if ! docker_up; then
+    printf "%s%-${w}s%s" "$DIM" "unknown" "$RST"; return
+  fi
+  n=$(running_count "$1")
+  if [ "${n:-0}" -gt 0 ]; then
+    printf "%s%-${w}s%s" "$GRN" "running" "$RST"
+  else
+    printf "%s%-${w}s%s" "$DIM" "stopped" "$RST"
+  fi
+}
+
+cols() { # terminal width, for keeping menu lines from wrapping
+  c=$(tput cols 2>/dev/null || true)
+  case "$c" in ''|*[!0-9]*) c=${COLUMNS:-80} ;; esac
+  echo "$c"
+}
+
+short() { # short <text> <max> -- cut to fit, with an ellipsis
+  if [ "${#1}" -le "$2" ]; then printf '%s' "$1"; else printf '%s...' "$(printf '%s' "$1" | cut -c1-$(($2 - 3)))"; fi
+}
+
+# --- secrets -----------------------------------------------------------------
+random_secret() {
+  LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 24
+}
+
+env_file() { echo "$STATE_DIR/$1.env"; }
+
+has_secrets() { # the stack's secrets.list names at least one variable
+  [ -f "$STACKS_DIR/$1/secrets.list" ] && grep -q '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list"
+}
+
+ensure_secrets() {
+  f=$(env_file "$1")
+  mkdir -p "$STATE_DIR"
+  chmod 700 "$STATE_DIR" 2>/dev/null || true
+  [ -f "$f" ] || ( umask 077; : > "$f" )
+  has_secrets "$1" || return 0
+  grep -q . "$f" || info "generating random passwords for $1 (stored in $f)"
+  # add any variable that is not set yet (keeps existing ones stable)
+  grep '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list" | while read -r var; do
+    grep -q "^$var=" "$f" || printf '%s=%s\n' "$var" "$(random_secret)" >> "$f"
+  done
+}
+
+# compose for a regular stack, always with its env file (the compose files
+# interpolate ${VAR:?} secrets). Only `up` may create the env file.
+stack_compose() { # stack_compose <stack> <compose args...>
+  _st=$1; shift
+  _env=$(env_file "$_st")
+  [ -f "$_env" ] || die "$_st was never started here (no $_env) -- start it with: cos-stacks up $_st"
+  compose -p "cos-$_st" --env-file "$_env" -f "$STACKS_DIR/$_st/docker-compose.yml" "$@"
+}
+
+# --- wazuh -----------------------------------------------------------------
+# The manager must not be older than the agents reporting to it, and the
+# native wazuh-agent comes from Wazuh's rolling 4.x repo -- so deploy the
+# wazuh-docker release matching the installed agent (fallback: a known one).
+wazuh_tag() {
+  if [ -n "${COS_WAZUH_TAG:-}" ]; then echo "$COS_WAZUH_TAG"; return; fi
+  v=$(dpkg-query -W -f='${Version}' wazuh-agent 2>/dev/null | sed 's/-.*//') || v=''
+  case "$v" in
+    [0-9]*.[0-9]*.[0-9]*) echo "v$v" ;;
+    *) echo v4.9.0 ;;
+  esac
+}
+
+wazuh_compose() { # upstream compose + our override (localhost-only UIs/APIs)
+  [ -f "$WAZUH_DIR/single-node/docker-compose.yml" ] || die "wazuh was never started here -- start it with: cos-stacks up wazuh"
+  cd "$WAZUH_DIR/single-node"
+  compose -f docker-compose.yml -f "$STACKS_DIR/wazuh/docker-compose.linux-cos.yml" "$@"
+}
+
+wazuh_up() {
+  command -v git >/dev/null 2>&1 || die "git is required -- run: sudo apt install git"
+  cv=$(compose version --short 2>/dev/null | sed 's/^v//') || cv=''
+  if [ -z "$cv" ] || ! version_ge "$cv" "$COMPOSE_MIN"; then
+    die "docker compose ${cv:-?} is too old (need $COMPOSE_MIN+ to keep the Wazuh UI/API on localhost) -- run: sudo apt install --only-upgrade docker-compose"
+  fi
+  tag=$(wazuh_tag)
+  if dpkg-query -W wazuh-agent >/dev/null 2>&1; then why="matching the installed wazuh-agent"; else why="no wazuh-agent installed, using a known release"; fi
+  if [ -d "$WAZUH_DIR/.git" ]; then
+    # an earlier clone stays put; warn if apt has since moved the agent past it
+    have=$(git -C "$WAZUH_DIR" describe --tags --exact-match 2>/dev/null || true)
+    if [ -n "$have" ] && [ "$have" != "$tag" ] && version_ge "${tag#v}" "${have#v}"; then
+      warn "this manager is $have but the local wazuh-agent is ${tag#v}: agents newer than the manager are refused."
+      warn "Upgrade: cos-stacks down wazuh, move $WAZUH_DIR away, then cos-stacks up wazuh"
+    fi
+  else
+    info "fetching the official wazuh-docker deployment ($tag, $why)"
+    mkdir -p "$(dirname "$WAZUH_DIR")"
+    git clone --depth 1 -b "$tag" https://github.com/wazuh/wazuh-docker.git "$WAZUH_DIR" \
+      || die "could not clone wazuh-docker $tag -- is the network up? (pick another release with COS_WAZUH_TAG=v4.x.y)"
+  fi
+  cd "$WAZUH_DIR/single-node"
+  if [ ! -d config/wazuh_indexer_ssl_certs ] || [ -z "$(ls -A config/wazuh_indexer_ssl_certs 2>/dev/null)" ]; then
+    info "generating the indexer TLS certificates (one time)"
+    compose -f generate-indexer-certs.yml run --rm generator
+  fi
+  wazuh_compose up -d
+  printf '\n%swazuh is starting.%s Dashboard: https://localhost\n' "$GRN" "$RST"
+  warn "Wazuh starts with its UPSTREAM DEFAULT passwords (admin / SecretPassword)."
+  warn "Change them before exposing anything: cos-stacks creds wazuh"
+}
+
+# --- actions -----------------------------------------------------------------
+cmd_list() {
+  docker_up || true  # decide once here, not in every $(status_word) subshell
+  w=$(( $(cols) - 28 )); [ "$w" -lt 20 ] && w=20
+  printf '%s%-16s %-9s %s%s\n' "$B" "STACK" "STATUS" "DESCRIPTION" "$RST"
+  for s in $(stacks); do
+    printf '%-16s %s %s\n' "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
+  done
+  docker_up || printf '\n%s(Docker is not running: start it with sudo systemctl start docker)%s\n' "$YEL" "$RST"
+  printf '\n%sDetails: cos-stacks info <stack>   Start: cos-stacks up <stack>%s\n' "$DIM" "$RST"
+}
+
+cmd_info() {
+  require_stack "$1"
+  docker_up || true
+  printf '%s%s%s\n' "$B" "$1" "$RST"
+  printf '  what   : %s\n' "$(meta "$1" description)"
+  printf '  web UI : %s\n' "$(meta "$1" url)"
+  printf '  needs  : %s RAM free, network on first start (images are pulled)\n' "$(meta "$1" ram)"
+  printf '  status : %s\n' "$(status_word "$1")"
+  note=$(meta "$1" note)
+  if [ -n "$note" ]; then
+    w=$(( $(cols) - 11 )); [ "$w" -lt 30 ] && w=30
+    printf '%s\n' "$note" | fold -s -w "$w" | sed '1s/^/  note   : /; 2,$s/^/           /'
+  fi
+  return 0
+}
+
+cmd_up() {
+  require_stack "$1"; need_docker
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_up; return ;;
+  esac
+  ensure_secrets "$1"
+  info "starting $1 (the first start downloads several GB of images)"
+  stack_compose "$1" up -d
+  printf '\n%s%s is starting.%s Web UI: %s\n' "$GRN" "$1" "$RST" "$(meta "$1" url)"
+  printf 'Credentials: cos-stacks creds %s    Logs: cos-stacks logs %s\n' "$1" "$1"
+}
+
+cmd_down() {
+  require_stack "$1"; need_docker
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_compose down ;;
+    *)     stack_compose "$1" down ;;
+  esac
+  info "$1 stopped (data kept; its volumes: docker volume ls --filter label=com.docker.compose.project=$(project "$1"))"
+}
+
+cmd_logs() {
+  require_stack "$1"; need_docker
+  printf '%s(following logs -- Ctrl+C to stop)%s\n' "$DIM" "$RST"
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_compose logs -f ;;
+    *)     stack_compose "$1" logs -f ;;
+  esac
+}
+
+cmd_status() {
+  need_docker
+  if [ -n "$1" ]; then
+    require_stack "$1"
+    case "$(meta "$1" kind)" in
+      wazuh) wazuh_compose ps ;;
+      *)     stack_compose "$1" ps ;;
+    esac
+  else
+    cmd_list
+  fi
+}
+
+cmd_creds() {
+  require_stack "$1"
+  case "$(meta "$1" kind)" in
+    wazuh)
+      echo "Wazuh uses its upstream defaults until you change them:"
+      echo "  dashboard / indexer: admin / SecretPassword"
+      echo "  API (127.0.0.1:55000): wazuh-wui / MyS3cr37P450r.*-"
+      echo "Change them: https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html#change-the-password-of-wazuh-users"
+      return ;;
+  esac
+  note=$(meta "$1" creds_note)
+  if has_secrets "$1"; then
+    f=$(env_file "$1")
+    [ -f "$f" ] || die "no credentials yet -- they are generated by: cos-stacks up $1"
+    cat "$f"
+  fi
+  [ -n "$note" ] && printf '%s\n' "$note"
+  return 0
+}
+
+menu() {
+  while :; do
+    DOCKER_STATE=''; docker_up || true  # re-check: the daemon may have been started meanwhile
+    w=$(( $(cols) - 33 )); [ "$w" -lt 20 ] && w=20
+    printf '\n%sLinux-C.O.S blue-team stacks%s\n' "$B" "$RST"
+    docker_up || printf '%s  Docker is not running -- start it with: sudo systemctl start docker%s\n' "$YEL" "$RST"
+    i=0
+    for s in $(stacks); do
+      i=$((i + 1))
+      printf '  %s%d)%s %-16s %s %s\n' "$B" "$i" "$RST" "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
+    done
+    printf '  %sq)%s quit    %sEnter)%s refresh\n' "$B" "$RST" "$B" "$RST"
+    printf 'Pick a stack [1-%d, q]: ' "$i"
+    if ! read -r pick; then echo; exit 0; fi
+    case "$pick" in
+      q|Q) exit 0 ;;
+      '') continue ;;
+      *[!0-9]*) echo "Not a valid choice: type a number from 1 to $i, or q."; continue ;;
+    esac
+    if [ "$pick" -lt 1 ] || [ "$pick" -gt "$i" ]; then
+      echo "Not a valid choice: type a number from 1 to $i, or q."; continue
+    fi
+    s=$(stacks | sed -n "${pick}p")
+    echo
+    cmd_info "$s"
+    while :; do
+      printf '  [u]p  [d]own  [l]ogs  [c]reds  [b]ack: '
+      if ! read -r act; then echo; exit 0; fi
+      # Ctrl+C stops the child (logs -f) and comes back here, instead of
+      # killing this menu and the terminal window it was launched in
+      trap 'echo' INT
+      case "$act" in
+        u|U) ( cmd_up "$s" ) || true ;;
+        d|D) ( cmd_down "$s" ) || true ;;
+        l|L) ( cmd_logs "$s" ) || true ;;
+        c|C) ( cmd_creds "$s" ) || true ;;
+        b|B|'') trap - INT; break ;;
+        *) echo "  Unknown key: use u, d, l, c or b." ;;
+      esac
+      trap - INT
+    done
+  done
+}
+
+case "${1:-}" in
+  '')            if [ -t 0 ] && [ -t 1 ]; then menu; else usage; exit 1; fi ;;
+  menu)          menu ;;
+  list|ls)       cmd_list ;;
+  info)          cmd_info "${2:-}" ;;
+  up|start)      cmd_up "${2:-}" ;;
+  down|stop)     cmd_down "${2:-}" ;;
+  logs)          cmd_logs "${2:-}" ;;
+  status|ps)     cmd_status "${2:-}" ;;
+  creds)         cmd_creds "${2:-}" ;;
+  -h|--help|help) usage ;;
+  *)             printf 'cos-stacks: unknown command "%s"\n\n' "$1" >&2; usage >&2; exit 1 ;;
 esac
-EOF
+LINUX_COS_EOF
 
-cat > /usr/local/sbin/linux-cos-firstboot <<'EOF'
+cat > /usr/local/bin/linux-cos-session-setup <<'LINUX_COS_EOF'
 #!/bin/sh
-# Linux-C.O.S -- runs once on the first real boot of an INSTALLED system
-# (not the live session -- see linux-cos-firstboot.service). Anything that
-# needs a real disk, a real network, or shouldn't run twice belongs here
-# instead of in a build-time hook.
+# Linux-C.O.S -- runs once per user at XFCE login (etc/xdg/autostart/).
+#
+# 1. Wallpaper on every monitor. The skel xfce4-desktop.xml can only name
+#    monitors it knows in advance (monitor0, monitorVirtual-1); real
+#    hardware shows up as monitoreDP-1, monitorHDMI-1, ... -- so read the
+#    connected outputs and set the property for each one.
+# 2. Trust the desktop "Install Linux-C.O.S" launcher. XFCE refuses to run
+#    an untrusted .desktop file from ~/Desktop and shows a scary dialog
+#    instead; trust = executable bit + a checksum in the file's metadata.
+#
+# Runs once per user (marker below) so a wallpaper the user picks later is
+# never overwritten.
+WALL=/usr/share/backgrounds/linux-cos/default.png
+STAMP=${XDG_CONFIG_HOME:-$HOME/.config}/linux-cos/session-setup-v1
+
+trust_launcher() {
+  f=$1
+  [ -f "$f" ] || return 0
+  chmod +x "$f" 2>/dev/null || true
+  if command -v gio >/dev/null 2>&1; then
+    sum=$(sha256sum "$f" | cut -d' ' -f1)
+    gio set "$f" metadata::xfce-exe-checksum "$sum" 2>/dev/null || true
+    gio set "$f" metadata::trusted true 2>/dev/null || true
+  fi
+}
+
+# the launcher may be recreated by skel on a fresh live boot: trust it every time
+trust_launcher "$HOME/Desktop/linux-cos-installer.desktop"
+
+[ -f "$STAMP" ] && exit 0
+
+if command -v xfconf-query >/dev/null 2>&1 && [ -f "$WALL" ]; then
+  # give xfdesktop a moment to register its own properties first
+  sleep 2
+  outputs=$(xrandr --listactivemonitors 2>/dev/null | awk 'NR > 1 { print $NF }')
+  for out in $outputs monitor0; do
+    case "$out" in monitor*) prop=$out ;; *) prop=monitor$out ;; esac
+    for ws in 0 1 2 3; do
+      base=/backdrop/screen0/$prop/workspace$ws
+      xfconf-query -c xfce4-desktop -p "$base/last-image" -n -t string -s "$WALL" 2>/dev/null \
+        || xfconf-query -c xfce4-desktop -p "$base/last-image" -s "$WALL" 2>/dev/null || true
+      xfconf-query -c xfce4-desktop -p "$base/image-style" -n -t int -s 5 2>/dev/null \
+        || xfconf-query -c xfce4-desktop -p "$base/image-style" -s 5 2>/dev/null || true
+    done
+  done
+fi
+
+mkdir -p "$(dirname "$STAMP")" && date > "$STAMP"
+LINUX_COS_EOF
+
+cat > /usr/local/sbin/linux-cos-blackarch-pull <<'LINUX_COS_EOF'
+#!/bin/sh
+# Linux-C.O.S -- makes the BlackArch image available on an installed system,
+# once (linux-cos-blackarch-pull.service, queued by linux-cos-firstboot;
+# safe to re-run):
+#   - ISO built with the full image baked in (build/blackarch-container/,
+#     docs/BLACKARCH-INTEGRATION.md): load it from disk, no network needed.
+#   - otherwise: pull BlackArch's official image.
+set -e
+
+IMG=linux-cos/blackarch:latest
+UPSTREAM=blackarchlinux/blackarch:latest
+TAR=/opt/linux-cos/blackarch-image.tar
+
+if docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "[linux-cos] $IMG already present, nothing to do"
+  exit 0
+fi
+
+if [ -f "$TAR" ]; then
+  echo "[linux-cos] loading the BlackArch image baked into the ISO"
+  docker load -i "$TAR"
+  echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"
+  exit 0
+fi
+
+echo "[linux-cos] pulling $UPSTREAM"
+docker pull "$UPSTREAM"
+docker tag "$UPSTREAM" "$IMG"
+echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"
+LINUX_COS_EOF
+
+cat > /usr/local/sbin/linux-cos-firstboot <<'LINUX_COS_EOF'
+#!/bin/sh
+# Linux-C.O.S -- first-boot setup. On an INSTALLED system it runs exactly
+# once (marker file below + the unit's ConditionPathExists). In the live
+# session it runs on every boot -- the live filesystem resets each time.
+#
+# It runs BEFORE the network comes up (linux-cos-firstboot.service is
+# ordered Before=network-pre.target), so there is no window in which the
+# machine is online without firewall rules. That is also why it must not
+# wait for Docker or the network itself: the BlackArch image is loaded or
+# downloaded by linux-cos-blackarch-pull.service, which this script only
+# queues (--no-block) and which never runs in the live session -- a
+# multi-GB image would land in the RAM overlay there.
 set -e
 
 MARKER=/var/lib/linux-cos/firstboot-done
-[ -f "$MARKER" ] && exit 0
-mkdir -p /var/lib/linux-cos
+LIVE=0
+[ -d /run/live/medium ] && LIVE=1
 
-echo "[linux-cos] first boot: enabling firewall"
+if [ "$LIVE" -eq 0 ] && [ -f "$MARKER" ]; then
+  exit 0
+fi
+
+echo "[linux-cos] first boot: enabling the firewall (default deny incoming)"
 # This is the actual ufw setup -- can't run any of it at build time (see
 # config/hooks/normal/0050-hardening.hook.chroot for why), so it all
 # happens here instead, now that there's a real kernel netfilter stack.
-ufw default deny incoming || true
-ufw default allow outgoing || true
-ufw --force enable || true
-
-echo "[linux-cos] first boot: loading the BlackArch tool container"
-if command -v docker >/dev/null 2>&1; then
-  systemctl start docker || true
-  if [ -f /opt/linux-cos/blackarch-image.tar ]; then
-    # Baked into the ISO at build time (see build/blackarch-container/) --
-    # no network needed, this is the "preinstalled day one" path.
-    docker load -i /opt/linux-cos/blackarch-image.tar \
-      && echo "[linux-cos] BlackArch image loaded from the ISO"
-  else
-    # Dev/fallback path: ISO was built without baking the image in (see
-    # docs/BLACKARCH-INTEGRATION.md for why that's a real tradeoff), so pull
-    # it once here instead.
-    ( docker pull blackarchlinux/blackarch:latest \
-        && docker tag blackarchlinux/blackarch:latest linux-cos/blackarch:latest \
-        || echo "[linux-cos] BlackArch image pull failed -- no network yet? re-run: blackarch-shell --update" \
-    ) >/var/log/linux-cos-blackarch-pull.log 2>&1 &
-  fi
+if command -v ufw >/dev/null 2>&1; then
+  ufw default deny incoming || true
+  ufw default allow outgoing || true
+  ufw --force enable || true
+  # The build disables ufw.service so it can't race this script with no
+  # rules set. Re-enable it now, or the firewall would be gone again after
+  # the next reboot (ENABLED=yes in ufw.conf alone doesn't load the rules).
+  systemctl enable ufw.service || true
+else
+  echo "[linux-cos] WARNING: ufw is not installed, no host firewall configured"
 fi
 
-date > "$MARKER"
-EOF
+if [ "$LIVE" -eq 1 ]; then
+  echo "[linux-cos] live session: not loading the BlackArch image (run blackarch-shell --update if you want it here)"
+  exit 0
+fi
 
-cat > /usr/local/sbin/linux-cos-live-password <<'EOF'
+mkdir -p /var/lib/linux-cos
+# load the baked-in image, or download it, once Docker and the network are up
+systemctl --no-block start linux-cos-blackarch-pull.service || true
+date > "$MARKER"
+LINUX_COS_EOF
+
+cat > /usr/local/sbin/linux-cos-live-password <<'LINUX_COS_EOF'
 #!/bin/sh
 # Linux-C.O.S -- live-config creates the live session's "kali" user fresh
 # on every single boot (username=kali, see auto/config's --bootappend-live)
@@ -141,6 +1139,6 @@ set -e
 if id kali >/dev/null 2>&1; then
   echo "kali:kali" | chpasswd
 fi
-EOF
+LINUX_COS_EOF
 
-chmod +x /usr/local/bin/blackarch-shell /usr/local/bin/cos-stacks /usr/local/sbin/linux-cos-firstboot /usr/local/sbin/linux-cos-live-password
+chmod 0755 /usr/local/bin/blackarch-shell /usr/local/bin/cos-ai /usr/local/bin/cos-help /usr/local/bin/cos-pause /usr/local/bin/cos-stacks /usr/local/bin/linux-cos-session-setup /usr/local/sbin/linux-cos-blackarch-pull /usr/local/sbin/linux-cos-firstboot /usr/local/sbin/linux-cos-live-password

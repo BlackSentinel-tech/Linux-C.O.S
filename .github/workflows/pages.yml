@@ -1,0 +1,42 @@
+name: Publish website
+
+on:
+  push:
+    branches: [main]
+    paths: ["website/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the committed pages are up to date
+        run: python3 scripts/build-website.py --check
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Stage the site (without its sources)
+        run: |
+          # 404.html is served at any missing URL, also nested ones: give it
+          # absolute links under the site's base path
+          python3 scripts/build-website.py --base "${{ steps.pages.outputs.base_path }}/"
+          mkdir -p _site
+          cp -r website/. _site/
+          rm -rf _site/_src
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

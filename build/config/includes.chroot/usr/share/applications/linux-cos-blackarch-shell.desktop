@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=BlackArch Shell
+Name[es]=Shell de BlackArch
+GenericName=BlackArch tools container
+Comment=Open a shell with BlackArch's tools (Docker container)
+Comment[es]=Abre una shell con las herramientas de BlackArch (contenedor Docker)
+Exec=cos-pause blackarch-shell
+Icon=utilities-terminal
+Terminal=true
+Categories=X-Linux-COS;System;Security;
+Keywords=blackarch;pentest;arch;pacman;container;

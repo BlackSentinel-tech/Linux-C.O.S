@@ -103,6 +103,43 @@ the BlackArch-as-container tradeoff.
   `lb config` outside the container/volume; delete the stray output, don't
   try to keep it in sync with anything.
 
+- **Calamares never created a user.** The `exec` sequence had no `users`
+  job (the `users` *page* only collects input), and also lacked
+  `displaymanager`, `networkcfg`, `hwclock`, `initramfscfg`/`initramfs`.
+  `scripts/lint.sh` now fails if `users` or `initramfs` go missing again.
+- **Calamares aborted at the last step**: `packages.conf` did a plain
+  `remove` of `calamares-settings-linux-cos`, a package that never existed
+  (our settings are plain files). With the apt backend an unknown name in
+  `remove` fails the whole install; it is `try_remove` now (lint-enforced).
+- The installed system inherited the live session's lightdm autologin for
+  `kali` (an account that doesn't exist there) and dead installer icons;
+  `shellprocess.conf` removes them.
+- `ufw --force enable` ran at first boot but `ufw.service` stayed disabled
+  from the build hook, so the firewall was gone after the next reboot.
+  `linux-cos-firstboot` now re-enables the unit.
+- `linux-cos-firstboot` also ran in the live session (no marker survives a
+  live boot) and started a multi-GB `docker pull` into the RAM overlay. It
+  is live-aware now (firewall only), and the pull is its own unit
+  (`linux-cos-blackarch-pull.service`, never in live) instead of a `&`
+  child of a oneshot service.
+- `docker compose` was never installed (only `docker.io`), so `cos-stacks`
+  could not start anything -- `docker-compose` is in `base.list.chroot`.
+- Stacks published their ports on `0.0.0.0` -- Docker-published ports
+  bypass ufw entirely -- and shipped shared `change-me` passwords. Ports are
+  `127.0.0.1` now and `cos-stacks` generates per-user random secrets
+  (both lint-enforced).
+- The live user wasn't in the `docker`/`wireshark` groups
+  (`user-default-groups=` in `--bootappend-live`), and `splash` was missing
+  from the kernel command line, so the Plymouth theme never showed.
+- The Plymouth hook sed'ed background colors into a `.script` file that the
+  `spinner` theme doesn't have (it is a two-step theme); colors now go in
+  the `[two-step]` section of the `.plymouth` file.
+- `unattended-upgrades` targeted Debian's `-security` origin, which a
+  kali-rolling system never has; it silently did nothing.
+- `0035-usrlocal-scripts.hook.chroot` duplicated every script by hand and
+  had drifted (e.g. `linux-cos-live-password` only existed in the hook). It
+  is generated now: `python3 scripts/sync-usrlocal-hook.py` (CI checks it).
+
 ## Layout
 
 ```
@@ -116,6 +153,8 @@ build/
     hooks/normal/           -- build-time chroot hooks, numbered = order
     includes.chroot/        -- files copied verbatim into the ISO's filesystem
   blackarch-container/      -- Dockerfile for the full BlackArch tool image
+  config/includes.binary/   -- files for the ISO itself (boot menu splash
+                               images for GRUB and isolinux)
   branding/                 -- wallpapers/logo (placeholders -- see TODO)
   docs/
     BLACKARCH-INTEGRATION.md -- why BlackArch is a container, and the real
@@ -123,59 +162,147 @@ build/
   output/                   -- finished .iso lands here after a build
 ```
 
-## Building
+What the user gets, by location inside `config/includes.chroot/`:
 
-Requires Docker (already installed and confirmed working on this machine).
+```
+usr/local/bin/cos-help            quick start (ES/EN) -- also "Quick Start" in the menu
+usr/local/bin/cos-stacks          blue-team stacks: interactive menu, up/down/logs/creds
+usr/local/bin/blackarch-shell     BlackArch container: shell, one-off commands, --status
+usr/local/bin/cos-pause           keeps menu-launched terminals open until Enter
+usr/local/bin/linux-cos-session-setup   per-user: wallpaper on every monitor, trusted installer icon
+usr/local/sbin/linux-cos-firstboot      firewall (+ BlackArch image on installed systems)
+usr/local/sbin/linux-cos-blackarch-pull one-time image download (its own systemd unit)
+etc/xdg/menus/applications-merged/linux-cos.menu + usr/share/applications/linux-cos-*.desktop
+                                  the "Linux-C.O.S" folder in the XFCE applications menu
+usr/share/grub/themes/linux-cos/ + etc/default/grub.d/zz-linux-cos.cfg
+                                  GRUB theme on installed systems
+usr/share/doc/linux-cos/README.md the offline user guide ("User Guide" in the menu)
+opt/linux-cos/blueteam-stacks/<stack>/{stack.meta,secrets.list,docker-compose.yml}
+```
+
+Edit the scripts under `usr/local/{bin,sbin}/` and then run
+`python3 scripts/sync-usrlocal-hook.py` -- the 0035 hook is generated from
+them. Boot artwork is rendered by `node scripts/render-boot-art.mjs`.
+
+## Checking changes without building an ISO
+
+```bash
+scripts/lint.sh          # shellcheck, YAML, Calamares invariants, desktop files, drift
+tests/cli/run.sh         # cos-stacks / blackarch-shell / cos-help against a fake docker
+```
+
+CI (`.github/workflows/ci.yml`) runs both plus the website tests on every push.
+
+## Getting a downloadable ISO
+
+Three ways, easiest first:
+
+**1. GitHub Actions (no local setup).** The `Build ISO` workflow
+(`.github/workflows/iso.yml`) builds the ISO on a GitHub runner -- which,
+unlike a locked-down sandbox, can reach the Kali/Parrot mirrors and has the
+disk the build needs. Actions tab -> **Build ISO** -> **Run workflow** ->
+pick a profile. When it finishes, download the ISO from the run's
+**Artifacts** section and verify it with the `SHA256SUMS` next to it. (The
+workflow must be on the repo's **default branch** for the Run button to
+appear.) Push a `v*` tag and the ISO is also attached to a GitHub Release.
+
+**2. Locally with Docker.** Needs Docker able to run privileged containers,
+tens of GB of free disk and bandwidth, and over an hour:
 
 ```bash
 cd build
-./build.sh
-```
-
-This is long (expect over an hour) and bandwidth-heavy (Debian base + all
-of Kali + the blue-team layer, tens of GB). Run it in the background:
-
-```bash
-nohup ./build.sh > build.out 2>&1 &
+./build.sh                       # full profile (default)
+COS_PROFILE=slim ./build.sh      # smaller, CI-friendly
+nohup ./build.sh > build.out 2>&1 &   # or in the background
 tail -f output/build.log
 ```
 
-Decide on the BlackArch baked-in-vs-first-boot tradeoff **before** your
-first real build -- read `docs/BLACKARCH-INTEGRATION.md`, it changes final
-ISO size a lot.
+The ISO lands in `build/output/*.iso`.
 
-## Testing the ISO
+### Build profiles (`COS_PROFILE`)
+
+How much of Kali's tool set goes in. Everything else (hardening, the
+blue-team stack, `cos-*`, `cos-ai`, the installer, branding) is the same.
+
+| profile | Kali packages | rough ISO | fits a free CI runner? |
+|---------|---------------|-----------|------------------------|
+| `full` (default) | `kali-linux-everything` | ~14.6 GiB | no -- large/self-hosted runner |
+| `slim` | `kali-linux-default` | a few GB | yes |
+| `min` | `kali-linux-headless` | smallest | yes |
+
+git always ships `full`; `slim`/`min` only rewrite the Kali metapackage list
+in the build volume (`build-inside.sh`), so the committed config is untouched.
+
+Decide on the BlackArch baked-in-vs-first-boot tradeoff **before** a full
+build -- read `docs/BLACKARCH-INTEGRATION.md`, it changes final ISO size a lot.
+
+## Running and installing the ISO
 
 **Live session login: `kali` / `kali`** (autologin is on by default, so
 you shouldn't even see the prompt -- see it above if autologin is ever off).
+The ISO is **amd64 (x86_64)** and a **BIOS + UEFI hybrid** (boots from USB
+or as a DVD/optical image, in legacy or EFI firmware). Secure Boot must be
+**off** (the UEFI GRUB is unsigned).
 
-Once `output/*.iso` exists, boot it in **UTM** -- this Mac is Apple Silicon,
-and VirtualBox on ARM only runs ARM guests (it *lists* x86_64 guest OS
-types, but `VBoxManage startvm` fails outright with
-`VBOX_E_PLATFORM_ARCH_NOT_SUPPORTED`; don't bother with the VBoxManage
-route on this machine). In UTM:
+### VirtualBox (Windows, Linux, Intel Mac)
 
-1. Create a New Virtual Machine
-2. **Emulate** -- not "Virtualize", which on Apple Silicon only supports
-   ARM64 guests and will silently create an incompatible VM (UTM does warn
-   about this, but only at the very end of the wizard)
-3. Linux
-4. Architecture: **x86_64**
-5. Boot ISO image: `build/output/live-image-amd64.hybrid.iso`
-6. Memory: 4096 MB or more
-7. Storage: skip it to just test the live session; add a 20+ GB disk if
-   you also want to test the Calamares install path
-8. Leave "Use Virtualization" / "Hardware OpenGL Acceleration" unchecked --
-   neither applies when emulating a different architecture than the host
+Works natively because the host is x86_64.
 
-This is pure software emulation (QEMU TCG, no hardware acceleration across
-architectures) -- expect boot to be genuinely slow, several minutes from
-GRUB to desktop, not a sign anything is hung.
+1. New -> Type **Linux**, Version **Debian (64-bit)**.
+2. Memory 4096 MB+; CPUs 2+.
+3. To test the installer, add a 60+ GB virtual disk (the live session alone
+   needs none).
+4. Settings -> Storage -> attach the `.iso` to the optical drive. Firmware:
+   the default (BIOS) boots via isolinux; Settings -> System -> **EFI** also
+   boots (via GRUB). If one won't start, switch to the other.
+5. Start. For the install path, double-click **Install Linux-C.O.S** on the
+   desktop -- Calamares installs the matching GRUB (BIOS or UEFI) for the VM.
+
+On an **Apple Silicon** Mac VirtualBox can't run an x86_64 guest (it lists
+the type but `VBoxManage startvm` fails with
+`VBOX_E_PLATFORM_ARCH_NOT_SUPPORTED`) -- use UTM instead.
+
+### UTM (Apple Silicon Mac)
+
+1. Create a New Virtual Machine -> **Emulate** (not "Virtualize", which on
+   Apple Silicon only does ARM64 guests and silently creates an
+   incompatible VM).
+2. Linux; Architecture **x86_64**.
+3. Boot ISO image: the `.iso`.
+4. Memory 4096 MB+; add a 60+ GB disk to test the installer.
+5. Leave "Use Virtualization" / "Hardware OpenGL Acceleration" unchecked --
+   neither applies when emulating a different architecture than the host.
+6. UTM's x86_64 default is UEFI, which the hybrid ISO boots. If it doesn't,
+   open the VM's **QEMU** settings and turn **UEFI Boot** off (SeaBIOS /
+   legacy), which boots the same ISO via isolinux.
+
+This is pure software emulation (QEMU TCG) -- boot is genuinely slow,
+several minutes from GRUB to desktop, not a sign anything is hung.
+
+### A real computer
+
+Write the ISO to a 32 GB+ USB stick (balenaEtcher, Rufus in **DD mode**, or
+`dd ... conv=fsync`), turn Secure Boot off in the firmware, pick the USB
+from the boot menu, and run the desktop installer. "Erase disk" wipes the
+whole disk (Windows included) -- choose "Install alongside" or manual
+partitioning to dual-boot, and back up first. Full-disk encryption (LUKS2)
+is offered on the partitioning page.
 
 ## TODO (known gaps, in rough priority order)
 
-- [ ] boot-test in UTM/VirtualBox (see "Testing the ISO" above) -- not done
-      yet, this is the very next step
+- [ ] run the `Build ISO` workflow on the default branch and confirm the
+      slim profile finishes within the runner's disk/time budget (the config
+      is in place; it has not been run end-to-end yet)
+- [ ] **verify the new BIOS+UEFI hybrid actually builds and boots.** The
+      first (and only) real build so far was BIOS-only -- its log says
+      "No grub-efi* package found". `--bootloaders syslinux,grub-efi` plus
+      `mtools`/`grub-efi-amd64-bin` in the Dockerfile now request the UEFI
+      half too; this is the standard Kali/Debian-live hybrid setup, but it
+      has not been rebuilt here. If the grub-efi stage ever fails the build,
+      the fallback is to drop back to `--bootloaders syslinux` (BIOS only)
+      and boot VMs in legacy mode.
+- [ ] boot-test in VirtualBox/UTM (see "Running and installing the ISO"
+      above), in both firmware modes -- not done yet
 - [ ] boot-test the Calamares install path specifically once the live
       session boots -- `unpackfs.conf`'s squashfs path
       (`/run/live/medium/live/filesystem.squashfs`) was written from
@@ -184,8 +311,13 @@ GRUB to desktop, not a sign anything is hung.
 - [ ] decide BlackArch baked-in vs. first-boot (docs/BLACKARCH-INTEGRATION.md)
       -- currently first-boot (nothing baked in), so first real boot needs
       network to get `blackarch-shell` working
-- [ ] GRUB theme/background isn't done yet (boots to a plain text GRUB menu
-      before Plymouth takes over) -- cosmetic only, not blocking
+- [ ] boot-test the new boot menus: the installed-system GRUB theme
+      (`usr/share/grub/themes/linux-cos/`) and the live ISO splash images in
+      `config/includes.binary/` -- the latter rely on live-build placing its
+      own `boot/grub/splash.png` / `isolinux/splash.png` at those paths, which
+      is live-build's documented layout but not yet confirmed on this ISO
+- [ ] boot-test the XFCE "Linux-C.O.S" menu folder and the session-setup
+      autostart (wallpaper on every monitor, trusted installer launcher)
 - [ ] Secure Boot is explicitly disabled (`--uefi-secure-boot disable`) --
       fine for VM testing, but this ISO will not boot on real hardware with
       Secure Boot on until that's revisited (needs Kali's own shim/signed

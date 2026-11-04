@@ -1,0 +1,14 @@
+# Linux-C.O.S -- GRUB tools in the installed system, so Calamares can install
+# the bootloader for whichever firmware the target uses (BIOS or UEFI). These
+# are the co-installable *-bin + helpers, NOT the grub-pc / grub-efi-amd64
+# metapackages (which conflict with each other): grub-install picks the
+# target at install time.
+#   - BIOS:  grub-install --target=i386-pc      (grub-pc-bin)
+#   - UEFI:  grub-install --target=x86_64-efi   (grub-efi-amd64-bin + efibootmgr)
+grub-common
+grub2-common
+grub-pc-bin
+grub-efi-amd64-bin
+efibootmgr
+dosfstools
+mtools

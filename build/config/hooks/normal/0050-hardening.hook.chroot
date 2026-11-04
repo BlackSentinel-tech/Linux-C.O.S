@@ -60,6 +60,9 @@ systemctl disable ufw.service || true
 mkdir -p /etc/ssh/sshd_config.d
 cat > /etc/ssh/sshd_config.d/99-linux-cos.conf <<'EOF'
 PermitRootLogin no
+# Password logins stay possible so a fresh install is reachable at all; move
+# to keys (PasswordAuthentication no) once yours is in ~/.ssh/authorized_keys.
+# Never enable sshd in the live session: its kali/kali login is public.
 PasswordAuthentication yes
 X11Forwarding no
 MaxAuthTries 3
@@ -72,15 +75,29 @@ mkdir -p /etc/audit/rules.d
 cat > /etc/audit/rules.d/linux-cos.rules <<'EOF'
 -w /etc/passwd -p wa -k identity
 -w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/gshadow -p wa -k identity
 -w /etc/sudoers -p wa -k scope
+-w /etc/sudoers.d/ -p wa -k scope
 -w /etc/ssh/sshd_config -p wa -k sshd
+-w /etc/ssh/sshd_config.d/ -p wa -k sshd
 -a always,exit -F arch=b64 -S execve -k exec
+-a always,exit -F arch=b32 -S execve -k exec
 EOF
 
-# --- unattended security upgrades on the Debian base -----------------------
+# --- unattended upgrades: ready, but opt-in --------------------------------
+# kali-rolling has no separate -security suite (see auto/config), so there
+# is no "security updates only" origin to restrict to -- the only origin is
+# the whole rolling archive. Upgrading all of it unattended can break a
+# working toolset mid-engagement, so the policy is written here but periodic
+# runs are NOT switched on. Turn them on with:
+#     sudo dpkg-reconfigure -plow unattended-upgrades
+# (An earlier version targeted Debian's "-security" origin, which a
+# kali-rolling system never has -- it silently did nothing.)
 cat > /etc/apt/apt.conf.d/50unattended-upgrades-linux-cos <<'EOF'
 Unattended-Upgrade::Origins-Pattern {
-        "origin=Debian,codename=${distro_codename}-security";
+        "origin=Kali,archive=kali-rolling";
 };
 Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
 EOF
