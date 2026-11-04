@@ -25,7 +25,7 @@
       "node_kind": "heading",
       "norm_label": "a real computer",
       "source_file": "build/README.md",
-      "source_location": "L277"
+      "source_location": "L282"
     },
     {
       "id": "readme_build_profiles_cos_profile",
@@ -145,7 +145,7 @@
       "node_kind": "heading",
       "norm_label": "todo (known gaps, in rough priority order)",
       "source_file": "build/README.md",
-      "source_location": "L286"
+      "source_location": "L291"
     },
     {
       "id": "readme_utm_apple_silicon_mac",
@@ -157,7 +157,7 @@
       "node_kind": "heading",
       "norm_label": "utm (apple silicon mac)",
       "source_file": "build/README.md",
-      "source_location": "L263"
+      "source_location": "L265"
     },
     {
       "id": "readme_virtualbox_windows_linux_intel_mac",
@@ -169,7 +169,7 @@
       "node_kind": "heading",
       "norm_label": "virtualbox (windows, linux, intel mac)",
       "source_file": "build/README.md",
-      "source_location": "L246"
+      "source_location": "L247"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
@@ -3498,7 +3498,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L286",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
@@ -3509,7 +3509,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L246",
+      "source_location": "L247",
       "weight": 1.0
     },
     {
@@ -3520,7 +3520,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L263",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -3531,7 +3531,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L277",
+      "source_location": "L282",
       "weight": 1.0
     },
     {
@@ -4218,5 +4218,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ce11c26a52594d8e262507a152712c0969b8b693"
+  "built_at_commit": "6537ef91ce7e5719ba773f5e3688e7f6c3925b1e"
 }

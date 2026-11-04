@@ -9,7 +9,7 @@ nav: download
   <div class="container">
     <span class="eyebrow"><span data-l="en">Download</span><span data-l="es">Descargar</span></span>
     <h1><span data-l="en">Get Linux-C.O.S</span><span data-l="es">Consigue Linux-C.O.S</span></h1>
-    <p class="lead"><span data-l="en">Version 0.1 “Génesis” · amd64 · hybrid ISO (USB and DVD)</span><span data-l="es">Versión 0.1 “Génesis” · amd64 · ISO híbrida (USB y DVD)</span></p>
+    <p class="lead"><span data-l="en">Version 0.1 “Génesis” · amd64 · BIOS + UEFI hybrid ISO (USB and DVD)</span><span data-l="es">Versión 0.1 “Génesis” · amd64 · ISO híbrida BIOS + UEFI (USB y DVD)</span></p>
     <div class="callout warn">
       <strong><span data-l="en">Pre-release</span><span data-l="es">Pre-lanzamiento</span></strong>
       <p><span data-l="en">A build pipeline produces the ISO on GitHub Actions — no local setup needed — and you download it from the run. Boot testing on VMs and real hardware is still in progress, so treat it as a pre-release and audit what you run.</span><span data-l="es">Un pipeline de compilación genera la ISO en GitHub Actions — sin instalar nada — y la descargas desde la ejecución. Las pruebas de arranque en VMs y hardware real siguen en curso, así que trátala como pre-lanzamiento y audita lo que ejecutes.</span></p>
@@ -124,7 +124,7 @@ sudo dd if=live-image-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fs
         <h3><span data-l="en">VirtualBox (Windows, Linux, Intel Mac)</span><span data-l="es">VirtualBox (Windows, Linux, Mac Intel)</span></h3>
         <ul>
           <li><span data-l="en">New VM: type <strong>Linux</strong>, version <strong>Debian (64-bit)</strong>; 4 GB RAM, 2 CPUs.</span><span data-l="es">Nueva VM: tipo <strong>Linux</strong>, versión <strong>Debian (64-bit)</strong>; 4 GB de RAM, 2 CPUs.</span></li>
-          <li><span data-l="en">Settings → System → enable <strong>EFI</strong>; Storage → attach the <code>.iso</code>. Add a 60 GB disk to test the installer (the live session needs none).</span><span data-l="es">Configuración → Sistema → activa <strong>EFI</strong>; Almacenamiento → conecta la <code>.iso</code>. Añade un disco de 60 GB para probar el instalador (la sesión live no necesita).</span></li>
+          <li><span data-l="en">Storage → attach the <code>.iso</code>. The default (BIOS) boots it; System → <strong>EFI</strong> boots it too — if one won't start, use the other. Add a 60 GB disk to test the installer (the live session needs none).</span><span data-l="es">Almacenamiento → conecta la <code>.iso</code>. El valor por defecto (BIOS) arranca; Sistema → <strong>EFI</strong> también — si uno no arranca, usa el otro. Añade un disco de 60 GB para probar el instalador (la sesión live no necesita).</span></li>
           <li><span data-l="en">VMware, QEMU/KVM and Hyper-V work the same way (Debian 64-bit, UEFI).</span><span data-l="es">VMware, QEMU/KVM y Hyper-V funcionan igual (Debian 64-bit, UEFI).</span></li>
         </ul>
         <p><span data-l="en">On an Apple Silicon Mac VirtualBox can't run an x86_64 guest — use UTM.</span><span data-l="es">En un Mac con Apple Silicon VirtualBox no puede ejecutar un invitado x86_64 — usa UTM.</span></p>
@@ -134,7 +134,7 @@ sudo dd if=live-image-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fs
         <ul>
           <li><span data-l="en">New VM → <strong>Emulate</strong> (not Virtualize), Linux, architecture <strong>x86_64</strong>.</span><span data-l="es">Nueva VM → <strong>Emular</strong> (no Virtualizar), Linux, arquitectura <strong>x86_64</strong>.</span></li>
           <li><span data-l="en">Boot ISO image: the <code>.iso</code>; 4 GB RAM; add a 60 GB disk for the installer.</span><span data-l="es">Imagen ISO de arranque: la <code>.iso</code>; 4 GB de RAM; añade un disco de 60 GB para el instalador.</span></li>
-          <li><span data-l="en">Boot is slow (software emulation) — several minutes to the desktop is normal.</span><span data-l="es">El arranque es lento (emulación por software) — varios minutos hasta el escritorio es normal.</span></li>
+          <li><span data-l="en">UTM's x86_64 default (UEFI) boots the hybrid ISO; if it doesn't, turn <strong>UEFI Boot</strong> off in the VM's QEMU settings (legacy). Boot is slow (software emulation) — several minutes to the desktop is normal.</span><span data-l="es">El valor por defecto x86_64 de UTM (UEFI) arranca la ISO híbrida; si no, desactiva <strong>UEFI Boot</strong> en los ajustes QEMU de la VM (legacy). El arranque es lento (emulación por software) — varios minutos hasta el escritorio es normal.</span></li>
         </ul>
         <p><span data-l="en">Live login: <code>kali</code> / <code>kali</code> (autologin is on).</span><span data-l="es">Login live: <code>kali</code> / <code>kali</code> (con autologin).</span> <a href="docs.html#live"><span data-l="en">What next?</span><span data-l="es">¿Y ahora qué?</span></a></p>
       </div>
