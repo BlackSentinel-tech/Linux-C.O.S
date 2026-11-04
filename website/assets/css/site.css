@@ -155,7 +155,7 @@ kbd { background: var(--surface-2); border: 1px solid var(--border); border-bott
 .menu-toggle { display: none; }
 .nav-cta { margin-left: 6px; }
 
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   .menu-toggle { display: inline-flex; }
   .nav-cta { display: none; }
   .nav-links {
@@ -173,7 +173,7 @@ kbd { background: var(--surface-2); border: 1px solid var(--border); border-bott
   body.menu-open { overflow: hidden; }
   .nav-tools { margin-left: auto; }
 }
-@media (min-width: 961px) { .nav-links .mobile-only { display: none; } }
+@media (min-width: 1101px) { .nav-links .mobile-only { display: none; } }
 @media (max-width: 340px) { .brand span { display: none; } }
 @media (prefers-reduced-motion: reduce) { .nav-links { transition: none !important; } }
 
@@ -442,7 +442,7 @@ h2:hover .anchor, h3:hover .anchor, .anchor:focus { opacity: 1; }
 body.menu-open .menu-toggle .l1 { transform: translateY(5px) rotate(45deg); }
 body.menu-open .menu-toggle .l2 { opacity: 0; }
 body.menu-open .menu-toggle .l3 { transform: translateY(-5px) rotate(-45deg); }
-@media (max-width: 960px) { .nav-gh { display: none; } }  /* GitHub is in the open menu there */
+@media (max-width: 1100px) { .nav-gh { display: none; } }  /* GitHub is in the open menu there */
 .center { text-align: center; }
 .center .lead { margin-inline: auto; }
 .center .hero-actions { justify-content: center; }
@@ -457,7 +457,7 @@ body.menu-open .menu-toggle .l3 { transform: translateY(-5px) rotate(-45deg); }
 @media (min-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); } }
 
 /* dim the page behind the open mobile menu */
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
   body.menu-open::after {
     content: ""; position: fixed; inset: var(--header-h) 0 0 0; z-index: 48;
     background: rgba(3, 6, 15, .55);
@@ -474,7 +474,7 @@ body.menu-open .menu-toggle .l3 { transform: translateY(-5px) rotate(-45deg); }
 
 .subsection { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
 /* short landscape phones: every menu item fits without scrolling */
-@media (max-width: 960px) and (max-height: 500px) {
+@media (max-width: 1100px) and (max-height: 500px) {
   .nav-links { gap: 0; padding-block: 6px 10px; }
   .nav-links a { padding: 9px 12px; }
 }

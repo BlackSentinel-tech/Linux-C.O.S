@@ -427,3 +427,26 @@ test('logo link has an accessible name at every width', async () => {
   const names = await page.$$eval('a.brand', as => as.map(a => (a.querySelector('img')?.alt || '') + a.innerText));
   assert.ok(names.every(n => n.includes('Linux-C.O.S')), names.join('|'));
 });
+
+test('header: logo never collides with the inline menu (Spanish is the widest)', async () => {
+  for (const width of [1101, 1180, 1440]) {
+    const page = await newPage({ viewport: { width, height: 700 }, locale: 'es-ES' });
+    await page.goto(`${base}/features.html`);
+    const gap = await page.evaluate(() => {
+      const span = document.querySelector('.site-header .brand span').getBoundingClientRect();
+      const first = [...document.querySelectorAll('#primary-nav li:not(.mobile-only) a')][0].getBoundingClientRect();
+      return first.left - span.right;
+    });
+    assert.ok(gap >= 12, `${width}px: only ${gap}px between the logo and the menu`);
+  }
+});
+
+test('every sideways-scrolling box is reachable by keyboard', async () => {
+  for (const [p, width] of [['index', 360], ['features', 360], ['docs', 320], ['download', 360]]) {
+    const page = await newPage({ viewport: { width, height: 700 }, locale: 'es-ES' });
+    await page.goto(`${base}/${p}.html`, { waitUntil: 'networkidle' });
+    const bad = await page.evaluate(() => [...document.querySelectorAll('pre, .table-wrap')]
+      .filter(el => el.scrollWidth > el.clientWidth + 1 && el.getAttribute('tabindex') !== '0').length);
+    assert.equal(bad, 0, `${p} @${width}px`);
+  }
+});
