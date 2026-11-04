@@ -1,8 +1,8 @@
 <!--
 title_en: Download
 title_es: Descargar
-desc_en: Get Linux-C.O.S: build the ISO from source with Docker on Linux, macOS or Windows, verify it, and boot it on a USB stick or in a virtual machine.
-desc_es: Consigue Linux-C.O.S: compila la ISO desde el código con Docker en Linux, macOS o Windows, verifícala y arráncala desde un USB o en una máquina virtual.
+desc_en: Get Linux-C.O.S: build the ISO from source with Docker on Linux, macOS or Windows, verify it, and run it in VirtualBox or UTM or install it on a computer.
+desc_es: Consigue Linux-C.O.S: compila la ISO desde el código con Docker en Linux, macOS o Windows, verifícala y ejecútala en VirtualBox o UTM, o instálala en un ordenador.
 nav: download
 -->
 <section class="page-hero">
@@ -12,24 +12,33 @@ nav: download
     <p class="lead"><span data-l="en">Version 0.1 “Génesis” · amd64 · hybrid ISO (USB and DVD)</span><span data-l="es">Versión 0.1 “Génesis” · amd64 · ISO híbrida (USB y DVD)</span></p>
     <div class="callout warn">
       <strong><span data-l="en">Pre-release</span><span data-l="es">Pre-lanzamiento</span></strong>
-      <p><span data-l="en">The first full ISO has been built successfully, but boot testing on VMs and real hardware is still in progress, and no prebuilt ISO is published yet. Building it yourself is the supported path today — it also means you can audit every step.</span><span data-l="es">La primera ISO completa ya se compiló con éxito, pero las pruebas de arranque en VMs y hardware real siguen en curso y todavía no hay una ISO publicada. Compilarla tú mismo es la vía soportada hoy — y además te permite auditar cada paso.</span></p>
+      <p><span data-l="en">A build pipeline produces the ISO on GitHub Actions — no local setup needed — and you download it from the run. Boot testing on VMs and real hardware is still in progress, so treat it as a pre-release and audit what you run.</span><span data-l="es">Un pipeline de compilación genera la ISO en GitHub Actions — sin instalar nada — y la descargas desde la ejecución. Las pruebas de arranque en VMs y hardware real siguen en curso, así que trátala como pre-lanzamiento y audita lo que ejecutes.</span></p>
     </div>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="grid grid-2">
+    <div class="grid grid-3">
       <div class="card">
-        <h2 class="h3"><span data-l="en">Build from source</span><span data-l="es">Compilar desde el código</span></h2>
-        <p><span data-l="en">Recommended. Runs inside Docker, so the build host can be Linux, macOS (Intel or Apple Silicon) or Windows 10/11 with WSL2.</span><span data-l="es">Recomendado. Corre dentro de Docker, así que el equipo puede ser Linux, macOS (Intel o Apple Silicon) o Windows 10/11 con WSL2.</span></p>
-        <a class="btn btn-primary" href="#build"><span data-l="en">Build steps</span><span data-l="es">Pasos de compilación</span></a>
+        <h2 class="h3"><span data-l="en">Build on GitHub (one click)</span><span data-l="es">Compilar en GitHub (un clic)</span></h2>
+        <p><span data-l="en">The <strong>Build ISO</strong> workflow builds it on GitHub's runners — no local setup. Run it, then download the ISO from the run's Artifacts.</span><span data-l="es">El workflow <strong>Build ISO</strong> la compila en los runners de GitHub — sin instalar nada. Ejecútalo y descarga la ISO desde los Artifacts de la ejecución.</span></p>
+        <a class="btn btn-primary" href="{{REPO}}/actions/workflows/iso.yml" rel="noopener"><span data-l="en">Open the workflow</span><span data-l="es">Abrir el workflow</span></a>
       </div>
       <div class="card">
-        <h2 class="h3"><span data-l="en">Prebuilt ISO</span><span data-l="es">ISO precompilada</span></h2>
-        <p><span data-l="en">Published releases, with their SHA-256 checksums, appear on GitHub Releases. Watch the repository to be notified of the first one.</span><span data-l="es">Las versiones publicadas, con sus sumas SHA-256, aparecen en GitHub Releases. Sigue el repositorio para enterarte de la primera.</span></p>
+        <h2 class="h3"><span data-l="en">Build locally</span><span data-l="es">Compilar en local</span></h2>
+        <p><span data-l="en">With Docker on Linux, macOS (Intel or Apple Silicon) or Windows 10/11 + WSL2. You audit every step.</span><span data-l="es">Con Docker en Linux, macOS (Intel o Apple Silicon) o Windows 10/11 + WSL2. Auditas cada paso.</span></p>
+        <a class="btn btn-ghost" href="#build"><span data-l="en">Build steps</span><span data-l="es">Pasos de compilación</span></a>
+      </div>
+      <div class="card">
+        <h2 class="h3"><span data-l="en">Releases</span><span data-l="es">Versiones</span></h2>
+        <p><span data-l="en">Tagged releases attach the ISO + SHA-256 checksums to GitHub Releases.</span><span data-l="es">Las versiones etiquetadas adjuntan la ISO + sumas SHA-256 en GitHub Releases.</span></p>
         <a class="btn btn-ghost" href="{{REPO}}/releases" rel="noopener"><span data-l="en">GitHub Releases</span><span data-l="es">GitHub Releases</span></a>
       </div>
+    </div>
+    <div class="callout">
+      <strong><span data-l="en">Which size?</span><span data-l="es">¿Qué tamaño?</span></strong>
+      <p><span data-l="en">Profiles pick how many tools go in: <code>slim</code> (Kali's default set, a few GB — the workflow default) and <code>min</code> (smallest) fit a free runner; <code>full</code> (every Kali tool, ~14.6 GiB) needs a large or self-hosted runner. Hardening, the blue-team stack, <code>cos-ai</code> and the installer are in all of them.</span><span data-l="es">Los perfiles eligen cuántas herramientas entran: <code>slim</code> (el conjunto por defecto de Kali, unos GB — el predeterminado del workflow) y <code>min</code> (el más pequeño) caben en un runner gratuito; <code>full</code> (todas las herramientas de Kali, ~14,6 GiB) necesita un runner grande o propio. El hardening, el stack blue-team, <code>cos-ai</code> y el instalador están en todos.</span></p>
     </div>
   </div>
 </section>
@@ -99,7 +108,7 @@ tail -F build.out output/build.log</pre></div>
 <section class="section section-alt" id="boot" aria-labelledby="boot-h">
   <div class="container">
     <h2 id="boot-h"><span data-l="en">Boot it</span><span data-l="es">Arráncala</span></h2>
-    <div class="grid grid-2">
+    <div class="grid grid-3">
       <div class="card">
         <h3><span data-l="en">USB stick</span><span data-l="es">Memoria USB</span></h3>
         <p><span data-l="en">Writing the ISO erases everything on the stick.</span><span data-l="es">Grabar la ISO borra todo lo que haya en la memoria.</span></p>
@@ -112,10 +121,20 @@ tail -F build.out output/build.log</pre></div>
 sudo dd if=live-image-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fsync</pre></div>
       </div>
       <div class="card">
-        <h3><span data-l="en">Virtual machine</span><span data-l="es">Máquina virtual</span></h3>
+        <h3><span data-l="en">VirtualBox (Windows, Linux, Intel Mac)</span><span data-l="es">VirtualBox (Windows, Linux, Mac Intel)</span></h3>
         <ul>
-          <li><span data-l="en">VirtualBox, VMware, QEMU/KVM or Hyper-V: type Linux / Debian 64-bit, 4 GB RAM, 60 GB disk to test the installer (the live session alone needs no disk).</span><span data-l="es">VirtualBox, VMware, QEMU/KVM o Hyper-V: tipo Linux / Debian 64-bit, 4 GB de RAM, disco de 60 GB para probar el instalador (la sesión live sola no necesita disco).</span></li>
-          <li><span data-l="en">Apple Silicon: use UTM in <strong>Emulate</strong> mode, architecture x86_64. Boot is slow (software emulation) — that's expected.</span><span data-l="es">Apple Silicon: usa UTM en modo <strong>Emular</strong>, arquitectura x86_64. El arranque es lento (emulación por software) — es normal.</span></li>
+          <li><span data-l="en">New VM: type <strong>Linux</strong>, version <strong>Debian (64-bit)</strong>; 4 GB RAM, 2 CPUs.</span><span data-l="es">Nueva VM: tipo <strong>Linux</strong>, versión <strong>Debian (64-bit)</strong>; 4 GB de RAM, 2 CPUs.</span></li>
+          <li><span data-l="en">Settings → System → enable <strong>EFI</strong>; Storage → attach the <code>.iso</code>. Add a 60 GB disk to test the installer (the live session needs none).</span><span data-l="es">Configuración → Sistema → activa <strong>EFI</strong>; Almacenamiento → conecta la <code>.iso</code>. Añade un disco de 60 GB para probar el instalador (la sesión live no necesita).</span></li>
+          <li><span data-l="en">VMware, QEMU/KVM and Hyper-V work the same way (Debian 64-bit, UEFI).</span><span data-l="es">VMware, QEMU/KVM y Hyper-V funcionan igual (Debian 64-bit, UEFI).</span></li>
+        </ul>
+        <p><span data-l="en">On an Apple Silicon Mac VirtualBox can't run an x86_64 guest — use UTM.</span><span data-l="es">En un Mac con Apple Silicon VirtualBox no puede ejecutar un invitado x86_64 — usa UTM.</span></p>
+      </div>
+      <div class="card">
+        <h3><span data-l="en">UTM (Apple Silicon Mac)</span><span data-l="es">UTM (Mac con Apple Silicon)</span></h3>
+        <ul>
+          <li><span data-l="en">New VM → <strong>Emulate</strong> (not Virtualize), Linux, architecture <strong>x86_64</strong>.</span><span data-l="es">Nueva VM → <strong>Emular</strong> (no Virtualizar), Linux, arquitectura <strong>x86_64</strong>.</span></li>
+          <li><span data-l="en">Boot ISO image: the <code>.iso</code>; 4 GB RAM; add a 60 GB disk for the installer.</span><span data-l="es">Imagen ISO de arranque: la <code>.iso</code>; 4 GB de RAM; añade un disco de 60 GB para el instalador.</span></li>
+          <li><span data-l="en">Boot is slow (software emulation) — several minutes to the desktop is normal.</span><span data-l="es">El arranque es lento (emulación por software) — varios minutos hasta el escritorio es normal.</span></li>
         </ul>
         <p><span data-l="en">Live login: <code>kali</code> / <code>kali</code> (autologin is on).</span><span data-l="es">Login live: <code>kali</code> / <code>kali</code> (con autologin).</span> <a href="docs.html#live"><span data-l="en">What next?</span><span data-l="es">¿Y ahora qué?</span></a></p>
       </div>

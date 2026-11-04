@@ -6,15 +6,15 @@
     "semantic_hash": ""
   },
   "build-inside.sh": {
-    "mtime": 1793777805.699975,
-    "seen": 1793795524.3857527,
-    "ast_hash": "4cc79d3f418c00339d650eba716b12a7",
+    "mtime": 1793807760.1461005,
+    "seen": 1793808056.6672158,
+    "ast_hash": "04e1d4fb7b03bcf4f27f56a5f96d1b57",
     "semantic_hash": ""
   },
   "build.sh": {
-    "mtime": 1793777805.6997437,
-    "seen": 1793795524.385758,
-    "ast_hash": "dfd940d3691d990e796d894feb2e191b",
+    "mtime": 1793807769.786101,
+    "seen": 1793808056.6672194,
+    "ast_hash": "d84818bd2cc06c1034fd6eae58f5c2e2",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/blackarch-shell": {
@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1793761731.4949958,
-    "seen": 1793776965.4625037,
-    "ast_hash": "fe7a2cb1a9ebeb5fca6d53ff84bc5a45",
+    "mtime": 1793807892.6621084,
+    "seen": 1793808056.6672401,
+    "ast_hash": "e492df72d56f3d258c45fcbcef2f610b",
     "semantic_hash": ""
   },
   "config/includes.chroot/opt/linux-cos/blueteam-stacks/misp/docker-compose.yml": {
