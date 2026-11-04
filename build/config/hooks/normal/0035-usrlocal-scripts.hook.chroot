@@ -47,7 +47,8 @@ blackarch-shell -- open a shell with BlackArch's tools (Docker container)
 usage:
   blackarch-shell             open (or re-join) the BlackArch shell
   blackarch-shell <command>   run one command inside it, e.g. blackarch-shell nmap -h
-  blackarch-shell --update    pull the latest BlackArch image
+  blackarch-shell --update    pull BlackArch's official image (refuses to replace a
+                              full image baked into the ISO; --update --force does)
   blackarch-shell --status    show whether the image is present / running
   blackarch-shell --help      this text
 
@@ -82,6 +83,17 @@ case "${1:-}" in
     usage; exit 0 ;;
   --update)
     need_docker
+    # The ISO may carry the FULL blackarch group (build/blackarch-container/,
+    # labelled org.linux-cos.blackarch=full). Re-tagging the upstream base
+    # image over it would silently drop the 2,858 preinstalled tools.
+    kind=$(docker_cmd image inspect -f '{{ index .Config.Labels "org.linux-cos.blackarch" }}' "$IMG" 2>/dev/null || true)
+    if [ "$kind" = full ] && [ "${2:-}" != --force ]; then
+      echo "Your BlackArch image is the full one baked into this ISO (every tool preinstalled)."
+      echo "Replacing it with the upstream base image would remove those tools. Instead, update"
+      echo "it in place:   blackarch-shell pacman -Syu"
+      echo "or replace it anyway:   blackarch-shell --update --force"
+      exit 1
+    fi
     echo "Pulling $UPSTREAM (this can take a while on the first run)..."
     docker_cmd pull "$UPSTREAM"
     docker_cmd tag "$UPSTREAM" "$IMG"
@@ -100,6 +112,8 @@ case "${1:-}" in
       echo "container: not running"
     fi
     exit 0 ;;
+  --)
+    shift ;;
   -*)
     echo "blackarch-shell: unknown option '$1'" >&2
     usage >&2
@@ -167,32 +181,42 @@ esac
 if [ "$L" = es ]; then
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
-  T_KALI="herramientas de Kali/Parrot instaladas (menú de aplicaciones o terminal)"
+  T_KALI="categorías de Kali instaladas (herramientas: menú de aplicaciones)"
   T_BA="shell con las herramientas de BlackArch (contenedor)"
-  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú interactivo)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú)"
   T_SVC="estado de los servicios de defensa"
   T_FW="estado del firewall (deny entrante por defecto)"
   T_UPD="actualizar todo el sistema"
   T_INST="instalar en disco (solo en la sesión live)"
   T_DOC="guía completa"
   T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
-  T_TOPICS="Temas: cos-help [offense|defense|install|system]"
+  T_TOPICS="Temas: cos-help [ofensiva|defensiva|instalar|sistema|guia]"
+  T_UNKNOWN="Tema desconocido"
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
-  T_KALI="installed Kali/Parrot tools (applications menu or terminal)"
+  T_KALI="installed Kali tool categories (the tools are in the applications menu)"
   T_BA="shell with BlackArch's tools (container)"
-  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (interactive menu)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (menu)"
   T_SVC="status of the defensive services"
   T_FW="firewall status (default deny incoming)"
   T_UPD="update the whole system"
   T_INST="install to disk (live session only)"
   T_DOC="full guide"
   T_LIVE="Live session: user kali / password kali. Nothing is kept after shutdown."
-  T_TOPICS="Topics: cos-help [offense|defense|install|system]"
+  T_TOPICS="Topics: cos-help [offense|defense|install|system|guide]"
+  T_UNKNOWN="Unknown topic"
 fi
 
-line() { printf '  %s%-46s%s %s\n' "$C" "$1" "$R" "$2"; }
+# command + description on one line when it fits in 80 columns, otherwise
+# the description goes on its own indented line (no wrapping mid-command)
+line() {
+  if [ $(( 37 + ${#2} )) -le 80 ] && [ "${#1}" -le 34 ]; then
+    printf '  %s%-34s%s %s\n' "$C" "$1" "$R" "$2"
+  else
+    printf '  %s%s%s\n      %s\n' "$C" "$1" "$R" "$2"
+  fi
+}
 
 offense() {
   printf '%s%s%s\n' "$B" "$T_OFF" "$R"
@@ -203,7 +227,7 @@ offense() {
 defense() {
   printf '%s%s%s\n' "$B" "$T_DEF" "$R"
   line "cos-stacks" "$T_STACKS"
-  line "systemctl status auditd apparmor wazuh-agent" "$T_SVC"
+  line "systemctl status auditd apparmor clamav-freshclam" "$T_SVC"
   line "sudo ufw status verbose" "$T_FW"
   line "sudo lynis audit system" "Lynis"
   line "sudo apt install falco sysdig" "Falco/Sysdig (DKMS, post-boot)"
@@ -220,6 +244,14 @@ install_topic() {
   line "LUKS2 / ext4 / btrfs / xfs" "partition.conf"
 }
 
+# "guide": open the offline, bilingual HTML guide (the project website,
+# copied into the image by build-inside.sh); the Markdown guide as fallback
+if [ "$topic" = guide ] || [ "$topic" = guia ]; then
+  page=/usr/share/doc/linux-cos/site/docs.html
+  [ -f "$page" ] || page=/usr/share/doc/linux-cos/README.md
+  exec xdg-open "$page"
+fi
+
 printf '\n%s%s%s\n\n' "$B" "$T_TITLE" "$R"
 case "$topic" in
   offense|ofensiva)  offense ;;
@@ -228,12 +260,12 @@ case "$topic" in
   system|sistema)    system ;;
   -h|--help|'')
     offense; echo; defense; echo; system ;;
-  *) echo "$T_TOPICS"; exit 1 ;;
+  *) printf '%s: "%s"\n%s\n' "$T_UNKNOWN" "$topic" "$T_TOPICS"; exit 1 ;;
 esac
 
 echo
 [ -d /run/live/medium ] && printf '%s\n' "$T_LIVE"
-printf '%s%s:%s %s  (%s)\n' "$B" "$T_MORE" "$R" "/usr/share/doc/linux-cos/README.md" "$T_DOC"
+printf '%s%s:%s cos-help guide  (%s)\n' "$B" "$T_MORE" "$R" "$T_DOC"
 printf '%s\n\n' "$T_TOPICS"
 LINUX_COS_EOF
 
@@ -259,10 +291,13 @@ cat > /usr/local/bin/cos-stacks <<'LINUX_COS_EOF'
 # does it -- baking a live SIEM into a squashfs image is how you end up with
 # every install sharing the same default admin password.
 #
-# That is also why this script generates every password itself: the first
-# `cos-stacks up <stack>` writes a per-user env file with random secrets
-# (mode 600) and every later run reuses it. `cos-stacks creds <stack>`
-# prints them. Nothing ships with a shared default.
+# Passwords: for stacks whose secrets can be injected through environment
+# variables (MISP), the first `cos-stacks up <stack>` writes a per-user env
+# file with random values (mode 600) that every later run reuses. TheHive
+# and Wazuh keep their users in their own databases/config and start with
+# their upstream first-login defaults -- `cos-stacks creds <stack>` says so
+# and tells you to change them. Every web UI and API is bound to 127.0.0.1;
+# the only ports published on the network are Wazuh's agent ports.
 #
 # Each stack lives in $STACKS_DIR/<name>/ with:
 #   stack.meta         key=value: description, url, ram, kind (compose|wazuh)
@@ -273,7 +308,8 @@ set -e
 STACKS_DIR=${COS_STACKS_DIR:-/opt/linux-cos/blueteam-stacks}
 STATE_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/linux-cos/stacks
 WAZUH_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/linux-cos/wazuh-docker
-WAZUH_TAG=v4.9.0
+# compose >= 2.24.4 understands the `!override` tag the Wazuh override uses
+COMPOSE_MIN=2.24.4
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
   B=$(printf '\033[1m'); DIM=$(printf '\033[2m'); RED=$(printf '\033[31m')
@@ -284,6 +320,7 @@ fi
 
 die()  { printf '%scos-stacks: %s%s\n' "$RED" "$*" "$RST" >&2; exit 1; }
 info() { printf '%s==>%s %s\n' "$B" "$RST" "$*"; }
+warn() { printf '%s!!  %s%s\n' "$YEL" "$*" "$RST"; }
 
 usage() {
   cat <<EOF
@@ -293,15 +330,15 @@ usage:
   cos-stacks                 interactive menu (when run in a terminal)
   cos-stacks list            every stack, with its status
   cos-stacks info   <stack>  what it is, where it listens, what it needs
-  cos-stacks up     <stack>  start it (first run generates its passwords)
+  cos-stacks up     <stack>  start it (MISP: generates random passwords)
   cos-stacks down   <stack>  stop it (data volumes are kept)
   cos-stacks status [stack]  running containers
-  cos-stacks logs   <stack>  follow the logs (Ctrl+C to leave)
-  cos-stacks creds  <stack>  print the generated credentials
+  cos-stacks logs   <stack>  follow the logs (Ctrl+C to stop)
+  cos-stacks creds  <stack>  credentials to log in with
   cos-stacks help            this text
 
-Every web UI is bound to 127.0.0.1 only: Docker-published ports bypass ufw,
-so nothing here is reachable from the network unless you change that.
+Web UIs and APIs listen on 127.0.0.1 only (Docker-published ports bypass
+ufw). Exception: Wazuh's agent ports 1514/1515, so agents can enroll.
 EOF
 }
 
@@ -331,6 +368,18 @@ compose() {
   else
     die "docker compose is not installed -- run: sudo apt install docker-compose"
   fi
+}
+
+version_ge() { # version_ge A B -- true when version A >= B (numeric, dotted)
+  [ "$(printf '%s\n%s\n' "$2" "$1" | sort -t. -k1,1n -k2,2n -k3,3n | head -n 1)" = "$2" ]
+}
+
+DOCKER_STATE='' # checked once per run: every docker call may be a sudo call
+docker_up() {
+  if [ -z "$DOCKER_STATE" ]; then
+    if docker_cmd info >/dev/null 2>&1; then DOCKER_STATE=up; else DOCKER_STATE=down; fi
+  fi
+  [ "$DOCKER_STATE" = up ]
 }
 
 need_docker() {
@@ -385,23 +434,6 @@ running_count() { # running containers of a stack, by compose label
   docker_cmd ps -q --filter "label=com.docker.compose.project=$(project "$1")" 2>/dev/null | grep -c . || true
 }
 
-DOCKER_STATE='' # checked once per run: every docker call may be a sudo call
-docker_up() {
-  if [ -z "$DOCKER_STATE" ]; then
-    if docker_cmd info >/dev/null 2>&1; then DOCKER_STATE=up; else DOCKER_STATE=down; fi
-  fi
-  [ "$DOCKER_STATE" = up ]
-}
-
-# compose for a regular stack, always with its env file (the compose files
-# interpolate ${VAR:?} secrets). Only `up` may create the env file.
-stack_compose() { # stack_compose <stack> <compose args...>
-  _st=$1; shift
-  _env=$(env_file "$_st")
-  [ -f "$_env" ] || die "$_st was never started here (no $_env) -- start it with: cos-stacks up $_st"
-  compose -p "cos-$_st" --env-file "$_env" -f "$STACKS_DIR/$_st/docker-compose.yml" "$@"
-}
-
 status_word() { # status_word <stack> [width] -- colored, padded to width
   w=${2:-0}
   if ! docker_up; then
@@ -415,6 +447,16 @@ status_word() { # status_word <stack> [width] -- colored, padded to width
   fi
 }
 
+cols() { # terminal width, for keeping menu lines from wrapping
+  c=$(tput cols 2>/dev/null || true)
+  case "$c" in ''|*[!0-9]*) c=${COLUMNS:-80} ;; esac
+  echo "$c"
+}
+
+short() { # short <text> <max> -- cut to fit, with an ellipsis
+  if [ "${#1}" -le "$2" ]; then printf '%s' "$1"; else printf '%s...' "$(printf '%s' "$1" | cut -c1-$(($2 - 3)))"; fi
+}
+
 # --- secrets -----------------------------------------------------------------
 random_secret() {
   LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 24
@@ -422,29 +464,84 @@ random_secret() {
 
 env_file() { echo "$STATE_DIR/$1.env"; }
 
+has_secrets() { # the stack's secrets.list names at least one variable
+  [ -f "$STACKS_DIR/$1/secrets.list" ] && grep -q '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list"
+}
+
 ensure_secrets() {
   f=$(env_file "$1")
-  list="$STACKS_DIR/$1/secrets.list"
   mkdir -p "$STATE_DIR"
   chmod 700 "$STATE_DIR" 2>/dev/null || true
-  if [ ! -f "$f" ]; then
-    ( umask 077; : > "$f" )
-    info "generating passwords for $1 (stored in $f)"
-  fi
-  [ -f "$list" ] || return 0
+  [ -f "$f" ] || ( umask 077; : > "$f" )
+  has_secrets "$1" || return 0
+  grep -q . "$f" || info "generating random passwords for $1 (stored in $f)"
   # add any variable that is not set yet (keeps existing ones stable)
-  grep -v '^[[:space:]]*\(#\|$\)' "$list" | while read -r var; do
+  grep '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list" | while read -r var; do
     grep -q "^$var=" "$f" || printf '%s=%s\n' "$var" "$(random_secret)" >> "$f"
   done
+}
+
+# compose for a regular stack, always with its env file (the compose files
+# interpolate ${VAR:?} secrets). Only `up` may create the env file.
+stack_compose() { # stack_compose <stack> <compose args...>
+  _st=$1; shift
+  _env=$(env_file "$_st")
+  [ -f "$_env" ] || die "$_st was never started here (no $_env) -- start it with: cos-stacks up $_st"
+  compose -p "cos-$_st" --env-file "$_env" -f "$STACKS_DIR/$_st/docker-compose.yml" "$@"
+}
+
+# --- wazuh -----------------------------------------------------------------
+# The manager must not be older than the agents reporting to it, and the
+# native wazuh-agent comes from Wazuh's rolling 4.x repo -- so deploy the
+# wazuh-docker release matching the installed agent (fallback: a known one).
+wazuh_tag() {
+  if [ -n "${COS_WAZUH_TAG:-}" ]; then echo "$COS_WAZUH_TAG"; return; fi
+  v=$(dpkg-query -W -f='${Version}' wazuh-agent 2>/dev/null | sed 's/-.*//') || v=''
+  case "$v" in
+    [0-9]*.[0-9]*.[0-9]*) echo "v$v" ;;
+    *) echo v4.9.0 ;;
+  esac
+}
+
+wazuh_compose() { # upstream compose + our override (localhost-only UIs/APIs)
+  [ -f "$WAZUH_DIR/single-node/docker-compose.yml" ] || die "wazuh was never started here -- start it with: cos-stacks up wazuh"
+  cd "$WAZUH_DIR/single-node"
+  compose -f docker-compose.yml -f "$STACKS_DIR/wazuh/docker-compose.linux-cos.yml" "$@"
+}
+
+wazuh_up() {
+  command -v git >/dev/null 2>&1 || die "git is required -- run: sudo apt install git"
+  cv=$(compose version --short 2>/dev/null | sed 's/^v//') || cv=''
+  if [ -z "$cv" ] || ! version_ge "$cv" "$COMPOSE_MIN"; then
+    die "docker compose ${cv:-?} is too old (need $COMPOSE_MIN+ to keep the Wazuh UI/API on localhost) -- run: sudo apt install --only-upgrade docker-compose"
+  fi
+  tag=$(wazuh_tag)
+  if [ ! -d "$WAZUH_DIR/.git" ]; then
+    info "fetching the official wazuh-docker deployment ($tag, matching the installed wazuh-agent)"
+    mkdir -p "$(dirname "$WAZUH_DIR")"
+    git clone --depth 1 -b "$tag" https://github.com/wazuh/wazuh-docker.git "$WAZUH_DIR" \
+      || die "could not clone wazuh-docker $tag -- is the network up? (pick another release with COS_WAZUH_TAG=v4.x.y)"
+  fi
+  cd "$WAZUH_DIR/single-node"
+  if [ ! -d config/wazuh_indexer_ssl_certs ] || [ -z "$(ls -A config/wazuh_indexer_ssl_certs 2>/dev/null)" ]; then
+    info "generating the indexer TLS certificates (one time)"
+    compose -f generate-indexer-certs.yml run --rm generator
+  fi
+  wazuh_compose up -d
+  printf '\n%swazuh is starting.%s Dashboard: https://localhost\n' "$GRN" "$RST"
+  warn "Wazuh starts with its UPSTREAM DEFAULT passwords (admin / SecretPassword)."
+  warn "Change them before exposing anything: cos-stacks creds wazuh"
 }
 
 # --- actions -----------------------------------------------------------------
 cmd_list() {
   docker_up || true  # decide once here, not in every $(status_word) subshell
+  w=$(( $(cols) - 28 )); [ "$w" -lt 20 ] && w=20
   printf '%s%-16s %-9s %s%s\n' "$B" "STACK" "STATUS" "DESCRIPTION" "$RST"
   for s in $(stacks); do
-    printf '%-16s %s %s\n' "$s" "$(status_word "$s" 9)" "$(meta "$s" description)"
+    printf '%-16s %s %s\n' "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
   done
+  docker_up || printf '\n%s(Docker is not running: start it with sudo systemctl start docker)%s\n' "$YEL" "$RST"
   printf '\n%sDetails: cos-stacks info <stack>   Start: cos-stacks up <stack>%s\n' "$DIM" "$RST"
 }
 
@@ -459,24 +556,6 @@ cmd_info() {
   note=$(meta "$1" note)
   [ -n "$note" ] && printf '  note   : %s\n' "$note"
   return 0
-}
-
-wazuh_up() {
-  command -v git >/dev/null 2>&1 || die "git is required -- run: sudo apt install git"
-  if [ ! -d "$WAZUH_DIR/.git" ]; then
-    info "fetching the official wazuh-docker deployment ($WAZUH_TAG)"
-    mkdir -p "$(dirname "$WAZUH_DIR")"
-    git clone --depth 1 -b "$WAZUH_TAG" https://github.com/wazuh/wazuh-docker.git "$WAZUH_DIR" \
-      || die "could not clone wazuh-docker -- is the network up?"
-  fi
-  cd "$WAZUH_DIR/single-node"
-  if [ ! -d config/wazuh_indexer_ssl_certs ] || [ -z "$(ls -A config/wazuh_indexer_ssl_certs 2>/dev/null)" ]; then
-    info "generating the indexer TLS certificates (one time)"
-    compose -f generate-indexer-certs.yml run --rm generator
-  fi
-  compose up -d
-  printf '\n%sWazuh dashboard: https://localhost  (upstream default admin / SecretPassword --%s\n' "$YEL" "$RST"
-  printf '%schange it now, see https://documentation.wazuh.com/current/deployment-options/docker/)%s\n' "$YEL" "$RST"
 }
 
 cmd_up() {
@@ -494,20 +573,18 @@ cmd_up() {
 cmd_down() {
   require_stack "$1"; need_docker
   case "$(meta "$1" kind)" in
-    wazuh)
-      [ -d "$WAZUH_DIR/single-node" ] || die "wazuh was never started"
-      cd "$WAZUH_DIR/single-node" && compose down ;;
-    *)
-      stack_compose "$1" down ;;
+    wazuh) wazuh_compose down ;;
+    *)     stack_compose "$1" down ;;
   esac
-  info "$1 stopped (data volumes kept; remove them with: docker volume ls | grep cos-$1)"
+  info "$1 stopped (data kept; its volumes: docker volume ls --filter label=com.docker.compose.project=$(project "$1"))"
 }
 
 cmd_logs() {
   require_stack "$1"; need_docker
+  printf '%s(following logs -- Ctrl+C to stop)%s\n' "$DIM" "$RST"
   case "$(meta "$1" kind)" in
-    wazuh) cd "$WAZUH_DIR/single-node" 2>/dev/null || die "wazuh was never started"; compose logs -f ;;
-    *) stack_compose "$1" logs -f ;;
+    wazuh) wazuh_compose logs -f ;;
+    *)     stack_compose "$1" logs -f ;;
   esac
 }
 
@@ -516,8 +593,8 @@ cmd_status() {
   if [ -n "$1" ]; then
     require_stack "$1"
     case "$(meta "$1" kind)" in
-      wazuh) cd "$WAZUH_DIR/single-node" 2>/dev/null || die "wazuh was never started"; compose ps ;;
-      *) stack_compose "$1" ps ;;
+      wazuh) wazuh_compose ps ;;
+      *)     stack_compose "$1" ps ;;
     esac
   else
     cmd_list
@@ -527,44 +604,64 @@ cmd_status() {
 cmd_creds() {
   require_stack "$1"
   case "$(meta "$1" kind)" in
-    wazuh) echo "wazuh uses the upstream default (admin / SecretPassword) until you change it."; return ;;
+    wazuh)
+      echo "Wazuh uses its upstream defaults until you change them:"
+      echo "  dashboard / indexer: admin / SecretPassword"
+      echo "  API (127.0.0.1:55000): wazuh-wui / MyS3cr37P450r.*-"
+      echo "Change them: https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html#change-the-password-of-wazuh-users"
+      return ;;
   esac
-  f=$(env_file "$1")
-  [ -f "$f" ] || die "no credentials yet -- they are generated by: cos-stacks up $1"
-  cat "$f"
   note=$(meta "$1" creds_note)
-  [ -n "$note" ] && printf '%s%s%s\n' "$DIM" "$note" "$RST"
+  if has_secrets "$1"; then
+    f=$(env_file "$1")
+    [ -f "$f" ] || die "no credentials yet -- they are generated by: cos-stacks up $1"
+    cat "$f"
+  fi
+  [ -n "$note" ] && printf '%s\n' "$note"
   return 0
 }
 
 menu() {
   while :; do
     DOCKER_STATE=''; docker_up || true  # re-check: the daemon may have been started meanwhile
+    w=$(( $(cols) - 33 )); [ "$w" -lt 20 ] && w=20
     printf '\n%sLinux-C.O.S blue-team stacks%s\n' "$B" "$RST"
+    docker_up || printf '%s  Docker is not running -- start it with: sudo systemctl start docker%s\n' "$YEL" "$RST"
     i=0
     for s in $(stacks); do
       i=$((i + 1))
-      printf '  %s%d)%s %-16s %s %s\n' "$B" "$i" "$RST" "$s" "$(status_word "$s" 9)" "$(meta "$s" description)"
+      printf '  %s%d)%s %-16s %s %s\n' "$B" "$i" "$RST" "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
     done
-    printf '  %sq)%s quit\n' "$B" "$RST"
+    printf '  %sq)%s quit    %sEnter)%s refresh\n' "$B" "$RST" "$B" "$RST"
     printf 'Pick a stack [1-%d, q]: ' "$i"
-    read -r pick || exit 0
+    if ! read -r pick; then echo; exit 0; fi
     case "$pick" in
-      q|Q|'') exit 0 ;;
-      *[!0-9]*) echo "Not a valid choice."; continue ;;
+      q|Q) exit 0 ;;
+      '') continue ;;
+      *[!0-9]*) echo "Not a valid choice: type a number from 1 to $i, or q."; continue ;;
     esac
-    s=$(stacks | sed -n "${pick}p" 2>/dev/null) || s=''
-    if [ -z "$s" ]; then echo "Not a valid choice."; continue; fi
+    if [ "$pick" -lt 1 ] || [ "$pick" -gt "$i" ]; then
+      echo "Not a valid choice: type a number from 1 to $i, or q."; continue
+    fi
+    s=$(stacks | sed -n "${pick}p")
+    echo
     cmd_info "$s"
-    printf '  [u]p  [d]own  [l]ogs  [c]reds  [b]ack: '
-    read -r act || exit 0
-    case "$act" in
-      u|U) ( cmd_up "$s" ) || true ;;
-      d|D) ( cmd_down "$s" ) || true ;;
-      l|L) ( cmd_logs "$s" ) || true ;;
-      c|C) ( cmd_creds "$s" ) || true ;;
-      *) ;;
-    esac
+    while :; do
+      printf '  [u]p  [d]own  [l]ogs  [c]reds  [b]ack: '
+      if ! read -r act; then echo; exit 0; fi
+      # Ctrl+C stops the child (logs -f) and comes back here, instead of
+      # killing this menu and the terminal window it was launched in
+      trap 'echo' INT
+      case "$act" in
+        u|U) ( cmd_up "$s" ) || true ;;
+        d|D) ( cmd_down "$s" ) || true ;;
+        l|L) ( cmd_logs "$s" ) || true ;;
+        c|C) ( cmd_creds "$s" ) || true ;;
+        b|B|'') trap - INT; break ;;
+        *) echo "  Unknown key: use u, d, l, c or b." ;;
+      esac
+      trap - INT
+    done
   done
 }
 
@@ -637,16 +734,27 @@ LINUX_COS_EOF
 
 cat > /usr/local/sbin/linux-cos-blackarch-pull <<'LINUX_COS_EOF'
 #!/bin/sh
-# Linux-C.O.S -- pulls BlackArch's official image once, on an installed
-# system whose ISO didn't have the full image baked in. Started by
-# linux-cos-firstboot (linux-cos-blackarch-pull.service); safe to re-run.
+# Linux-C.O.S -- makes the BlackArch image available on an installed system,
+# once (linux-cos-blackarch-pull.service, queued by linux-cos-firstboot;
+# safe to re-run):
+#   - ISO built with the full image baked in (build/blackarch-container/,
+#     docs/BLACKARCH-INTEGRATION.md): load it from disk, no network needed.
+#   - otherwise: pull BlackArch's official image.
 set -e
 
 IMG=linux-cos/blackarch:latest
 UPSTREAM=blackarchlinux/blackarch:latest
+TAR=/opt/linux-cos/blackarch-image.tar
 
 if docker image inspect "$IMG" >/dev/null 2>&1; then
   echo "[linux-cos] $IMG already present, nothing to do"
+  exit 0
+fi
+
+if [ -f "$TAR" ]; then
+  echo "[linux-cos] loading the BlackArch image baked into the ISO"
+  docker load -i "$TAR"
+  echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"
   exit 0
 fi
 
@@ -660,13 +768,15 @@ cat > /usr/local/sbin/linux-cos-firstboot <<'LINUX_COS_EOF'
 #!/bin/sh
 # Linux-C.O.S -- first-boot setup. On an INSTALLED system it runs exactly
 # once (marker file below + the unit's ConditionPathExists). In the live
-# session it runs on every boot -- the live filesystem resets each time --
-# but only does the cheap, RAM-safe part (the firewall): pulling a
-# multi-GB container image into the live session's tmpfs overlay would
-# eat the machine's memory, so that is installed-system only.
+# session it runs on every boot -- the live filesystem resets each time.
 #
-# Anything that needs a real disk, a real network, or shouldn't run twice
-# belongs here instead of in a build-time hook.
+# It runs BEFORE the network comes up (linux-cos-firstboot.service is
+# ordered Before=network-pre.target), so there is no window in which the
+# machine is online without firewall rules. That is also why it must not
+# wait for Docker or the network itself: the BlackArch image is loaded or
+# downloaded by linux-cos-blackarch-pull.service, which this script only
+# queues (--no-block) and which never runs in the live session -- a
+# multi-GB image would land in the RAM overlay there.
 set -e
 
 MARKER=/var/lib/linux-cos/firstboot-done
@@ -694,31 +804,13 @@ else
 fi
 
 if [ "$LIVE" -eq 1 ]; then
-  echo "[linux-cos] live session: skipping the BlackArch image download (run blackarch-shell --update if you want it here)"
+  echo "[linux-cos] live session: not loading the BlackArch image (run blackarch-shell --update if you want it here)"
   exit 0
 fi
 
 mkdir -p /var/lib/linux-cos
-
-echo "[linux-cos] first boot: loading the BlackArch tool container"
-if command -v docker >/dev/null 2>&1; then
-  systemctl start docker || true
-  if [ -f /opt/linux-cos/blackarch-image.tar ]; then
-    # Baked into the ISO at build time (see build/blackarch-container/) --
-    # no network needed, this is the "preinstalled day one" path.
-    docker load -i /opt/linux-cos/blackarch-image.tar \
-      && echo "[linux-cos] BlackArch image loaded from the ISO" \
-      || echo "[linux-cos] WARNING: could not load the baked-in BlackArch image"
-  else
-    # Dev/fallback path: ISO was built without baking the image in (see
-    # docs/BLACKARCH-INTEGRATION.md for why that's a real tradeoff), so pull
-    # it once, in its own unit: a background `&` child of this oneshot
-    # would live and die with this service's cgroup, and its own unit gets
-    # a journal (`journalctl -u linux-cos-blackarch-pull`) and retries.
-    systemctl --no-block start linux-cos-blackarch-pull.service || true
-  fi
-fi
-
+# load the baked-in image, or download it, once Docker and the network are up
+systemctl --no-block start linux-cos-blackarch-pull.service || true
 date > "$MARKER"
 LINUX_COS_EOF
 

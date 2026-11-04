@@ -52,7 +52,8 @@ esac
 # Docker Desktop's bind mount of this macOS directory is virtiofs/gRPC-fuse
 # underneath -- neither supports mknod, so the actual chroot build has to
 # happen on a real Linux filesystem: a named Docker volume, not this bind
-# mount. The bind mount (/src) is read-only input (config/hooks/branding);
+# mount. The bind mounts (/src, and /website for the offline guide) are
+# read-only input (config/hooks/branding);
 # build-inside.sh rsyncs it into the volume, builds there, and copies the
 # finished ISO back out to output/ on the host side.
 docker volume create cos-workspace >/dev/null
@@ -60,6 +61,7 @@ docker volume create cos-workspace >/dev/null
 echo "[linux-cos] starting the live-build run"
 docker run --rm --privileged \
     -v "$(pwd):/src:ro" \
+    -v "$(pwd)/../website:/website:ro" \
     -v "cos-workspace:/build" \
     -v "$(pwd)/output:/src-output" \
     -v "$(pwd)/cache:/var/cache/apt/archives" \

@@ -1,11 +1,15 @@
 [Unit]
-Description=Linux-C.O.S first boot setup (firewall, BlackArch image)
+Description=Linux-C.O.S first boot setup (firewall before the network comes up)
 Documentation=file:///usr/share/doc/linux-cos/README.md
-After=network-online.target docker.service
-Wants=network-online.target
+# Same placement as ufw.service itself: rules exist before any interface is up.
+DefaultDependencies=no
+After=local-fs.target
+Before=network-pre.target shutdown.target
+Wants=network-pre.target
+Conflicts=shutdown.target
 # Installed systems: once, ever. Live sessions have no marker (the live
 # filesystem resets every boot), so it runs each time there -- the script
-# itself only does the RAM-safe firewall setup in that case.
+# itself only does the firewall in that case.
 ConditionPathExists=!/var/lib/linux-cos/firstboot-done
 
 [Service]
@@ -14,4 +18,4 @@ ExecStart=/usr/local/sbin/linux-cos-firstboot
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target

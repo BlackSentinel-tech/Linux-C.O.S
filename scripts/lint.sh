@@ -91,6 +91,24 @@ for d in "$INC"/opt/linux-cos/blueteam-stacks/*/; do
 done
 [ "$fail" -eq "$stacks_before" ] && ok "stacks: localhost-only ports, no hard-coded passwords"
 
+echo "apt repositories reach the installed system"
+# *.chroot archives only exist during the build; the final image needs the
+# *.binary twin or the repo (and Parrot's priority-1 pin) silently vanish
+for f in build/config/archives/*.chroot; do
+  b="${f%.chroot}.binary"
+  if [ ! -f "$b" ]; then bad "missing $b (copy of $f for the installed system)"
+  elif ! cmp -s "$f" "$b"; then bad "$b differs from $f"; fi
+done
+ok "every archives/*.chroot has an identical *.binary"
+
+echo "Wazuh override keeps UIs/APIs on localhost"
+wo="$INC/opt/linux-cos/blueteam-stacks/wazuh/docker-compose.linux-cos.yml"
+if grep -E '^\s*- "[0-9]+:' "$wo" | grep -vE '"(1514|1515):' >/dev/null; then
+  bad "$wo publishes something other than the agent ports on all interfaces"
+else
+  ok "only 1514/1515 are network-facing"
+fi
+
 echo "desktop entries + XML"
 if need desktop-file-validate; then
   for f in "$INC"/usr/share/applications/*.desktop "$INC"/etc/skel/Desktop/*.desktop \

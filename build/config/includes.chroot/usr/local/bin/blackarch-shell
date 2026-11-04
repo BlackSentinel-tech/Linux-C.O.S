@@ -22,7 +22,8 @@ blackarch-shell -- open a shell with BlackArch's tools (Docker container)
 usage:
   blackarch-shell             open (or re-join) the BlackArch shell
   blackarch-shell <command>   run one command inside it, e.g. blackarch-shell nmap -h
-  blackarch-shell --update    pull the latest BlackArch image
+  blackarch-shell --update    pull BlackArch's official image (refuses to replace a
+                              full image baked into the ISO; --update --force does)
   blackarch-shell --status    show whether the image is present / running
   blackarch-shell --help      this text
 
@@ -57,6 +58,17 @@ case "${1:-}" in
     usage; exit 0 ;;
   --update)
     need_docker
+    # The ISO may carry the FULL blackarch group (build/blackarch-container/,
+    # labelled org.linux-cos.blackarch=full). Re-tagging the upstream base
+    # image over it would silently drop the 2,858 preinstalled tools.
+    kind=$(docker_cmd image inspect -f '{{ index .Config.Labels "org.linux-cos.blackarch" }}' "$IMG" 2>/dev/null || true)
+    if [ "$kind" = full ] && [ "${2:-}" != --force ]; then
+      echo "Your BlackArch image is the full one baked into this ISO (every tool preinstalled)."
+      echo "Replacing it with the upstream base image would remove those tools. Instead, update"
+      echo "it in place:   blackarch-shell pacman -Syu"
+      echo "or replace it anyway:   blackarch-shell --update --force"
+      exit 1
+    fi
     echo "Pulling $UPSTREAM (this can take a while on the first run)..."
     docker_cmd pull "$UPSTREAM"
     docker_cmd tag "$UPSTREAM" "$IMG"
@@ -75,6 +87,8 @@ case "${1:-}" in
       echo "container: not running"
     fi
     exit 0 ;;
+  --)
+    shift ;;
   -*)
     echo "blackarch-shell: unknown option '$1'" >&2
     usage >&2

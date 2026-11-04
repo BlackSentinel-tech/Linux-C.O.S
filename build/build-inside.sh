@@ -29,6 +29,15 @@ rsync -a --delete \
     --exclude='output' --exclude='build.out' \
     /src/ /build/
 
+# The project website doubles as the offline, bilingual user guide
+# ("User Guide" in the menu, `cos-help guide`). Copied at build time instead
+# of being duplicated under config/includes.chroot in git.
+if [ -d /website ]; then
+  echo "[linux-cos] copying the website into the image as the offline guide"
+  mkdir -p /build/config/includes.chroot/usr/share/doc/linux-cos/site
+  rsync -a --delete --exclude='_src' /website/ /build/config/includes.chroot/usr/share/doc/linux-cos/site/
+fi
+
 cd /build
 
 echo "[linux-cos] lb config"

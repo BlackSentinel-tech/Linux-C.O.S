@@ -60,6 +60,9 @@ systemctl disable ufw.service || true
 mkdir -p /etc/ssh/sshd_config.d
 cat > /etc/ssh/sshd_config.d/99-linux-cos.conf <<'EOF'
 PermitRootLogin no
+# Password logins stay possible so a fresh install is reachable at all; move
+# to keys (PasswordAuthentication no) once yours is in ~/.ssh/authorized_keys.
+# Never enable sshd in the live session: its kali/kali login is public.
 PasswordAuthentication yes
 X11Forwarding no
 MaxAuthTries 3
@@ -72,9 +75,14 @@ mkdir -p /etc/audit/rules.d
 cat > /etc/audit/rules.d/linux-cos.rules <<'EOF'
 -w /etc/passwd -p wa -k identity
 -w /etc/shadow -p wa -k identity
+-w /etc/group -p wa -k identity
+-w /etc/gshadow -p wa -k identity
 -w /etc/sudoers -p wa -k scope
+-w /etc/sudoers.d/ -p wa -k scope
 -w /etc/ssh/sshd_config -p wa -k sshd
+-w /etc/ssh/sshd_config.d/ -p wa -k sshd
 -a always,exit -F arch=b64 -S execve -k exec
+-a always,exit -F arch=b32 -S execve -k exec
 EOF
 
 # --- unattended upgrades: ready, but opt-in --------------------------------

@@ -74,6 +74,9 @@ check "cos-stacks down before up explains how" 1 "never started here" sh "$CS" d
 check "cos-stacks logs before up explains how" 1 "never started here" sh "$CS" logs misp
 check "cos-stacks up misp" 0 "Web UI: https://localhost:8443" sh "$CS" up misp
 check "cos-stacks up passes the env file + project" 0 "compose -p cos-misp --env-file .*misp.env" cat "$MOCK_LOG"
+check "thehive up does not claim to generate passwords" 1 - sh -c "sh '$CS' up thehive-cortex | grep -q 'generating'"
+check "thehive creds says to change the default" 0 "change it on first login" sh "$CS" creds thehive-cortex
+check "wazuh creds warns about upstream defaults" 0 "SecretPassword" sh "$CS" creds wazuh
 check "cos-stacks creds after up" 0 "^MISP_ADMIN_PASSPHRASE=[A-Za-z0-9]{24}$" sh "$CS" creds misp
 
 envf="$HOME/.config/linux-cos/stacks/misp.env"
@@ -87,6 +90,12 @@ check "status of a started stack works" 0 - sh "$CS" status misp
 check "down after up works" 0 "misp stopped" sh "$CS" down misp
 check "docker down -> clear error" 1 "Docker daemon is not running" env MOCK_DOWN=1 sh "$CS" up misp
 check "menu: invalid then quit" 0 "Not a valid choice" sh -c "printf 'x\n99\nq\n' | sh '$CS' menu"
+check "menu: 0 is rejected without errors" 0 "^[^b]*Not a valid choice" sh -c "printf '0\nq\n' | sh '$CS' menu 2>&1"
+check "menu: empty input refreshes instead of quitting" 0 "Pick a stack.*Pick a stack" sh -c "printf '\nq\n' | sh '$CS' menu | tr '\n' ' '"
+check "menu: unknown action key is explained" 0 "Unknown key" sh -c "printf '1\nx\nb\nq\n' | sh '$CS' menu"
+check "menu: EOF exits cleanly" 0 - sh -c "printf '' | sh '$CS' menu"
+check "menu lines fit 80 columns" 0 - sh -c "printf 'q\n' | COLUMNS=80 sh '$CS' menu | awk 'length > 80 { exit 1 }'"
+check "list fits 80 columns" 0 - sh -c "COLUMNS=80 sh '$CS' list | awk 'length > 80 { exit 1 }'"
 check "menu: pick a stack shows its info" 0 "what   : MISP" sh -c "printf '1\nb\nq\n' | sh '$CS' menu"
 
 BA="$BIN/blackarch-shell"
@@ -104,7 +113,9 @@ check "join uses docker exec" 0 "docker exec -i -w .* blackarch-tools id" cat "$
 check "cos-help English" 0 "Offense" env LANG=en_US.UTF-8 sh "$BIN/cos-help"
 check "cos-help Spanish" 0 "Ofensiva" env LANG=es_ES.UTF-8 sh "$BIN/cos-help"
 check "cos-help --es topic" 0 "Defensiva" env LANG=C sh "$BIN/cos-help" --es defense
-check "cos-help bad topic" 1 "Topics:" env LANG=C sh "$BIN/cos-help" nope
+check "cos-help bad topic" 1 "Unknown topic: \"nope\"" env LANG=C sh "$BIN/cos-help" nope
+check "cos-help output fits 80 columns" 0 - sh -c "for l in C es_ES.UTF-8; do LANG=\$l sh '$BIN/cos-help'; done | awk 'length > 80 { exit 1 }'"
+check "blackarch-shell -- ends options" 0 - env MOCK_IMAGE=1 sh "$BA" -- ls -la
 check "cos-pause keeps the exit status" 3 "Press Enter" sh -c "printf '\n' | sh '$BIN/cos-pause' sh -c 'exit 3'"
 
 echo

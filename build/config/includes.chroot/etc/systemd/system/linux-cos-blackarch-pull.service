@@ -1,5 +1,5 @@
 [Unit]
-Description=Linux-C.O.S: download the BlackArch tool image (one time)
+Description=Linux-C.O.S: load or download the BlackArch tool image (one time)
 After=network-online.target docker.service
 Wants=network-online.target
 Requires=docker.service

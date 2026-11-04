@@ -24,32 +24,42 @@ esac
 if [ "$L" = es ]; then
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
-  T_KALI="herramientas de Kali/Parrot instaladas (menú de aplicaciones o terminal)"
+  T_KALI="categorías de Kali instaladas (herramientas: menú de aplicaciones)"
   T_BA="shell con las herramientas de BlackArch (contenedor)"
-  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú interactivo)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú)"
   T_SVC="estado de los servicios de defensa"
   T_FW="estado del firewall (deny entrante por defecto)"
   T_UPD="actualizar todo el sistema"
   T_INST="instalar en disco (solo en la sesión live)"
   T_DOC="guía completa"
   T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
-  T_TOPICS="Temas: cos-help [offense|defense|install|system]"
+  T_TOPICS="Temas: cos-help [ofensiva|defensiva|instalar|sistema|guia]"
+  T_UNKNOWN="Tema desconocido"
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
-  T_KALI="installed Kali/Parrot tools (applications menu or terminal)"
+  T_KALI="installed Kali tool categories (the tools are in the applications menu)"
   T_BA="shell with BlackArch's tools (container)"
-  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (interactive menu)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (menu)"
   T_SVC="status of the defensive services"
   T_FW="firewall status (default deny incoming)"
   T_UPD="update the whole system"
   T_INST="install to disk (live session only)"
   T_DOC="full guide"
   T_LIVE="Live session: user kali / password kali. Nothing is kept after shutdown."
-  T_TOPICS="Topics: cos-help [offense|defense|install|system]"
+  T_TOPICS="Topics: cos-help [offense|defense|install|system|guide]"
+  T_UNKNOWN="Unknown topic"
 fi
 
-line() { printf '  %s%-46s%s %s\n' "$C" "$1" "$R" "$2"; }
+# command + description on one line when it fits in 80 columns, otherwise
+# the description goes on its own indented line (no wrapping mid-command)
+line() {
+  if [ $(( 37 + ${#2} )) -le 80 ] && [ "${#1}" -le 34 ]; then
+    printf '  %s%-34s%s %s\n' "$C" "$1" "$R" "$2"
+  else
+    printf '  %s%s%s\n      %s\n' "$C" "$1" "$R" "$2"
+  fi
+}
 
 offense() {
   printf '%s%s%s\n' "$B" "$T_OFF" "$R"
@@ -60,7 +70,7 @@ offense() {
 defense() {
   printf '%s%s%s\n' "$B" "$T_DEF" "$R"
   line "cos-stacks" "$T_STACKS"
-  line "systemctl status auditd apparmor wazuh-agent" "$T_SVC"
+  line "systemctl status auditd apparmor clamav-freshclam" "$T_SVC"
   line "sudo ufw status verbose" "$T_FW"
   line "sudo lynis audit system" "Lynis"
   line "sudo apt install falco sysdig" "Falco/Sysdig (DKMS, post-boot)"
@@ -77,6 +87,14 @@ install_topic() {
   line "LUKS2 / ext4 / btrfs / xfs" "partition.conf"
 }
 
+# "guide": open the offline, bilingual HTML guide (the project website,
+# copied into the image by build-inside.sh); the Markdown guide as fallback
+if [ "$topic" = guide ] || [ "$topic" = guia ]; then
+  page=/usr/share/doc/linux-cos/site/docs.html
+  [ -f "$page" ] || page=/usr/share/doc/linux-cos/README.md
+  exec xdg-open "$page"
+fi
+
 printf '\n%s%s%s\n\n' "$B" "$T_TITLE" "$R"
 case "$topic" in
   offense|ofensiva)  offense ;;
@@ -85,10 +103,10 @@ case "$topic" in
   system|sistema)    system ;;
   -h|--help|'')
     offense; echo; defense; echo; system ;;
-  *) echo "$T_TOPICS"; exit 1 ;;
+  *) printf '%s: "%s"\n%s\n' "$T_UNKNOWN" "$topic" "$T_TOPICS"; exit 1 ;;
 esac
 
 echo
 [ -d /run/live/medium ] && printf '%s\n' "$T_LIVE"
-printf '%s%s:%s %s  (%s)\n' "$B" "$T_MORE" "$R" "/usr/share/doc/linux-cos/README.md" "$T_DOC"
+printf '%s%s:%s cos-help guide  (%s)\n' "$B" "$T_MORE" "$R" "$T_DOC"
 printf '%s\n\n' "$T_TOPICS"

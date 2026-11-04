@@ -5,8 +5,8 @@ installed natively, BlackArch's tools in a container, a blue-team stack, and
 an OS that is hardened by default.
 
 > Quick start in a terminal: `cos-help` (Spanish: `cos-help --es`).
-> Everything below is also in the **Linux-C.O.S** folder of the applications
-> menu.
+> The full bilingual guide (English/Español) opens from **Linux-C.O.S → User
+> Guide** in the applications menu, or `cos-help guide`; it works offline.
 
 ---
 
@@ -36,11 +36,23 @@ fill your RAM). Run `blackarch-shell --update` if you really want it there.
 ## 3. Defensive stack
 
 Running out of the box: **AppArmor** (enforcing), **auditd** (identity, sudo,
-sshd and exec rules), **ClamAV** signature updates, **ufw** firewall,
-**wazuh-agent**, kernel/sysctl hardening.
+sshd and exec rules), **ClamAV** signature updates, **ufw** firewall (set up
+before the network comes up), kernel/sysctl hardening.
 
-Installed but off (enable when this box should watch a network):
-`sudo systemctl enable --now suricata`.
+Installed but off or not configured yet:
+
+* **Suricata**: `sudo systemctl enable --now suricata` when this box should
+  watch a network segment.
+* **wazuh-agent**: not enrolled -- set the manager address in
+  `/var/ossec/etc/ossec.conf`, then `sudo systemctl enable --now wazuh-agent`
+  (see `/opt/linux-cos/blueteam-stacks/wazuh/README.md`).
+* **AIDE**: build its baseline once, on a system you trust:
+  `sudo aideinit` (takes a while), then `sudo aide --check` later.
+* **osquery**: `sudo osqueryi` for ad-hoc queries.
+
+Good to know: members of the `docker` group (the live user and the user you
+create in the installer) can get root through Docker -- that is how
+`blackarch-shell` and `cos-stacks` work without sudo.
 
 Installed on demand: `sudo apt install falco sysdig` -- both build a kernel
 driver, which only works on the running system, never at build time.
@@ -62,17 +74,29 @@ cos-stacks logs misp       # follow logs
 cos-stacks down misp       # stop (data is kept)
 ```
 
-Every web UI listens on `127.0.0.1` only: ports published by Docker bypass
-ufw, so binding to all interfaces would expose them to the network.
+Every web UI and API listens on `127.0.0.1` only: ports published by Docker
+bypass ufw, so binding to all interfaces would expose them to the network.
+The one exception is Wazuh's agent ports (1514/1515), so agents can enroll.
+
+Passwords: MISP's are generated at random on the first `up` (see
+`cos-stacks creds misp`). TheHive and Wazuh start with their upstream
+first-login defaults -- `cos-stacks creds <stack>` shows them; change them on
+first login.
 
 ## 4. Installing to disk
 
 The installer (Calamares) offers ext4, btrfs or xfs, and **LUKS2 full-disk
 encryption** -- tick "Encrypt system" on the partitioning page. Requirements:
-20 GB of disk, 2 GB of RAM (4 GB+ recommended).
+60 GB of disk, 2 GB of RAM (4 GB+ recommended). The installer also asks for a
+separate root password.
+
+**"Erase disk" erases everything on that disk, including Windows.** To keep
+another system, choose "Install alongside" or manual partitioning, and back
+up first.
 
 On the first boot of the installed system `linux-cos-firstboot` enables the
-firewall and loads (or downloads, in the background) the BlackArch image:
+firewall before the network starts, and `linux-cos-blackarch-pull` then loads
+(or downloads, in the background) the BlackArch image:
 `journalctl -u linux-cos-firstboot -u linux-cos-blackarch-pull`.
 
 ## 5. Hardening reference

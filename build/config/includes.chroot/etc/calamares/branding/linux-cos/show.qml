@@ -25,7 +25,10 @@ Presentation {
             anchors.bottomMargin: 60
             color: "#eef2ff"
             font.pointSize: 14
-            text: "Kali + Parrot installed natively -- 550+ offensive tools ready at first login"
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            width: parent.width * 0.9
+            text: "800+ Kali tools + Parrot extras, installed natively\n800+ herramientas de Kali + extras de Parrot, nativas"
         }
     }
 
@@ -43,7 +46,10 @@ Presentation {
             anchors.bottomMargin: 60
             color: "#eef2ff"
             font.pointSize: 14
-            text: "Run `blackarch-shell` for all 2,858 BlackArch tools, no setup needed"
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            width: parent.width * 0.9
+            text: "blackarch-shell: BlackArch's 2,858 tools in a container (pacman -S <tool>)\nblackarch-shell: las 2.858 herramientas de BlackArch en un contenedor"
         }
     }
 
@@ -61,7 +67,10 @@ Presentation {
             anchors.bottomMargin: 60
             color: "#eef2ff"
             font.pointSize: 14
-            text: "AppArmor, firewall and auditd are already enforcing -- this box defends itself too"
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            width: parent.width * 0.9
+            text: "AppArmor, firewall and auditd on from the first boot -- this box defends itself too\nAppArmor, firewall y auditd activos desde el primer arranque"
         }
     }
 }
