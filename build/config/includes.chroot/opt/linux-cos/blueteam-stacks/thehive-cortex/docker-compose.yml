@@ -2,7 +2,9 @@
 # analysis/enrichment). Bring up with: cos-stacks up thehive-cortex
 # First run: open http://localhost:9001 for Cortex, create an org + analyzer
 # API keys, then paste them into TheHive's application.conf before use.
-version: "3.8"
+# Ports are bound to 127.0.0.1: Docker-published ports bypass ufw entirely.
+# Note: Cortex gets the Docker socket so it can run its analyzers as
+# containers -- that is root-equivalent access to this host, by design.
 
 services:
   cassandra:
@@ -27,7 +29,7 @@ services:
   cortex:
     image: thehiveproject/cortex:3.1.7
     depends_on: [elasticsearch]
-    ports: ["9001:9001"]
+    ports: ["127.0.0.1:9001:9001"]
     environment:
       - job_directory=/tmp/cortex-jobs
     volumes:
@@ -36,9 +38,9 @@ services:
     restart: unless-stopped
 
   thehive:
-    image: thehiveproject/thehive4:latest
+    image: thehiveproject/thehive4:4.1.24-1
     depends_on: [cassandra, elasticsearch, cortex]
-    ports: ["9000:9000"]
+    ports: ["127.0.0.1:9000:9000"]
     command:
       - --cql-hostnames
       - cassandra

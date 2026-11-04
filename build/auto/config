@@ -25,10 +25,22 @@
 # just builds a second, redundant, broken installer.
 set -e
 
+# Cross-building (arm64 host, e.g. Apple Silicon -> amd64 ISO) needs QEMU
+# user-mode emulation inside the chroot; a native amd64 build host doesn't,
+# and running every postinst through qemu there would only slow it down.
+case "$(uname -m)" in
+    x86_64|amd64) ;;  # native: live-build's default (no qemu) is right
+    *) set -- --bootstrap-qemu-arch amd64 \
+              --bootstrap-qemu-static /usr/bin/qemu-x86_64-static "$@" ;;
+esac
+
+# Live user groups: live-config's defaults plus docker (blackarch-shell,
+# cos-stacks) and wireshark (capture without root). Groups that don't exist
+# in the image are skipped by live-config.
+LIVE_GROUPS=audio,cdrom,dip,floppy,video,plugdev,netdev,powerdev,scanner,bluetooth,docker,wireshark
+
 lb config noauto \
     --architecture amd64 \
-    --bootstrap-qemu-arch amd64 \
-    --bootstrap-qemu-static /usr/bin/qemu-x86_64-static \
     --debootstrap-options "--include=ca-certificates,gnupg --keyring=/usr/share/keyrings/kali-archive-keyring.gpg" \
     --distribution kali-rolling \
     --distribution-chroot kali-rolling \
@@ -54,7 +66,7 @@ lb config noauto \
     --iso-volume "LINUX-C.O.S" \
     --linux-packages "linux-image" \
     --memtest none \
-    --bootappend-live "boot=live components username=kali hostname=linux-cos" \
+    --bootappend-live "boot=live components username=kali hostname=linux-cos user-default-groups=${LIVE_GROUPS} splash quiet" \
     --apt-recommends true \
     --apt-source-archives false \
     --cache true \

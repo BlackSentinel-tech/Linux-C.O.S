@@ -18,3 +18,15 @@ systemctl enable apparmor.service || true
 # box's job is to actively monitor a network segment). Not zeek/falco: they
 # aren't installed by default at all -- see blueteam-native.list.chroot.
 systemctl disable suricata.service 2>/dev/null || true
+
+# linux-cos-blackarch-pull.service is deliberately NOT enabled: firstboot
+# starts it on demand, only on installed systems without a baked-in image.
+
+# Calamares gives the installed user the docker group (users.conf) and the
+# live user gets it via auto/config's user-default-groups -- make sure the
+# group exists even if docker.io's postinst ever ran out of order.
+getent group docker >/dev/null || groupadd -r docker
+
+# XFCE menu: refresh the desktop database so the "Linux-C.O.S" folder
+# (etc/xdg/menus/applications-merged/linux-cos.menu) is populated at once.
+update-desktop-database -q /usr/share/applications 2>/dev/null || true

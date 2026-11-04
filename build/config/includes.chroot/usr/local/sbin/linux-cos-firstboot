@@ -1,21 +1,45 @@
 #!/bin/sh
-# Linux-C.O.S -- runs once on the first real boot of an INSTALLED system
-# (not the live session -- see linux-cos-firstboot.service). Anything that
-# needs a real disk, a real network, or shouldn't run twice belongs here
-# instead of in a build-time hook.
+# Linux-C.O.S -- first-boot setup. On an INSTALLED system it runs exactly
+# once (marker file below + the unit's ConditionPathExists). In the live
+# session it runs on every boot -- the live filesystem resets each time --
+# but only does the cheap, RAM-safe part (the firewall): pulling a
+# multi-GB container image into the live session's tmpfs overlay would
+# eat the machine's memory, so that is installed-system only.
+#
+# Anything that needs a real disk, a real network, or shouldn't run twice
+# belongs here instead of in a build-time hook.
 set -e
 
 MARKER=/var/lib/linux-cos/firstboot-done
-[ -f "$MARKER" ] && exit 0
-mkdir -p /var/lib/linux-cos
+LIVE=0
+[ -d /run/live/medium ] && LIVE=1
 
-echo "[linux-cos] first boot: enabling firewall"
+if [ "$LIVE" -eq 0 ] && [ -f "$MARKER" ]; then
+  exit 0
+fi
+
+echo "[linux-cos] first boot: enabling the firewall (default deny incoming)"
 # This is the actual ufw setup -- can't run any of it at build time (see
 # config/hooks/normal/0050-hardening.hook.chroot for why), so it all
 # happens here instead, now that there's a real kernel netfilter stack.
-ufw default deny incoming || true
-ufw default allow outgoing || true
-ufw --force enable || true
+if command -v ufw >/dev/null 2>&1; then
+  ufw default deny incoming || true
+  ufw default allow outgoing || true
+  ufw --force enable || true
+  # The build disables ufw.service so it can't race this script with no
+  # rules set. Re-enable it now, or the firewall would be gone again after
+  # the next reboot (ENABLED=yes in ufw.conf alone doesn't load the rules).
+  systemctl enable ufw.service || true
+else
+  echo "[linux-cos] WARNING: ufw is not installed, no host firewall configured"
+fi
+
+if [ "$LIVE" -eq 1 ]; then
+  echo "[linux-cos] live session: skipping the BlackArch image download (run blackarch-shell --update if you want it here)"
+  exit 0
+fi
+
+mkdir -p /var/lib/linux-cos
 
 echo "[linux-cos] first boot: loading the BlackArch tool container"
 if command -v docker >/dev/null 2>&1; then
@@ -24,15 +48,15 @@ if command -v docker >/dev/null 2>&1; then
     # Baked into the ISO at build time (see build/blackarch-container/) --
     # no network needed, this is the "preinstalled day one" path.
     docker load -i /opt/linux-cos/blackarch-image.tar \
-      && echo "[linux-cos] BlackArch image loaded from the ISO"
+      && echo "[linux-cos] BlackArch image loaded from the ISO" \
+      || echo "[linux-cos] WARNING: could not load the baked-in BlackArch image"
   else
     # Dev/fallback path: ISO was built without baking the image in (see
     # docs/BLACKARCH-INTEGRATION.md for why that's a real tradeoff), so pull
-    # it once here instead.
-    ( docker pull blackarchlinux/blackarch:latest \
-        && docker tag blackarchlinux/blackarch:latest linux-cos/blackarch:latest \
-        || echo "[linux-cos] BlackArch image pull failed -- no network yet? re-run: blackarch-shell --update" \
-    ) >/var/log/linux-cos-blackarch-pull.log 2>&1 &
+    # it once, in its own unit: a background `&` child of this oneshot
+    # would live and die with this service's cgroup, and its own unit gets
+    # a journal (`journalctl -u linux-cos-blackarch-pull`) and retries.
+    systemctl --no-block start linux-cos-blackarch-pull.service || true
   fi
 fi
 

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Linux-C.O.S -- runs a command, then waits for Enter before returning.
+# Menu launchers use it (Terminal=true entries in the XFCE "Linux-C.O.S"
+# folder) so a short command's output -- or an error such as "Docker is not
+# running" -- doesn't vanish with the terminal window the instant it exits.
+"$@"
+status=$?
+printf '\nPress Enter to close / Pulsa Enter para cerrar '
+read -r _ || true
+exit "$status"
