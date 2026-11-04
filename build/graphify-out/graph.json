@@ -16,16 +16,28 @@
       "source_location": "L1"
     },
     {
-      "id": "readme_building",
-      "label": "Building",
+      "id": "readme_a_real_computer",
+      "label": "A real computer",
       "_origin": "ast",
       "community": 0,
       "community_name": "Linux-C.O.S",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "building",
+      "norm_label": "a real computer",
       "source_file": "build/README.md",
-      "source_location": "L196"
+      "source_location": "L277"
+    },
+    {
+      "id": "readme_build_profiles_cos_profile",
+      "label": "Build profiles (`COS_PROFILE`)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "build profiles (`cos_profile`)",
+      "source_file": "build/README.md",
+      "source_location": "L222"
     },
     {
       "id": "readme_checking_changes_without_building_an_iso",
@@ -38,6 +50,18 @@
       "norm_label": "checking changes without building an iso",
       "source_file": "build/README.md",
       "source_location": "L187"
+    },
+    {
+      "id": "readme_getting_a_downloadable_iso",
+      "label": "Getting a downloadable ISO",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "getting a downloadable iso",
+      "source_file": "build/README.md",
+      "source_location": "L196"
     },
     {
       "id": "readme_layout",
@@ -76,6 +100,18 @@
       "source_location": "L43"
     },
     {
+      "id": "readme_running_and_installing_the_iso",
+      "label": "Running and installing the ISO",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "running and installing the iso",
+      "source_file": "build/README.md",
+      "source_location": "L239"
+    },
+    {
       "id": "readme_status",
       "label": "Status",
       "_origin": "ast",
@@ -86,18 +122,6 @@
       "norm_label": "status",
       "source_file": "build/README.md",
       "source_location": "L17"
-    },
-    {
-      "id": "readme_testing_the_iso",
-      "label": "Testing the ISO",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Linux-C.O.S",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "testing the iso",
-      "source_file": "build/README.md",
-      "source_location": "L217"
     },
     {
       "id": "readme_these_will_bite_again_if_a_fix_gets_reverted_by_accident",
@@ -121,7 +145,31 @@
       "node_kind": "heading",
       "norm_label": "todo (known gaps, in rough priority order)",
       "source_file": "build/README.md",
-      "source_location": "L245"
+      "source_location": "L286"
+    },
+    {
+      "id": "readme_utm_apple_silicon_mac",
+      "label": "UTM (Apple Silicon Mac)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "utm (apple silicon mac)",
+      "source_file": "build/README.md",
+      "source_location": "L263"
+    },
+    {
+      "id": "readme_virtualbox_windows_linux_intel_mac",
+      "label": "VirtualBox (Windows, Linux, Intel Mac)",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Linux-C.O.S",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "virtualbox (windows, linux, intel mac)",
+      "source_file": "build/README.md",
+      "source_location": "L246"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks__entry",
@@ -3377,6 +3425,17 @@
       "weight": 1.0
     },
     {
+      "source": "readme_getting_a_downloadable_iso",
+      "target": "readme_build_profiles_cos_profile",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L222",
+      "weight": 1.0
+    },
+    {
       "source": "readme_linux_c_o_s",
       "target": "readme_layout",
       "relation": "contains",
@@ -3411,7 +3470,7 @@
     },
     {
       "source": "readme_linux_c_o_s",
-      "target": "readme_building",
+      "target": "readme_getting_a_downloadable_iso",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -3422,13 +3481,13 @@
     },
     {
       "source": "readme_linux_c_o_s",
-      "target": "readme_testing_the_iso",
+      "target": "readme_running_and_installing_the_iso",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L217",
+      "source_location": "L239",
       "weight": 1.0
     },
     {
@@ -3439,7 +3498,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/README.md",
-      "source_location": "L245",
+      "source_location": "L286",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_running_and_installing_the_iso",
+      "target": "readme_virtualbox_windows_linux_intel_mac",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L246",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_running_and_installing_the_iso",
+      "target": "readme_utm_apple_silicon_mac",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L263",
+      "weight": 1.0
+    },
+    {
+      "source": "readme_running_and_installing_the_iso",
+      "target": "readme_a_real_computer",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/README.md",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -4126,5 +4218,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1dd5331440ad091e14af2b95119ffaf58dbfaf96"
+  "built_at_commit": "ce11c26a52594d8e262507a152712c0969b8b693"
 }

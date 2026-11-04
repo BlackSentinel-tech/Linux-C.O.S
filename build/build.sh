@@ -58,8 +58,12 @@ esac
 # finished ISO back out to output/ on the host side.
 docker volume create cos-workspace >/dev/null
 
-echo "[linux-cos] starting the live-build run"
+# COS_PROFILE selects how much of Kali's tool set goes in (full|slim|min);
+# default full. Pass it through to build-inside.sh. See build/README.md.
+COS_PROFILE=${COS_PROFILE:-full}
+echo "[linux-cos] starting the live-build run (profile: $COS_PROFILE)"
 docker run --rm --privileged \
+    -e "COS_PROFILE=$COS_PROFILE" \
     -v "$(pwd):/src:ro" \
     -v "$(pwd)/../website:/website:ro" \
     -v "cos-workspace:/build" \

@@ -193,59 +193,103 @@ tests/cli/run.sh         # cos-stacks / blackarch-shell / cos-help against a fak
 
 CI (`.github/workflows/ci.yml`) runs both plus the website tests on every push.
 
-## Building
+## Getting a downloadable ISO
 
-Requires Docker (already installed and confirmed working on this machine).
+Three ways, easiest first:
+
+**1. GitHub Actions (no local setup).** The `Build ISO` workflow
+(`.github/workflows/iso.yml`) builds the ISO on a GitHub runner -- which,
+unlike a locked-down sandbox, can reach the Kali/Parrot mirrors and has the
+disk the build needs. Actions tab -> **Build ISO** -> **Run workflow** ->
+pick a profile. When it finishes, download the ISO from the run's
+**Artifacts** section and verify it with the `SHA256SUMS` next to it. (The
+workflow must be on the repo's **default branch** for the Run button to
+appear.) Push a `v*` tag and the ISO is also attached to a GitHub Release.
+
+**2. Locally with Docker.** Needs Docker able to run privileged containers,
+tens of GB of free disk and bandwidth, and over an hour:
 
 ```bash
 cd build
-./build.sh
-```
-
-This is long (expect over an hour) and bandwidth-heavy (Debian base + all
-of Kali + the blue-team layer, tens of GB). Run it in the background:
-
-```bash
-nohup ./build.sh > build.out 2>&1 &
+./build.sh                       # full profile (default)
+COS_PROFILE=slim ./build.sh      # smaller, CI-friendly
+nohup ./build.sh > build.out 2>&1 &   # or in the background
 tail -f output/build.log
 ```
 
-Decide on the BlackArch baked-in-vs-first-boot tradeoff **before** your
-first real build -- read `docs/BLACKARCH-INTEGRATION.md`, it changes final
-ISO size a lot.
+The ISO lands in `build/output/*.iso`.
 
-## Testing the ISO
+### Build profiles (`COS_PROFILE`)
+
+How much of Kali's tool set goes in. Everything else (hardening, the
+blue-team stack, `cos-*`, `cos-ai`, the installer, branding) is the same.
+
+| profile | Kali packages | rough ISO | fits a free CI runner? |
+|---------|---------------|-----------|------------------------|
+| `full` (default) | `kali-linux-everything` | ~14.6 GiB | no -- large/self-hosted runner |
+| `slim` | `kali-linux-default` | a few GB | yes |
+| `min` | `kali-linux-headless` | smallest | yes |
+
+git always ships `full`; `slim`/`min` only rewrite the Kali metapackage list
+in the build volume (`build-inside.sh`), so the committed config is untouched.
+
+Decide on the BlackArch baked-in-vs-first-boot tradeoff **before** a full
+build -- read `docs/BLACKARCH-INTEGRATION.md`, it changes final ISO size a lot.
+
+## Running and installing the ISO
 
 **Live session login: `kali` / `kali`** (autologin is on by default, so
 you shouldn't even see the prompt -- see it above if autologin is ever off).
+The ISO is **amd64 (x86_64)** and a hybrid image (boots from USB or as a
+DVD/optical image). Secure Boot must be **off** (no signed bootloader yet).
 
-Once `output/*.iso` exists, boot it in **UTM** -- this Mac is Apple Silicon,
-and VirtualBox on ARM only runs ARM guests (it *lists* x86_64 guest OS
-types, but `VBoxManage startvm` fails outright with
-`VBOX_E_PLATFORM_ARCH_NOT_SUPPORTED`; don't bother with the VBoxManage
-route on this machine). In UTM:
+### VirtualBox (Windows, Linux, Intel Mac)
 
-1. Create a New Virtual Machine
-2. **Emulate** -- not "Virtualize", which on Apple Silicon only supports
-   ARM64 guests and will silently create an incompatible VM (UTM does warn
-   about this, but only at the very end of the wizard)
-3. Linux
-4. Architecture: **x86_64**
-5. Boot ISO image: `build/output/live-image-amd64.hybrid.iso`
-6. Memory: 4096 MB or more
-7. Storage: skip it to just test the live session; add a 20+ GB disk if
-   you also want to test the Calamares install path
-8. Leave "Use Virtualization" / "Hardware OpenGL Acceleration" unchecked --
-   neither applies when emulating a different architecture than the host
+Works natively because the host is x86_64.
 
-This is pure software emulation (QEMU TCG, no hardware acceleration across
-architectures) -- expect boot to be genuinely slow, several minutes from
-GRUB to desktop, not a sign anything is hung.
+1. New -> Type **Linux**, Version **Debian (64-bit)**.
+2. Memory 4096 MB+; CPUs 2+.
+3. To test the installer, add a 60+ GB virtual disk (the live session alone
+   needs none).
+4. Settings -> System -> enable **EFI** (Calamares installs a GRUB EFI
+   loader). Settings -> Storage -> attach the `.iso` to the optical drive.
+5. Start. For the install path, double-click **Install Linux-C.O.S** on the
+   desktop.
+
+On an **Apple Silicon** Mac VirtualBox can't run an x86_64 guest (it lists
+the type but `VBoxManage startvm` fails with
+`VBOX_E_PLATFORM_ARCH_NOT_SUPPORTED`) -- use UTM instead.
+
+### UTM (Apple Silicon Mac)
+
+1. Create a New Virtual Machine -> **Emulate** (not "Virtualize", which on
+   Apple Silicon only does ARM64 guests and silently creates an
+   incompatible VM).
+2. Linux; Architecture **x86_64**.
+3. Boot ISO image: the `.iso`.
+4. Memory 4096 MB+; add a 60+ GB disk to test the installer.
+5. Leave "Use Virtualization" / "Hardware OpenGL Acceleration" unchecked --
+   neither applies when emulating a different architecture than the host.
+
+This is pure software emulation (QEMU TCG) -- boot is genuinely slow,
+several minutes from GRUB to desktop, not a sign anything is hung.
+
+### A real computer
+
+Write the ISO to a 32 GB+ USB stick (balenaEtcher, Rufus in **DD mode**, or
+`dd ... conv=fsync`), turn Secure Boot off in the firmware, pick the USB
+from the boot menu, and run the desktop installer. "Erase disk" wipes the
+whole disk (Windows included) -- choose "Install alongside" or manual
+partitioning to dual-boot, and back up first. Full-disk encryption (LUKS2)
+is offered on the partitioning page.
 
 ## TODO (known gaps, in rough priority order)
 
-- [ ] boot-test in UTM/VirtualBox (see "Testing the ISO" above) -- not done
-      yet, this is the very next step
+- [ ] run the `Build ISO` workflow on the default branch and confirm the
+      slim profile finishes within the runner's disk/time budget (the config
+      is in place; it has not been run end-to-end yet)
+- [ ] boot-test in VirtualBox/UTM (see "Running and installing the ISO"
+      above) -- not done yet
 - [ ] boot-test the Calamares install path specifically once the live
       session boots -- `unpackfs.conf`'s squashfs path
       (`/run/live/medium/live/filesystem.squashfs`) was written from

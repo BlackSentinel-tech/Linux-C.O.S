@@ -1,0 +1,123 @@
+name: Build ISO
+
+# Produces a downloadable Linux-C.O.S ISO.
+#   - Manually (Actions tab -> "Build ISO" -> Run workflow): pick a profile;
+#     the ISO is attached to the run as a downloadable artifact.
+#   - On a version tag (v*): the ISO + SHA256SUMS are also published to a
+#     GitHub Release (split into <2 GB parts if the file is larger).
+#
+# NOTE: this runs on GitHub's infrastructure, which (unlike a restricted
+# sandbox) can reach the Kali/Parrot mirrors and has the disk the build
+# needs. The default profile is "slim" so it fits a free runner; "full"
+# (kali-linux-everything, ~14.6 GiB ISO) needs a large or self-hosted runner.
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Tool set to include"
+        type: choice
+        default: slim
+        options: [slim, min, full]
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: iso-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free up disk space on the runner
+        run: |
+          echo "Before:"; df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/powershell /usr/share/swift || true
+          sudo docker image prune --all --force || true
+          sudo apt-get clean || true
+          echo "After:"; df -h /
+
+      - name: Choose profile and version
+        id: meta
+        run: |
+          if [ "${{ github.ref_type }}" = tag ]; then
+            profile=full; version="${GITHUB_REF_NAME#v}"
+          else
+            profile="${{ inputs.profile }}"; version="0.1-$(date +%Y%m%d)"
+          fi
+          echo "profile=$profile" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "iso=linux-cos-${version}-${profile}-amd64.iso" >> "$GITHUB_OUTPUT"
+          echo "Building profile=$profile version=$version"
+
+      - name: Build the ISO
+        working-directory: build
+        env:
+          COS_PROFILE: ${{ steps.meta.outputs.profile }}
+        run: |
+          ./build.sh
+          ls -lh output/*.iso
+
+      - name: Name the ISO and checksum it
+        id: out
+        working-directory: build/output
+        run: |
+          src=$(ls ./*.iso | head -n 1)
+          mv "$src" "${{ steps.meta.outputs.iso }}"
+          sha256sum "${{ steps.meta.outputs.iso }}" | tee SHA256SUMS
+          size=$(stat -c %s "${{ steps.meta.outputs.iso }}")
+          echo "size=$size" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Linux-C.O.S ISO built"
+            echo ""
+            echo "- File: \`${{ steps.meta.outputs.iso }}\` ($(numfmt --to=iec "$size"))"
+            echo "- Profile: \`${{ steps.meta.outputs.profile }}\`"
+            echo ""
+            echo "Download it from the **Artifacts** section of this run, then verify:"
+            echo '```'
+            echo "sha256sum -c SHA256SUMS --ignore-missing"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the ISO as a downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-cos-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.profile }}
+          path: |
+            build/output/${{ steps.meta.outputs.iso }}
+            build/output/SHA256SUMS
+          retention-days: 14
+          compression-level: 0
+          if-no-files-found: error
+
+      - name: Publish to the Release (tags only)
+        if: github.ref_type == 'tag'
+        working-directory: build/output
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          iso="${{ steps.meta.outputs.iso }}"
+          limit=$((2000 * 1024 * 1024))   # GitHub release assets: <= 2 GB each
+          if [ "${{ steps.out.outputs.size }}" -le "$limit" ]; then
+            assets="$iso SHA256SUMS"
+            note=""
+          else
+            split -b 1900M -d --additional-suffix=.part "$iso" "${iso}."
+            rm -f "$iso"
+            assets="$(ls "${iso}".*.part) SHA256SUMS"
+            note=$'\nThe ISO is split to fit the 2 GB asset limit. Reassemble it:\n```\ncat '"${iso}"'.*.part > '"${iso}"'\nsha256sum -c SHA256SUMS --ignore-missing\n```'
+          fi
+          # shellcheck disable=SC2086
+          gh release create "${GITHUB_REF_NAME}" $assets \
+            --title "Linux-C.O.S ${GITHUB_REF_NAME}" \
+            --notes "Linux-C.O.S ${GITHUB_REF_NAME} (profile: ${{ steps.meta.outputs.profile }}, amd64).${note}" \
+            || gh release upload "${GITHUB_REF_NAME}" $assets --clobber
