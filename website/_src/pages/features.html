@@ -51,13 +51,14 @@ nav: features
           <li><strong>YARA</strong>, <strong>ClamAV</strong> <span data-l="en">(signatures kept fresh)</span><span data-l="es">(firmas actualizadas)</span></li>
           <li><strong>osquery</strong>, <strong>AIDE</strong>, <strong>Lynis</strong>, <strong>rkhunter</strong>, <strong>Tiger</strong></li>
           <li><strong>Wireshark</strong>, <strong>tshark</strong>, <strong>tcpdump</strong></li>
-          <li><strong>Wazuh agent</strong> <span data-l="en">— point it at your manager</span><span data-l="es">— apúntalo a tu manager</span></li>
-          <li><span data-l="en"><strong>Falco</strong> &amp; <strong>Sysdig</strong> repos pre-configured: <code>sudo apt install falco sysdig</code> builds their driver against the running kernel.</span><span data-l="es">Repositorios de <strong>Falco</strong> y <strong>Sysdig</strong> preconfigurados: <code>sudo apt install falco sysdig</code> compila su driver contra el kernel en uso.</span></li>
+          <li><strong>Wazuh agent</strong> <span data-l="en">— installed, not enrolled: point it at your manager and enable it</span><span data-l="es">— instalado, sin registrar: apúntalo a tu manager y actívalo</span></li>
+          <li><strong>fail2ban</strong>, <strong>ClamAV</strong> <span data-l="en">daemon</span><span data-l="es">(demonio)</span></li>
+          <li><span data-l="en"><strong>Falco</strong> (its repo is pre-configured) and <strong>Sysdig</strong> (from the Kali archive): <code>sudo apt install falco sysdig</code> builds their driver against the running kernel.</span><span data-l="es"><strong>Falco</strong> (con su repositorio preconfigurado) y <strong>Sysdig</strong> (del archivo de Kali): <code>sudo apt install falco sysdig</code> compila su driver contra el kernel en uso.</span></li>
         </ul>
       </div>
       <div class="card">
         <h3><span data-l="en">Heavy platforms, on demand</span><span data-l="es">Plataformas pesadas, bajo demanda</span></h3>
-        <p><span data-l="en">A SIEM baked into an image means every install shares the same admin password. <code>cos-stacks</code> starts them when you need them and generates random credentials on first run.</span><span data-l="es">Un SIEM horneado en una imagen significa que todas las instalaciones comparten la misma contraseña de admin. <code>cos-stacks</code> los arranca cuando los necesitas y genera credenciales aleatorias en el primer arranque.</span></p>
+        <p><span data-l="en">A SIEM baked into an image means every install shares the same admin password. <code>cos-stacks</code> starts them only when you need them. MISP gets random passwords on its first start; TheHive and Wazuh begin with their upstream first-login defaults, which <code>cos-stacks creds</code> shows so you can change them.</span><span data-l="es">Un SIEM horneado en una imagen significa que todas las instalaciones comparten la misma contraseña de admin. <code>cos-stacks</code> los arranca solo cuando los necesitas. MISP recibe contraseñas aleatorias en su primer inicio; TheHive y Wazuh empiezan con los valores de fábrica de sus proyectos, que <code>cos-stacks creds</code> muestra para que los cambies.</span></p>
         <div class="table-wrap"><table>
           <thead><tr><th>Stack</th><th><span data-l="en">What</span><span data-l="es">Qué es</span></th></tr></thead>
           <tbody>
@@ -66,7 +67,7 @@ nav: features
             <tr><td><code>wazuh</code></td><td><span data-l="en">Manager + indexer + dashboard</span><span data-l="es">Manager + indexador + panel</span></td></tr>
           </tbody>
         </table></div>
-        <p><span data-l="en">Web UIs listen on 127.0.0.1 only — Docker-published ports bypass the firewall, so nothing is exposed by accident.</span><span data-l="es">Las interfaces web escuchan solo en 127.0.0.1 — los puertos publicados por Docker se saltan el firewall, así que nada queda expuesto por accidente.</span></p>
+        <p><span data-l="en">Web UIs and APIs listen on 127.0.0.1 only — Docker-published ports bypass the firewall. The one exception is Wazuh's agent ports (1514/1515), so agents can enroll.</span><span data-l="es">Las interfaces web y las APIs escuchan solo en 127.0.0.1 — los puertos publicados por Docker se saltan el firewall. La única excepción son los puertos de agentes de Wazuh (1514/1515), para que los agentes puedan registrarse.</span></p>
       </div>
     </div>
   </div>
@@ -81,12 +82,13 @@ nav: features
     <div class="table-wrap"><table>
       <thead><tr><th><span data-l="en">Layer</span><span data-l="es">Capa</span></th><th><span data-l="en">Default</span><span data-l="es">Por defecto</span></th><th><span data-l="en">Where</span><span data-l="es">Dónde</span></th></tr></thead>
       <tbody>
-        <tr><td><span data-l="en">Firewall</span><span data-l="es">Firewall</span></td><td><span data-l="en">ufw: deny incoming, allow outgoing — enabled at first boot and kept across reboots</span><span data-l="es">ufw: denegar entrante, permitir saliente — activado en el primer arranque y persistente</span></td><td><code>linux-cos-firstboot</code></td></tr>
+        <tr><td><span data-l="en">Firewall</span><span data-l="es">Firewall</span></td><td><span data-l="en">ufw: deny incoming, allow outgoing — applied before the network comes up, kept across reboots</span><span data-l="es">ufw: denegar entrante, permitir saliente — aplicado antes de que arranque la red, persistente</span></td><td><code>linux-cos-firstboot</code></td></tr>
         <tr><td>MAC</td><td><span data-l="en">AppArmor enforcing, extra profiles installed</span><span data-l="es">AppArmor en modo enforcing, perfiles extra instalados</span></td><td><code>apparmor.service</code></td></tr>
         <tr><td><span data-l="en">Kernel</span><span data-l="es">Kernel</span></td><td>kptr_restrict=2, dmesg_restrict, ptrace_scope=1, unprivileged BPF off, kexec off, rp_filter, no redirects, SYN cookies</td><td><code>/etc/sysctl.d/99-linux-cos-hardening.conf</code></td></tr>
-        <tr><td><span data-l="en">Audit</span><span data-l="es">Auditoría</span></td><td><span data-l="en">auditd watches passwd, shadow, sudoers, sshd_config and every execve</span><span data-l="es">auditd vigila passwd, shadow, sudoers, sshd_config y cada execve</span></td><td><code>/etc/audit/rules.d/linux-cos.rules</code></td></tr>
-        <tr><td>SSH</td><td><span data-l="en">Off. If enabled: no root login, 3 tries, 20 s grace</span><span data-l="es">Apagado. Si lo activas: sin login de root, 3 intentos, 20 s de gracia</span></td><td><code>/etc/ssh/sshd_config.d/99-linux-cos.conf</code></td></tr>
+        <tr><td><span data-l="en">Audit</span><span data-l="es">Auditoría</span></td><td><span data-l="en">auditd watches accounts (passwd, shadow, group), sudoers + sudoers.d, sshd config + sshd_config.d, and every execve (64- and 32-bit)</span><span data-l="es">auditd vigila las cuentas (passwd, shadow, group), sudoers + sudoers.d, la configuración de sshd + sshd_config.d y cada execve (64 y 32 bits)</span></td><td><code>/etc/audit/rules.d/linux-cos.rules</code></td></tr>
+        <tr><td>SSH</td><td><span data-l="en">Off. If enabled: no root login, 3 tries, 20 s grace; password logins still allowed — switch to keys, and never enable it in the live session (its kali/kali login is public)</span><span data-l="es">Apagado. Si lo activas: sin login de root, 3 intentos, 20 s de gracia; se permite el login con contraseña — pásate a claves, y nunca lo actives en la sesión live (su login kali/kali es público)</span></td><td><code>/etc/ssh/sshd_config.d/99-linux-cos.conf</code></td></tr>
         <tr><td><span data-l="en">Disk</span><span data-l="es">Disco</span></td><td><span data-l="en">LUKS2 full-disk encryption offered by the installer</span><span data-l="es">Cifrado de disco completo LUKS2 en el instalador</span></td><td>Calamares</td></tr>
+        <tr><td>Docker</td><td><span data-l="en">Running, for blackarch-shell and the stacks. Members of the <code>docker</code> group are root-equivalent</span><span data-l="es">En marcha, para blackarch-shell y los stacks. Los miembros del grupo <code>docker</code> equivalen a root</span></td><td><code>docker.service</code></td></tr>
         <tr><td><span data-l="en">Updates</span><span data-l="es">Actualizaciones</span></td><td><span data-l="en">Unattended upgrades policy ready, opt-in (a rolling base has no security-only suite)</span><span data-l="es">Política de actualizaciones automáticas lista, opcional (una base rolling no tiene suite solo de seguridad)</span></td><td><code>dpkg-reconfigure unattended-upgrades</code></td></tr>
       </tbody>
     </table></div>

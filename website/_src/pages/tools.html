@@ -1,45 +1,26 @@
 <!--
 title_en: Tool catalog
 title_es: Catálogo de herramientas
-desc_en: Search every tool shipped by Linux-C.O.S — Kali and Parrot tools installed natively, and BlackArch's 2,858 tools in blackarch-shell.
-desc_es: Busca cada herramienta de Linux-C.O.S — las de Kali y Parrot instaladas de forma nativa y las 2.858 de BlackArch en blackarch-shell.
+desc_en: Search every tool in Linux-C.O.S — Kali and Parrot tools installed natively, BlackArch's 2,858 tools through blackarch-shell — and see how to run each one.
+desc_es: Busca cada herramienta de Linux-C.O.S — las de Kali y Parrot instaladas de forma nativa y las 2.858 de BlackArch con blackarch-shell — y cómo ejecutar cada una.
 nav: tools
-scripts: tools.js
+scripts: assets/data/tools-data.js, tools.js
 -->
-<section class="page-hero">
+<section class="page-hero page-hero-compact">
   <div class="container">
     <span class="eyebrow"><span data-l="en">Tool catalog</span><span data-l="es">Catálogo de herramientas</span></span>
     <h1><span data-l="en">Find a tool</span><span data-l="es">Encuentra una herramienta</span></h1>
-    <p class="lead"><span data-l="en">Kali and Parrot tools are installed natively — run them from the menu or a terminal. BlackArch tools run inside <code>blackarch-shell</code>.</span><span data-l="es">Las herramientas de Kali y Parrot están instaladas de forma nativa — ejecútalas desde el menú o una terminal. Las de BlackArch corren dentro de <code>blackarch-shell</code>.</span></p>
+    <p class="lead"><span data-l="en">Search by tool, command or category. Kali and Parrot tools are installed natively; BlackArch tools run inside <code class="nowrap">blackarch-shell</code>.</span><span data-l="es">Busca por herramienta, comando o categoría. Las de Kali y Parrot están instaladas de forma nativa; las de BlackArch corren dentro de <code class="nowrap">blackarch-shell</code>.</span></p>
   </div>
 </section>
 
-<section class="section" id="explorer" aria-busy="true" aria-labelledby="results-heading">
+<section class="section section-tight" id="explorer" aria-busy="true" aria-labelledby="results-heading">
   <div class="container">
-    <div class="chart-card">
-      <div class="chart-head">
-        <div>
-          <h2><span data-l="en">Tools per category</span><span data-l="es">Herramientas por categoría</span></h2>
-          <p id="chart-sub"></p>
-        </div>
-        <div class="chart-actions">
-          <button class="btn btn-ghost btn-sm" id="chart-toggle" type="button" aria-pressed="false" aria-controls="cat-chart cat-table">Show as table</button>
-        </div>
-      </div>
-      <div class="bars" id="cat-chart"></div>
-      <div class="table-wrap" id="cat-table" hidden>
-        <table>
-          <thead><tr><th scope="col" data-col="cat">Category</th><th scope="col" data-col="n">Tools</th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-
     <h2 id="results-heading" class="visually-hidden"><span data-l="en">Search the catalog</span><span data-l="es">Buscar en el catálogo</span></h2>
     <form class="explorer-controls" role="search" aria-label="Tool search" data-aria-en="Tool search" data-aria-es="Búsqueda de herramientas">
       <div class="field">
-        <label for="tool-q"><span data-l="en">Search by name or category</span><span data-l="es">Buscar por nombre o categoría</span></label>
-        <input class="input" id="tool-q" type="search" autocomplete="off" spellcheck="false" placeholder="nmap, sqlmap, wifi…" data-ph-en="nmap, sqlmap, wifi…" data-ph-es="nmap, sqlmap, wifi…">
+        <label for="tool-q"><span data-l="en">Tool, command or category</span><span data-l="es">Herramienta, comando o categoría</span></label>
+        <input class="input" id="tool-q" type="search" maxlength="200" autocomplete="off" spellcheck="false" placeholder="nmap, msfconsole, wifi…" data-ph-en="nmap, msfconsole, wifi…" data-ph-es="nmap, msfconsole, wifi…">
       </div>
       <div class="field">
         <label for="tool-cat"><span data-l="en">Category</span><span data-l="es">Categoría</span></label>
@@ -57,19 +38,39 @@ scripts: tools.js
 
     <div class="result-bar">
       <span id="tool-count" role="status" aria-live="polite"></span>
-      <span><span class="src kali">Kali</span> <span class="src parrot">Parrot</span> <span data-l="en">native</span><span data-l="es">nativas</span> · <span class="src blackarch">BlackArch</span> <span data-l="en">in the container</span><span data-l="es">en el contenedor</span></span>
+      <span><span class="src kali">Kali</span> <span class="src parrot">Parrot</span> <span data-l="en">installed natively</span><span data-l="es">instaladas de forma nativa</span> · <span class="src blackarch">BlackArch</span> <span data-l="en">in blackarch-shell</span><span data-l="es">en blackarch-shell</span></span>
     </div>
-    <p id="tool-status" class="empty">Loading the catalog…</p>
+    <p id="tool-status" class="empty" hidden>Loading the catalog…</p>
     <ul class="tool-list" id="tool-list"></ul>
     <div class="empty" id="tool-empty" hidden>
       <p><span data-l="en">No tool matches these filters.</span><span data-l="es">Ninguna herramienta coincide con estos filtros.</span></p>
+      <p id="empty-src" hidden><span></span> <button class="btn btn-ghost btn-sm" type="button"><span data-l="en">Search all sources</span><span data-l="es">Buscar en todos los orígenes</span></button></p>
       <button class="btn btn-ghost btn-sm" id="empty-clear" type="button"><span data-l="en">Clear filters</span><span data-l="es">Limpiar filtros</span></button>
     </div>
     <div class="load-more" id="load-more" hidden><button class="btn btn-ghost" type="button">Show more</button></div>
 
+    <div class="chart-card chart-after">
+      <div class="chart-head">
+        <div>
+          <h2><span data-l="en">Tools per category</span><span data-l="es">Herramientas por categoría</span></h2>
+          <p id="chart-sub"></p>
+        </div>
+        <div class="chart-actions">
+          <button class="btn btn-ghost btn-sm" id="chart-toggle" type="button" aria-controls="cat-chart cat-table">Show as table</button>
+        </div>
+      </div>
+      <div class="bars" id="cat-chart"></div>
+      <div class="table-wrap" id="cat-table" hidden>
+        <table>
+          <thead><tr><th scope="col" data-col="cat">Category</th><th scope="col" data-col="n">Tools</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="callout">
       <strong><span data-l="en">About this list</span><span data-l="es">Sobre esta lista</span></strong>
-      <p><span data-l="en">Built from Kali's and Parrot's tool metapackages and BlackArch's package groups. A Parrot badge means Parrot lists the tool; a handful of Parrot-only names don't resolve on a Kali base and are skipped by the build (see the build notes). Inside the container, install any BlackArch tool with <code>pacman -S &lt;name&gt;</code>.</span><span data-l="es">Generada a partir de los metapaquetes de herramientas de Kali y Parrot y los grupos de paquetes de BlackArch. La etiqueta Parrot significa que Parrot lista la herramienta; algunos nombres exclusivos de Parrot no se resuelven sobre una base Kali y la compilación los omite (ver notas de compilación). Dentro del contenedor, instala cualquier herramienta de BlackArch con <code>pacman -S &lt;nombre&gt;</code>.</span></p>
+      <p><span data-l="en">Built from Kali's and Parrot's tool metapackages and BlackArch's package groups; a tool is listed under every category its distribution gives it. Parrot-only tools are listed only when the build really installs them. BlackArch: an ISO built with the full image has all of them preinstalled; with the default image (downloaded on first boot) install what you need inside the container with <code>pacman -S &lt;name&gt;</code>.</span><span data-l="es">Generada a partir de los metapaquetes de herramientas de Kali y Parrot y los grupos de paquetes de BlackArch; cada herramienta aparece en todas las categorías que le da su distribución. Las exclusivas de Parrot solo aparecen si la compilación las instala de verdad. BlackArch: una ISO compilada con la imagen completa las trae todas preinstaladas; con la imagen por defecto (descargada en el primer arranque) instala las que necesites dentro del contenedor con <code>pacman -S &lt;nombre&gt;</code>.</span></p>
     </div>
   </div>
 </section>

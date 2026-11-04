@@ -62,21 +62,21 @@ nav: docs
 
     <h2 id="blackarch">blackarch-shell</h2>
     <p><span data-l="en">BlackArch is Arch Linux; its packages can't be installed with apt. <code>blackarch-shell</code> runs it unmodified in Docker, with your home directory mounted at the same path inside.</span><span data-l="es">BlackArch es Arch Linux; sus paquetes no se instalan con apt. <code>blackarch-shell</code> lo ejecuta sin modificar en Docker, con tu carpeta personal montada en la misma ruta.</span></p>
-    <div class="code"><pre>blackarch-shell              # open (or re-join) the shell
-blackarch-shell nmap -h      # run one command
-blackarch-shell --status     # image present? container running?
-blackarch-shell --update     # pull the latest image</pre></div>
+    <div class="code ref"><pre>blackarch-shell              <span data-l="en"># open (or re-join) the shell</span><span data-l="es"># abrir (o volver a) la shell</span>
+blackarch-shell nmap -h      <span data-l="en"># run one command</span><span data-l="es"># ejecutar un solo comando</span>
+blackarch-shell --status     <span data-l="en"># image present? container running?</span><span data-l="es"># ¿hay imagen? ¿contenedor en marcha?</span>
+blackarch-shell --update     <span data-l="en"># download BlackArch's official image</span><span data-l="es"># descargar la imagen oficial de BlackArch</span></pre></div>
     <p><span data-l="en">Inside the container: <code>pacman -Ss &lt;name&gt;</code> searches, <code>pacman -S &lt;name&gt;</code> installs.</span><span data-l="es">Dentro del contenedor: <code>pacman -Ss &lt;nombre&gt;</code> busca, <code>pacman -S &lt;nombre&gt;</code> instala.</span></p>
 
     <h2 id="stacks">cos-stacks</h2>
     <p><span data-l="en">Starts and stops the heavy blue-team platforms. Run it without arguments for an interactive menu.</span><span data-l="es">Inicia y detiene las plataformas blue-team pesadas. Ejecútalo sin argumentos para ver un menú interactivo.</span></p>
-    <div class="code"><pre>cos-stacks                   # interactive menu
-cos-stacks list              # every stack and its status
-cos-stacks info misp         # URL, RAM needed, notes
-cos-stacks up misp           # start (first run generates passwords)
-cos-stacks creds misp        # show them
-cos-stacks logs misp         # follow logs
-cos-stacks down misp         # stop (data is kept)</pre></div>
+    <div class="code ref"><pre>cos-stacks                   <span data-l="en"># interactive menu</span><span data-l="es"># menú interactivo</span>
+cos-stacks list              <span data-l="en"># every stack and its status</span><span data-l="es"># todos los stacks y su estado</span>
+cos-stacks info misp         <span data-l="en"># URL, RAM needed, notes</span><span data-l="es"># URL, RAM necesaria, notas</span>
+cos-stacks up misp           <span data-l="en"># start (MISP: generates random passwords)</span><span data-l="es"># iniciar (MISP: genera contraseñas aleatorias)</span>
+cos-stacks creds misp        <span data-l="en"># how to log in</span><span data-l="es"># cómo iniciar sesión</span>
+cos-stacks logs misp         <span data-l="en"># follow logs (Ctrl+C to stop)</span><span data-l="es"># seguir los logs (Ctrl+C para parar)</span>
+cos-stacks down misp         <span data-l="en"># stop (data is kept)</span><span data-l="es"># detener (los datos se conservan)</span></pre></div>
     <div class="table-wrap"><table>
       <thead><tr><th>Stack</th><th>Web UI</th><th>RAM</th></tr></thead>
       <tbody>
@@ -87,20 +87,30 @@ cos-stacks down misp         # stop (data is kept)</pre></div>
     </table></div>
     <div class="callout">
       <strong><span data-l="en">Why only localhost?</span><span data-l="es">¿Por qué solo localhost?</span></strong>
-      <p><span data-l="en">Ports published by Docker bypass ufw. Binding the UIs to 127.0.0.1 keeps them off the network until you decide otherwise. Wazuh is the exception: its agent ports must be reachable by agents.</span><span data-l="es">Los puertos publicados por Docker se saltan ufw. Atar las interfaces a 127.0.0.1 las mantiene fuera de la red hasta que decidas lo contrario. Wazuh es la excepción: sus puertos de agentes deben ser alcanzables.</span></p>
+      <p><span data-l="en">Ports published by Docker bypass ufw. Every web UI and API (Wazuh's dashboard, indexer and API included) is bound to 127.0.0.1 until you decide otherwise. The only network-facing ports are Wazuh's agent ports 1514/1515, so agents can enroll.</span><span data-l="es">Los puertos publicados por Docker se saltan ufw. Todas las interfaces web y APIs (incluidos el panel, el indexador y la API de Wazuh) escuchan en 127.0.0.1 hasta que decidas lo contrario. Los únicos puertos abiertos a la red son los de agentes de Wazuh, 1514/1515, para que los agentes puedan registrarse.</span></p>
+    </div>
+    <div class="callout warn">
+      <strong><span data-l="en">Passwords</span><span data-l="es">Contraseñas</span></strong>
+      <p><span data-l="en">MISP's passwords are generated at random on its first start. TheHive and Wazuh start with their upstream first-login defaults — <code>cos-stacks creds &lt;stack&gt;</code> shows them; change them on first login.</span><span data-l="es">Las contraseñas de MISP se generan al azar en su primer arranque. TheHive y Wazuh empiezan con los valores de fábrica de sus proyectos — <code>cos-stacks creds &lt;stack&gt;</code> los muestra; cámbialos en el primer inicio de sesión.</span></p>
     </div>
 
     <h2 id="install"><span data-l="en">Installing to disk</span><span data-l="es">Instalar en disco</span></h2>
     <ol>
       <li><span data-l="en">Double-click <strong>Install Linux-C.O.S</strong> on the desktop and enter the password <code>kali</code>.</span><span data-l="es">Haz doble clic en <strong>Instalar Linux-C.O.S</strong> en el escritorio e introduce la contraseña <code>kali</code>.</span></li>
       <li><span data-l="en">Pick language, location and keyboard.</span><span data-l="es">Elige idioma, ubicación y teclado.</span></li>
-      <li><span data-l="en">Partitions: “Erase disk” is the default. Tick <strong>Encrypt system</strong> for LUKS2 full-disk encryption (recommended). ext4, btrfs and xfs are offered.</span><span data-l="es">Particiones: “Borrar disco” es lo predeterminado. Marca <strong>Cifrar el sistema</strong> para el cifrado completo LUKS2 (recomendado). Se ofrecen ext4, btrfs y xfs.</span></li>
-      <li><span data-l="en">Create your user (password of 8+ characters). It joins the <code>sudo</code>, <code>docker</code> and <code>wireshark</code> groups.</span><span data-l="es">Crea tu usuario (contraseña de 8+ caracteres). Se une a los grupos <code>sudo</code>, <code>docker</code> y <code>wireshark</code>.</span></li>
+      <li><span data-l="en">Partitions: <strong>“Erase disk” (the default) deletes everything on that disk, Windows included.</strong> To keep another system, back up and choose “Install alongside” or manual partitioning. Tick <strong>Encrypt system</strong> for LUKS2 full-disk encryption (recommended). ext4, btrfs and xfs are offered; you need 60 GB.</span><span data-l="es">Particiones: <strong>“Borrar disco” (lo predeterminado) elimina todo lo que hay en ese disco, Windows incluido.</strong> Para conservar otro sistema, haz una copia de seguridad y elige “Instalar junto a” o el particionado manual. Marca <strong>Cifrar el sistema</strong> para el cifrado completo LUKS2 (recomendado). Se ofrecen ext4, btrfs y xfs; necesitas 60 GB.</span></li>
+      <li><span data-l="en">Create your user (password of 8+ characters) and, on the next screen, a separate root password. Your user joins the <code>sudo</code>, <code>docker</code> and <code>wireshark</code> groups — note that the <code>docker</code> group is root-equivalent.</span><span data-l="es">Crea tu usuario (contraseña de 8+ caracteres) y, en la pantalla siguiente, una contraseña de root aparte. Tu usuario entra en los grupos <code>sudo</code>, <code>docker</code> y <code>wireshark</code> — ten en cuenta que el grupo <code>docker</code> equivale a root.</span></li>
       <li><span data-l="en">Review the summary and install. Live-only packages and the live autologin are removed from the installed system.</span><span data-l="es">Revisa el resumen e instala. Los paquetes de la sesión live y su autologin se eliminan del sistema instalado.</span></li>
     </ol>
 
     <h2 id="firstboot"><span data-l="en">First boot</span><span data-l="es">Primer arranque</span></h2>
-    <p><span data-l="en">On the first boot of the installed system, <code>linux-cos-firstboot</code> enables the firewall permanently and loads the BlackArch image (from the ISO if it was baked in, otherwise it downloads it once in the background).</span><span data-l="es">En el primer arranque del sistema instalado, <code>linux-cos-firstboot</code> activa el firewall de forma permanente y carga la imagen de BlackArch (desde la ISO si se incluyó, si no la descarga una vez en segundo plano).</span></p>
+    <p><span data-l="en">On the first boot of the installed system, <code>linux-cos-firstboot</code> enables the firewall permanently — before the network comes up — and <code>linux-cos-blackarch-pull</code> then loads the BlackArch image (from the ISO if it was baked in, otherwise it downloads it once in the background).</span><span data-l="es">En el primer arranque del sistema instalado, <code>linux-cos-firstboot</code> activa el firewall de forma permanente — antes de que arranque la red — y después <code>linux-cos-blackarch-pull</code> carga la imagen de BlackArch (desde la ISO si se incluyó, si no la descarga una vez en segundo plano).</span></p>
+    <h3 id="defense-setup"><span data-l="en">Defensive tools that need one step from you</span><span data-l="es">Herramientas defensivas que necesitan un paso tuyo</span></h3>
+    <ul>
+      <li><span data-l="en"><strong>wazuh-agent</strong> is installed but not enrolled: set your manager's address in <code>/var/ossec/etc/ossec.conf</code>, then <code>sudo systemctl enable --now wazuh-agent</code>.</span><span data-l="es"><strong>wazuh-agent</strong> está instalado pero no registrado: pon la dirección de tu manager en <code>/var/ossec/etc/ossec.conf</code> y luego <code>sudo systemctl enable --now wazuh-agent</code>.</span></li>
+      <li><span data-l="en"><strong>AIDE</strong> needs a baseline of a system you trust: <code>sudo aideinit</code> once (it takes a while), then <code>sudo aide --check</code>.</span><span data-l="es"><strong>AIDE</strong> necesita una referencia de un sistema en el que confíes: <code>sudo aideinit</code> una vez (tarda un rato) y luego <code>sudo aide --check</code>.</span></li>
+      <li><span data-l="en"><strong>Suricata</strong> is off: <code>sudo systemctl enable --now suricata</code> when this box should watch a network.</span><span data-l="es"><strong>Suricata</strong> está apagado: <code>sudo systemctl enable --now suricata</code> cuando este equipo deba vigilar una red.</span></li>
+    </ul>
     <div class="code"><pre>journalctl -u linux-cos-firstboot -u linux-cos-blackarch-pull</pre></div>
 
     <h2 id="hardening"><span data-l="en">Hardening reference</span><span data-l="es">Referencia de hardening</span></h2>
@@ -113,9 +123,9 @@ cos-stacks down misp         # stop (data is kept)</pre></div>
         <tr><td><code>/etc/apt/apt.conf.d/50unattended-upgrades-linux-cos</code></td><td><span data-l="en">opt-in automatic updates</span><span data-l="es">actualizaciones automáticas opcionales</span></td></tr>
       </tbody>
     </table></div>
-    <div class="code"><pre>sudo ufw status verbose
-sudo aa-status
-sudo lynis audit system</pre></div>
+    <div class="code ref"><pre>sudo ufw status verbose      <span data-l="en"># firewall rules</span><span data-l="es"># reglas del firewall</span>
+sudo aa-status               <span data-l="en"># AppArmor profiles</span><span data-l="es"># perfiles de AppArmor</span>
+sudo lynis audit system      <span data-l="en"># full hardening audit</span><span data-l="es"># auditoría completa de hardening</span></pre></div>
 
     <h2 id="troubleshooting"><span data-l="en">Troubleshooting</span><span data-l="es">Solución de problemas</span></h2>
     <h3 id="ts-docker"><span data-l="en">“the Docker daemon is not running”</span><span data-l="es">“the Docker daemon is not running”</span></h3>
