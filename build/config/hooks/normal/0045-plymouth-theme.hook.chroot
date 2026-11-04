@@ -27,11 +27,21 @@ sed -i \
   "$DST/linux-cos.plymouth"
 
 cp /usr/share/backgrounds/linux-cos/logo.png "$DST/watermark.png"
-# background: solid near-black to match the wallpaper/lightdm theme instead
-# of spinner's default grey
-sed -i 's/Window\.SetBackgroundTopColor(.*/Window.SetBackgroundTopColor(0.02, 0.03, 0.05);/' \
-  "$DST/linux-cos.script" 2>/dev/null || true
-sed -i 's/Window\.SetBackgroundBottomColor(.*/Window.SetBackgroundBottomColor(0.02, 0.03, 0.05);/' \
-  "$DST/linux-cos.script" 2>/dev/null || true
+# Background: near-black navy to match the wallpaper and lightdm, instead of
+# spinner's default. `spinner` is a two-step theme -- its colors live in the
+# [two-step] section of the .plymouth file, not in a .script (an earlier
+# version of this hook sed'ed a .script file spinner doesn't ship, so the
+# color change silently never applied).
+set_twostep() { # set_twostep <key> <value>
+  if grep -q "^$1=" "$DST/linux-cos.plymouth"; then
+    sed -i "s|^$1=.*|$1=$2|" "$DST/linux-cos.plymouth"
+  else
+    sed -i "/^\[[Tt]wo-[Ss]tep\]/a $1=$2" "$DST/linux-cos.plymouth"
+  fi
+}
+set_twostep BackgroundStartColor 0x0a0f24
+set_twostep BackgroundEndColor 0x05070d
+set_twostep WatermarkHorizontalAlignment .5
+set_twostep WatermarkVerticalAlignment .42
 
 plymouth-set-default-theme -R linux-cos

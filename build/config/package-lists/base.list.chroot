@@ -23,10 +23,12 @@ gnupg2
 software-properties-common
 zsh
 python3
+jq
 python3-pip
 python3-venv
 pipx
 docker.io
+docker-compose
 podman
 distrobox
 flatpak

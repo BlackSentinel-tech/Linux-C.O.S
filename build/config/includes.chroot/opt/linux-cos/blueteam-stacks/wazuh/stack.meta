@@ -1,0 +1,5 @@
+description=Wazuh manager + indexer + dashboard -- full SIEM for a fleet of agents
+url=https://localhost (dashboard)
+ram=8 GB
+kind=wazuh
+note=Official wazuh-docker single-node, same version as the installed wazuh-agent. Only agent ports 1514/1515 are on the network; dashboard, indexer and API are 127.0.0.1. Starts with upstream default passwords: change them.

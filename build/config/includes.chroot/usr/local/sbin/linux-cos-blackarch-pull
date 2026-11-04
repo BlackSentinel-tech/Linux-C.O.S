@@ -1,0 +1,29 @@
+#!/bin/sh
+# Linux-C.O.S -- makes the BlackArch image available on an installed system,
+# once (linux-cos-blackarch-pull.service, queued by linux-cos-firstboot;
+# safe to re-run):
+#   - ISO built with the full image baked in (build/blackarch-container/,
+#     docs/BLACKARCH-INTEGRATION.md): load it from disk, no network needed.
+#   - otherwise: pull BlackArch's official image.
+set -e
+
+IMG=linux-cos/blackarch:latest
+UPSTREAM=blackarchlinux/blackarch:latest
+TAR=/opt/linux-cos/blackarch-image.tar
+
+if docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "[linux-cos] $IMG already present, nothing to do"
+  exit 0
+fi
+
+if [ -f "$TAR" ]; then
+  echo "[linux-cos] loading the BlackArch image baked into the ISO"
+  docker load -i "$TAR"
+  echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"
+  exit 0
+fi
+
+echo "[linux-cos] pulling $UPSTREAM"
+docker pull "$UPSTREAM"
+docker tag "$UPSTREAM" "$IMG"
+echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"

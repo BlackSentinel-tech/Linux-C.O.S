@@ -1,5 +1,6 @@
 #!/bin/sh
-# Linux-C.O.S -- build orchestrator, run from macOS.
+# Linux-C.O.S -- build orchestrator. Run from macOS, Linux or Windows
+# (WSL2) with Docker available.
 #
 # usage: ./build.sh
 #
@@ -17,6 +18,15 @@
 set -e
 cd "$(dirname "$0")"
 
+if ! command -v docker >/dev/null 2>&1; then
+  echo "[linux-cos] docker is not installed or not on PATH -- see build/README.md" >&2
+  exit 1
+fi
+if ! docker info >/dev/null 2>&1; then
+  echo "[linux-cos] the Docker daemon is not reachable (is Docker Desktop / dockerd running?)" >&2
+  exit 1
+fi
+
 echo "[linux-cos] building the build environment image"
 docker build -t cos-builder .
 
@@ -28,21 +38,34 @@ mkdir -p output cache
 # under emulation during the build -- registering binfmt handlers here is
 # what makes that possible at all, but expect the build to run noticeably
 # slower than on x86_64 hardware because of it.
-echo "[linux-cos] registering QEMU binfmt handlers for cross-arch (amd64 on arm64 host)"
-docker run --rm --privileged tonistiigi/binfmt --install amd64
+# On an x86_64 host (Linux, Intel Mac, Windows/WSL2) there is nothing to
+# emulate, so skip it there.
+case "$(uname -m)" in
+  x86_64|amd64)
+    echo "[linux-cos] native amd64 host -- no QEMU emulation needed" ;;
+  *)
+    echo "[linux-cos] registering QEMU binfmt handlers for cross-arch (amd64 on $(uname -m) host)"
+    docker run --rm --privileged tonistiigi/binfmt --install amd64 ;;
+esac
 
 # live-build's chroot needs mknod (real device nodes for debootstrap).
 # Docker Desktop's bind mount of this macOS directory is virtiofs/gRPC-fuse
 # underneath -- neither supports mknod, so the actual chroot build has to
 # happen on a real Linux filesystem: a named Docker volume, not this bind
-# mount. The bind mount (/src) is read-only input (config/hooks/branding);
+# mount. The bind mounts (/src, and /website for the offline guide) are
+# read-only input (config/hooks/branding);
 # build-inside.sh rsyncs it into the volume, builds there, and copies the
 # finished ISO back out to output/ on the host side.
 docker volume create cos-workspace >/dev/null
 
-echo "[linux-cos] starting the live-build run"
+# COS_PROFILE selects how much of Kali's tool set goes in (full|slim|min);
+# default full. Pass it through to build-inside.sh. See build/README.md.
+COS_PROFILE=${COS_PROFILE:-full}
+echo "[linux-cos] starting the live-build run (profile: $COS_PROFILE)"
 docker run --rm --privileged \
+    -e "COS_PROFILE=$COS_PROFILE" \
     -v "$(pwd):/src:ro" \
+    -v "$(pwd)/../website:/website:ro" \
     -v "cos-workspace:/build" \
     -v "$(pwd)/output:/src-output" \
     -v "$(pwd)/cache:/var/cache/apt/archives" \

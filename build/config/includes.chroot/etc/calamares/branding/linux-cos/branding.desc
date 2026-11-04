@@ -12,10 +12,10 @@ strings:
     versionedName:        "Linux-C.O.S 0.1 \"Génesis\""
     shortVersionedName:   "Linux-C.O.S 0.1"
     bootloaderEntryName:  "Linux-C.O.S"
-    productUrl:           "https://github.com/"
-    supportUrl:           "https://github.com/"
-    knownIssuesUrl:       "https://github.com/"
-    releaseNotesUrl:      "https://github.com/"
+    productUrl:           "https://github.com/BlackSentinel-tech/Linux-C.O.S"
+    supportUrl:           "https://github.com/BlackSentinel-tech/Linux-C.O.S/issues"
+    knownIssuesUrl:       "https://github.com/BlackSentinel-tech/Linux-C.O.S#known-gaps"
+    releaseNotesUrl:      "https://github.com/BlackSentinel-tech/Linux-C.O.S/releases"
 
 images:
     productLogo:          "logo.png"

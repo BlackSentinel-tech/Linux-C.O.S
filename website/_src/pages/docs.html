@@ -1,0 +1,171 @@
+<!--
+title_en: Documentation
+title_es: Documentación
+desc_en: Linux-C.O.S documentation: live session, the Linux-C.O.S menu, blackarch-shell, cos-stacks, installing with LUKS2, first boot, hardening and troubleshooting.
+desc_es: Documentación de Linux-C.O.S: sesión live, el menú Linux-C.O.S, blackarch-shell, cos-stacks, instalación con LUKS2, primer arranque, hardening y solución de problemas.
+nav: docs
+-->
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow"><span data-l="en">Documentation</span><span data-l="es">Documentación</span></span>
+    <h1><span data-l="en">Using Linux-C.O.S</span><span data-l="es">Usar Linux-C.O.S</span></h1>
+    <p class="lead"><span data-l="en">The same guide ships inside the OS — open “User Guide” from the Linux-C.O.S menu, or run <code>cos-help</code> in a terminal.</span><span data-l="es">La misma guía viene dentro del sistema — abre “Guía de usuario” desde el menú Linux-C.O.S, o ejecuta <code>cos-help</code> en una terminal.</span></p>
+  </div>
+</section>
+
+<div class="container docs-layout">
+  <aside class="toc" aria-label="On this page" data-aria-en="On this page" data-aria-es="En esta página">
+    <div>
+      <details>
+        <summary><span data-l="en">On this page</span><span data-l="es">En esta página</span></summary>
+        <ol>
+          <li><a href="#live"><span data-l="en">Live session</span><span data-l="es">Sesión live</span></a></li>
+          <li><a href="#menu"><span data-l="en">The Linux-C.O.S menu</span><span data-l="es">El menú Linux-C.O.S</span></a></li>
+          <li><a href="#offense"><span data-l="en">Offensive tools</span><span data-l="es">Herramientas ofensivas</span></a></li>
+          <li><a href="#blackarch">blackarch-shell</a></li>
+          <li><a href="#stacks">cos-stacks</a></li>
+          <li><a href="#ai">cos-ai <span data-l="en">(AI)</span><span data-l="es">(IA)</span></a></li>
+          <li><a href="#install"><span data-l="en">Installing to disk</span><span data-l="es">Instalar en disco</span></a></li>
+          <li><a href="#firstboot"><span data-l="en">First boot</span><span data-l="es">Primer arranque</span></a></li>
+          <li><a href="#hardening"><span data-l="en">Hardening reference</span><span data-l="es">Referencia de hardening</span></a></li>
+          <li><a href="#troubleshooting"><span data-l="en">Troubleshooting</span><span data-l="es">Solución de problemas</span></a></li>
+        </ol>
+      </details>
+    </div>
+  </aside>
+
+  <article class="prose">
+    <h2 id="live"><span data-l="en">Live session</span><span data-l="es">Sesión live</span></h2>
+    <p><span data-l="en">Booting the ISO takes you straight to the XFCE desktop as user <code>kali</code> (password <code>kali</code>, needed for <code>sudo</code> and the installer). Nothing persists: everything is lost at shutdown.</span><span data-l="es">Al arrancar la ISO entras directamente al escritorio XFCE como el usuario <code>kali</code> (contraseña <code>kali</code>, necesaria para <code>sudo</code> y el instalador). Nada persiste: todo se pierde al apagar.</span></p>
+    <ul>
+      <li><span data-l="en">The firewall is already on (deny incoming).</span><span data-l="es">El firewall ya está activo (deniega lo entrante).</span></li>
+      <li><span data-l="en">The live session never downloads the BlackArch image on its own — it would fill your RAM. Run <code>blackarch-shell --update</code> if you want it anyway.</span><span data-l="es">La sesión live nunca descarga la imagen de BlackArch por su cuenta — llenaría tu RAM. Ejecuta <code>blackarch-shell --update</code> si igual la quieres.</span></li>
+    </ul>
+
+    <h2 id="menu"><span data-l="en">The Linux-C.O.S menu</span><span data-l="es">El menú Linux-C.O.S</span></h2>
+    <p><span data-l="en">Open the applications menu (top-left) → <strong>Linux-C.O.S</strong>:</span><span data-l="es">Abre el menú de aplicaciones (arriba a la izquierda) → <strong>Linux-C.O.S</strong>:</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th><span data-l="en">Entry</span><span data-l="es">Entrada</span></th><th><span data-l="en">What it does</span><span data-l="es">Qué hace</span></th></tr></thead>
+      <tbody>
+        <tr><td><span data-l="en">Quick Start</span><span data-l="es">Inicio rápido</span></td><td><span data-l="en">Runs <code>cos-help</code>: the commands worth knowing, in your language</span><span data-l="es">Ejecuta <code>cos-help</code>: los comandos que conviene conocer, en tu idioma</span></td></tr>
+        <tr><td><span data-l="en">BlackArch Shell</span><span data-l="es">Shell de BlackArch</span></td><td><span data-l="en">Opens <code>blackarch-shell</code></span><span data-l="es">Abre <code>blackarch-shell</code></span></td></tr>
+        <tr><td><span data-l="en">Blue-Team Stacks</span><span data-l="es">Stacks Blue-Team</span></td><td><span data-l="en">The interactive <code>cos-stacks</code> menu</span><span data-l="es">El menú interactivo de <code>cos-stacks</code></span></td></tr>
+        <tr><td><span data-l="en">User Guide</span><span data-l="es">Guía de usuario</span></td><td><span data-l="en">This guide, offline</span><span data-l="es">Esta guía, sin conexión</span></td></tr>
+        <tr><td><span data-l="en">Install Linux-C.O.S</span><span data-l="es">Instalar Linux-C.O.S</span></td><td><span data-l="en">The installer (live session only)</span><span data-l="es">El instalador (solo en la sesión live)</span></td></tr>
+      </tbody>
+    </table></div>
+    <p><span data-l="en">Terminal entries wait for <kbd>Enter</kbd> before closing, so you can read the output.</span><span data-l="es">Las entradas de terminal esperan a <kbd>Enter</kbd> antes de cerrarse, para que puedas leer la salida.</span></p>
+
+    <h2 id="offense"><span data-l="en">Offensive tools</span><span data-l="es">Herramientas ofensivas</span></h2>
+    <p><span data-l="en">Kali's and Parrot's tools are regular packages: start them from the menu categories or by name in a terminal. To list what's installed:</span><span data-l="es">Las herramientas de Kali y Parrot son paquetes normales: ábrelas desde las categorías del menú o por su nombre en una terminal. Para ver lo instalado:</span></p>
+    <div class="code"><pre>apt list --installed 'kali-tools-*'</pre></div>
+    <p><span data-l="en">Looking for a specific tool? Use the <a href="tools.html">tool catalog</a>.</span><span data-l="es">¿Buscas una herramienta concreta? Usa el <a href="tools.html">catálogo de herramientas</a>.</span></p>
+
+    <h2 id="blackarch">blackarch-shell</h2>
+    <p><span data-l="en">BlackArch is Arch Linux; its packages can't be installed with apt. <code>blackarch-shell</code> runs it unmodified in Docker, with your home directory mounted at the same path inside.</span><span data-l="es">BlackArch es Arch Linux; sus paquetes no se instalan con apt. <code>blackarch-shell</code> lo ejecuta sin modificar en Docker, con tu carpeta personal montada en la misma ruta.</span></p>
+    <div class="code ref"><pre>blackarch-shell              <span data-l="en"># open (or re-join) the shell</span><span data-l="es"># abrir (o volver a) la shell</span>
+blackarch-shell nmap -h      <span data-l="en"># run one command</span><span data-l="es"># ejecutar un solo comando</span>
+blackarch-shell --status     <span data-l="en"># image present? container running?</span><span data-l="es"># ¿hay imagen? ¿contenedor en marcha?</span>
+blackarch-shell --update     <span data-l="en"># download BlackArch's official image</span><span data-l="es"># descargar la imagen oficial de BlackArch</span>
+blackarch-shell --reset      <span data-l="en"># start over with a fresh container</span><span data-l="es"># empezar de cero con un contenedor nuevo</span></pre></div>
+    <p><span data-l="en">Inside the container: <code>pacman -Ss &lt;name&gt;</code> searches, <code>pacman -S &lt;name&gt;</code> installs. Your container is kept between sessions, so what you install stays installed until <code>blackarch-shell --reset</code>.</span><span data-l="es">Dentro del contenedor: <code>pacman -Ss &lt;nombre&gt;</code> busca, <code>pacman -S &lt;nombre&gt;</code> instala. Tu contenedor se conserva entre sesiones, así que lo que instales sigue ahí hasta <code>blackarch-shell --reset</code>.</span></p>
+
+    <h2 id="stacks">cos-stacks</h2>
+    <p><span data-l="en">Starts and stops the heavy blue-team platforms. Run it without arguments for an interactive menu.</span><span data-l="es">Inicia y detiene las plataformas blue-team pesadas. Ejecútalo sin argumentos para ver un menú interactivo.</span></p>
+    <div class="code ref"><pre>cos-stacks                   <span data-l="en"># interactive menu</span><span data-l="es"># menú interactivo</span>
+cos-stacks list              <span data-l="en"># every stack and its status</span><span data-l="es"># todos los stacks y su estado</span>
+cos-stacks info misp         <span data-l="en"># URL, RAM needed, notes</span><span data-l="es"># URL, RAM necesaria, notas</span>
+cos-stacks up misp           <span data-l="en"># start (MISP: generates random passwords)</span><span data-l="es"># iniciar (MISP: genera contraseñas aleatorias)</span>
+cos-stacks creds misp        <span data-l="en"># how to log in</span><span data-l="es"># cómo iniciar sesión</span>
+cos-stacks logs misp         <span data-l="en"># follow logs (Ctrl+C to stop)</span><span data-l="es"># seguir los logs (Ctrl+C para parar)</span>
+cos-stacks down misp         <span data-l="en"># stop (data is kept)</span><span data-l="es"># detener (los datos se conservan)</span></pre></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Stack</th><th>Web UI</th><th>RAM</th></tr></thead>
+      <tbody>
+        <tr><td><code>thehive-cortex</code></td><td>http://localhost:9000 · :9001</td><td>6 GB</td></tr>
+        <tr><td><code>misp</code></td><td>https://localhost:8443</td><td>4 GB</td></tr>
+        <tr><td><code>wazuh</code></td><td>https://localhost</td><td>8 GB</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout">
+      <strong><span data-l="en">Why only localhost?</span><span data-l="es">¿Por qué solo localhost?</span></strong>
+      <p><span data-l="en">Ports published by Docker bypass ufw. Every web UI and API (Wazuh's dashboard, indexer and API included) is bound to 127.0.0.1 until you decide otherwise. The only network-facing ports are Wazuh's agent ports 1514/1515, so agents can enroll.</span><span data-l="es">Los puertos publicados por Docker se saltan ufw. Todas las interfaces web y APIs (incluidos el panel, el indexador y la API de Wazuh) escuchan en 127.0.0.1 hasta que decidas lo contrario. Los únicos puertos abiertos a la red son los de agentes de Wazuh, 1514/1515, para que los agentes puedan registrarse.</span></p>
+    </div>
+    <div class="callout warn">
+      <strong><span data-l="en">Passwords</span><span data-l="es">Contraseñas</span></strong>
+      <p><span data-l="en">MISP's passwords are generated at random on its first start. TheHive and Wazuh start with their upstream first-login defaults — <code>cos-stacks creds &lt;stack&gt;</code> shows them; change them on first login.</span><span data-l="es">Las contraseñas de MISP se generan al azar en su primer arranque. TheHive y Wazuh empiezan con los valores de fábrica de sus proyectos — <code>cos-stacks creds &lt;stack&gt;</code> los muestra; cámbialos en el primer inicio de sesión.</span></p>
+    </div>
+
+        <h2 id="ai">cos-ai <span data-l="en">— the AI assistant</span><span data-l="es">— el asistente de IA</span></h2>
+    <p><span data-l="en">A local AI copilot for offensive and defensive work. It runs on this machine against a free, open-weight model served by <a href="https://ollama.com" rel="noopener">Ollama</a> — no cloud, no API key, offline once a model is downloaded. It assists; you review and run everything yourself, only on systems you are authorized to test.</span><span data-l="es">Un copiloto de IA local para trabajo ofensivo y defensivo. Corre en este equipo sobre un modelo abierto y gratuito servido por <a href="https://ollama.com" rel="noopener">Ollama</a> — sin nube, sin clave de API, offline una vez descargado el modelo. Asiste; tú revisas y ejecutas todo, solo en sistemas que tengas autorización para probar.</span></p>
+    <p><span data-l="en">Set it up once (installs Ollama and downloads a model, a few GB):</span><span data-l="es">Actívalo una vez (instala Ollama y descarga un modelo, unos GB):</span></p>
+    <div class="code"><pre>cos-ai setup</pre></div>
+    <div class="code ref"><pre>cos-ai                                   <span data-l="en"># chat with the default assistant</span><span data-l="es"># chatea con el asistente por defecto</span>
+cos-ai ask "what is a SYN scan?"         <span data-l="en"># one-shot question</span><span data-l="es"># pregunta directa</span>
+nmap -sV target | cos-ai explain         <span data-l="en"># explain tool output</span><span data-l="es"># explica la salida</span>
+cos-ai suggest "enumerate an SMB host"   <span data-l="en"># prints commands for you to run</span><span data-l="es"># imprime comandos para que los ejecutes</span>
+cos-ai blueteam "write a Sigma rule"     <span data-l="en"># use a specific profile</span><span data-l="es"># usa un perfil concreto</span>
+cos-ai models   ;   cos-ai status</pre></div>
+    <p><span data-l="en">The profiles are the built-in "agents"; add your own as a markdown file under <code>/opt/linux-cos/ai/profiles/</code>:</span><span data-l="es">Los perfiles son los "agentes" incluidos; añade el tuyo como un archivo markdown en <code>/opt/linux-cos/ai/profiles/</code>:</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th><span data-l="en">Profile</span><span data-l="es">Perfil</span></th><th><span data-l="en">For</span><span data-l="es">Para</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>assistant</code></td><td><span data-l="en">general security Q&amp;A (default)</span><span data-l="es">consultas generales de seguridad (por defecto)</span></td></tr>
+        <tr><td><code>recon</code></td><td><span data-l="en">reconnaissance &amp; enumeration</span><span data-l="es">reconocimiento y enumeración</span></td></tr>
+        <tr><td><code>webapp</code></td><td><span data-l="en">web application testing</span><span data-l="es">pruebas de aplicaciones web</span></td></tr>
+        <tr><td><code>exploit</code></td><td><span data-l="en">vulnerability analysis &amp; exploitation (authorized)</span><span data-l="es">análisis de vulnerabilidades y explotación (autorizada)</span></td></tr>
+        <tr><td><code>blueteam</code></td><td><span data-l="en">SOC analyst: triage and detections (Suricata/YARA/Sigma)</span><span data-l="es">analista SOC: triaje y detecciones (Suricata/YARA/Sigma)</span></td></tr>
+        <tr><td><code>forensics</code></td><td>DFIR</td></tr>
+        <tr><td><code>report</code></td><td><span data-l="en">writing up findings</span><span data-l="es">redactar hallazgos</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout">
+      <strong><span data-l="en">Copilot, not autopilot</span><span data-l="es">Copiloto, no piloto automático</span></strong>
+      <p><span data-l="en"><code>cos-ai suggest</code> prints commands; it never runs them, and nothing attacks a target on its own. The live session does not set up AI (the model would fill RAM) — run <code>cos-ai setup</code> on an installed system. Any Ollama model works: <code>cos-ai pull qwen2.5-coder:7b</code>.</span><span data-l="es"><code>cos-ai suggest</code> imprime comandos; nunca los ejecuta, y nada ataca un objetivo por su cuenta. La sesión live no instala la IA (el modelo llenaría la RAM) — ejecuta <code>cos-ai setup</code> en un sistema instalado. Vale cualquier modelo de Ollama: <code>cos-ai pull qwen2.5-coder:7b</code>.</span></p>
+    </div>
+
+    <h2 id="install"><span data-l="en">Installing to disk</span><span data-l="es">Instalar en disco</span></h2>
+    <ol>
+      <li><span data-l="en">Double-click <strong>Install Linux-C.O.S</strong> on the desktop and enter the password <code>kali</code>.</span><span data-l="es">Haz doble clic en <strong>Instalar Linux-C.O.S</strong> en el escritorio e introduce la contraseña <code>kali</code>.</span></li>
+      <li><span data-l="en">Pick language, location and keyboard.</span><span data-l="es">Elige idioma, ubicación y teclado.</span></li>
+      <li><span data-l="en">Partitions: <strong>“Erase disk” (the default) deletes everything on that disk, Windows included.</strong> To keep another system, back up and choose “Install alongside” or manual partitioning. Tick <strong>Encrypt system</strong> for LUKS2 full-disk encryption (recommended). ext4, btrfs and xfs are offered; you need 60 GB.</span><span data-l="es">Particiones: <strong>“Borrar disco” (lo predeterminado) elimina todo lo que hay en ese disco, Windows incluido.</strong> Para conservar otro sistema, haz una copia de seguridad y elige “Instalar junto a” o el particionado manual. Marca <strong>Cifrar el sistema</strong> para el cifrado completo LUKS2 (recomendado). Se ofrecen ext4, btrfs y xfs; necesitas 60 GB.</span></li>
+      <li><span data-l="en">Create your user (password of 8+ characters) and, on the next screen, a separate root password. Your user joins the <code>sudo</code>, <code>docker</code> and <code>wireshark</code> groups — note that the <code>docker</code> group is root-equivalent.</span><span data-l="es">Crea tu usuario (contraseña de 8+ caracteres) y, en la pantalla siguiente, una contraseña de root aparte. Tu usuario entra en los grupos <code>sudo</code>, <code>docker</code> y <code>wireshark</code> — ten en cuenta que el grupo <code>docker</code> equivale a root.</span></li>
+      <li><span data-l="en">Review the summary and install. Live-only packages and the live autologin are removed from the installed system.</span><span data-l="es">Revisa el resumen e instala. Los paquetes de la sesión live y su autologin se eliminan del sistema instalado.</span></li>
+    </ol>
+
+    <h2 id="firstboot"><span data-l="en">First boot</span><span data-l="es">Primer arranque</span></h2>
+    <p><span data-l="en">On the first boot of the installed system, <code>linux-cos-firstboot</code> enables the firewall permanently — before the network comes up — and <code>linux-cos-blackarch-pull</code> then loads the BlackArch image (from the ISO if it was baked in, otherwise it downloads it once in the background).</span><span data-l="es">En el primer arranque del sistema instalado, <code>linux-cos-firstboot</code> activa el firewall de forma permanente — antes de que arranque la red — y después <code>linux-cos-blackarch-pull</code> carga la imagen de BlackArch (desde la ISO si se incluyó, si no la descarga una vez en segundo plano).</span></p>
+    <h3 id="defense-setup"><span data-l="en">Defensive tools that need one step from you</span><span data-l="es">Herramientas defensivas que necesitan un paso tuyo</span></h3>
+    <ul>
+      <li><span data-l="en"><strong>wazuh-agent</strong> is installed but not enrolled: set your manager's address in <code>/var/ossec/etc/ossec.conf</code>, then <code>sudo systemctl enable --now wazuh-agent</code>.</span><span data-l="es"><strong>wazuh-agent</strong> está instalado pero no registrado: pon la dirección de tu manager en <code>/var/ossec/etc/ossec.conf</code> y luego <code>sudo systemctl enable --now wazuh-agent</code>.</span></li>
+      <li><span data-l="en"><strong>AIDE</strong> needs a baseline of a system you trust: <code>sudo aideinit</code> once (it takes a while), then <code>sudo aide --check</code>.</span><span data-l="es"><strong>AIDE</strong> necesita una referencia de un sistema en el que confíes: <code>sudo aideinit</code> una vez (tarda un rato) y luego <code>sudo aide --check</code>.</span></li>
+      <li><span data-l="en"><strong>Suricata</strong> is off: <code>sudo systemctl enable --now suricata</code> when this box should watch a network.</span><span data-l="es"><strong>Suricata</strong> está apagado: <code>sudo systemctl enable --now suricata</code> cuando este equipo deba vigilar una red.</span></li>
+    </ul>
+    <div class="code"><pre>journalctl -u linux-cos-firstboot -u linux-cos-blackarch-pull</pre></div>
+
+    <h2 id="hardening"><span data-l="en">Hardening reference</span><span data-l="es">Referencia de hardening</span></h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th><span data-l="en">File</span><span data-l="es">Archivo</span></th><th><span data-l="en">What</span><span data-l="es">Qué</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>/etc/sysctl.d/99-linux-cos-hardening.conf</code></td><td><span data-l="en">network and kernel sysctls</span><span data-l="es">sysctls de red y kernel</span></td></tr>
+        <tr><td><code>/etc/audit/rules.d/linux-cos.rules</code></td><td><span data-l="en">auditd ruleset</span><span data-l="es">reglas de auditd</span></td></tr>
+        <tr><td><code>/etc/ssh/sshd_config.d/99-linux-cos.conf</code></td><td><span data-l="en">sshd defaults (sshd itself is off)</span><span data-l="es">valores de sshd (sshd está apagado)</span></td></tr>
+        <tr><td><code>/etc/apt/apt.conf.d/50unattended-upgrades-linux-cos</code></td><td><span data-l="en">opt-in automatic updates</span><span data-l="es">actualizaciones automáticas opcionales</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="code ref"><pre>sudo ufw status verbose      <span data-l="en"># firewall rules</span><span data-l="es"># reglas del firewall</span>
+sudo aa-status               <span data-l="en"># AppArmor profiles</span><span data-l="es"># perfiles de AppArmor</span>
+sudo lynis audit system      <span data-l="en"># full hardening audit</span><span data-l="es"># auditoría completa de hardening</span></pre></div>
+
+    <h2 id="troubleshooting"><span data-l="en">Troubleshooting</span><span data-l="es">Solución de problemas</span></h2>
+    <h3 id="ts-docker"><span data-l="en">“the Docker daemon is not running”</span><span data-l="es">“the Docker daemon is not running”</span></h3>
+    <div class="code"><pre>sudo systemctl start docker</pre></div>
+    <h3 id="ts-permission"><span data-l="en">“permission denied” on the Docker socket</span><span data-l="es">“permission denied” en el socket de Docker</span></h3>
+    <p><span data-l="en">Group changes only apply to new logins. Log out and back in; until then the Linux-C.O.S commands fall back to <code>sudo</code> automatically.</span><span data-l="es">Los cambios de grupo solo se aplican en nuevos inicios de sesión. Cierra sesión y vuelve a entrar; mientras tanto los comandos de Linux-C.O.S usan <code>sudo</code> automáticamente.</span></p>
+    <h3 id="ts-secureboot"><span data-l="en">It doesn't boot on real hardware</span><span data-l="es">No arranca en hardware real</span></h3>
+    <p><span data-l="en">Disable Secure Boot in the firmware settings — this release has no signed bootloader yet.</span><span data-l="es">Desactiva Secure Boot en la configuración del firmware — esta versión todavía no tiene un cargador de arranque firmado.</span></p>
+    <h3 id="ts-slow"><span data-l="en">Boot is extremely slow in UTM on a Mac</span><span data-l="es">El arranque es muy lento en UTM en un Mac</span></h3>
+    <p><span data-l="en">Expected on Apple Silicon: an x86_64 guest is emulated in software. Several minutes from GRUB to the desktop is normal.</span><span data-l="es">Es normal en Apple Silicon: un invitado x86_64 se emula por software. Varios minutos desde GRUB hasta el escritorio es lo esperado.</span></p>
+    <p><span data-l="en">Still stuck?</span><span data-l="es">¿Sigues atascado?</span> <a href="faq.html"><span data-l="en">Read the FAQ</span><span data-l="es">Lee las preguntas frecuentes</span></a> <span data-l="en">or</span><span data-l="es">o</span> <a href="{{REPO}}/issues" rel="noopener"><span data-l="en">open an issue</span><span data-l="es">abre un issue</span></a>.</p>
+  </article>
+</div>

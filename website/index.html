@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-title-en="Linux-C.O.S — Cyber Offensive &amp; defensive Security" data-title-es="Linux-C.O.S — Seguridad ofensiva y defensiva" data-desc-en="A Kali-based security distribution: Kali and Parrot tools installed natively, BlackArch&#x27;s 2,858 tools in a container, a blue-team stack and an OS hardened by default." data-desc-es="Una distribución de seguridad basada en Kali: herramientas de Kali y Parrot nativas, las 2.858 de BlackArch en un contenedor, stack blue-team y un sistema endurecido por defecto.">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Wl7epaI7283ASZK5/nSRd7pHWHT+GMOsUTtI0TFr6p0='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Linux-C.O.S — Cyber Offensive &amp; defensive Security</title>
+<meta name="description" content="A Kali-based security distribution: Kali and Parrot tools installed natively, BlackArch&#x27;s 2,858 tools in a container, a blue-team stack and an OS hardened by default.">
+<meta name="theme-color" content="#070a14">
+<meta property="og:title" content="Linux-C.O.S — Cyber Offensive &amp; defensive Security">
+<meta property="og:description" content="A Kali-based security distribution: Kali and Parrot tools installed natively, BlackArch&#x27;s 2,858 tools in a container, a blue-team stack and an OS hardened by default.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/og.png">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('cos-lang');t=localStorage.getItem('cos-theme')}catch(e){}if(l!=='es'&&l!=='en'){l=((navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().indexOf('es')===0?'es':'en'}d.setAttribute('data-lang',l);d.lang=l;if(t==='light'||t==='dark')d.setAttribute('data-theme',t)})();</script>
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/site.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main"><span data-l="en">Skip to content</span><span data-l="es">Saltar al contenido</span></a>
+<header class="site-header">
+  <nav class="nav container" aria-label="Main" data-aria-en="Main" data-aria-es="Principal">
+    <a class="brand" href="index.html" aria-current="page"><img src="assets/img/logo.svg" alt="Linux-C.O.S" width="30" height="30"><span aria-hidden="true">LINUX-C.O.S</span></a>
+    <ul class="nav-links" id="primary-nav">
+      <li class="mobile-only"><a href="index.html" aria-current="page"><span data-l="en">Home</span><span data-l="es">Inicio</span></a></li><li><a href="features.html"><span data-l="en">Features</span><span data-l="es">Características</span></a></li><li><a href="tools.html"><span data-l="en">Tools</span><span data-l="es">Herramientas</span></a></li><li><a href="download.html"><span data-l="en">Download</span><span data-l="es">Descargar</span></a></li><li><a href="docs.html"><span data-l="en">Docs</span><span data-l="es">Documentación</span></a></li><li><a href="faq.html"><span data-l="en">FAQ</span><span data-l="es">Preguntas</span></a></li><li class="mobile-only"><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener">GitHub</a></li>
+    </ul>
+    <div class="nav-tools">
+      <a class="icon-btn nav-gh" href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener" aria-label="Linux-C.O.S on GitHub" data-aria-en="Linux-C.O.S on GitHub" data-aria-es="Linux-C.O.S en GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+      <button class="icon-btn" id="lang-toggle" type="button"><span data-l="en" lang="es">ES<span class="visually-hidden">, español</span></span><span data-l="es" lang="en">EN<span class="visually-hidden">, English</span></span></button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-pressed="false"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span class="visually-hidden"><span data-l="en">Light theme</span><span data-l="es">Tema claro</span></span></button>
+      <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="l1" d="M4 7h16"/><path class="l2" d="M4 12h16"/><path class="l3" d="M4 17h16"/></svg></button>
+    </div>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">v0.1 “Génesis”</span>
+      <h1>
+        <span data-l="en"><span class="split-blue">Defend</span> the box. <span class="split-red">Attack</span> from it.</span>
+        <span data-l="es"><span class="split-blue">Defiende</span> tu máquina. <span class="split-red">Ataca</span> desde ella.</span>
+      </h1>
+      <p class="lead">
+        <span data-l="en">Linux-C.O.S is one security distribution for attackers (red team) <em>and</em> defenders (blue team): Kali's and Parrot's tools installed natively, BlackArch's tools in a container, real defensive tooling, a local AI copilot — and an operating system that is hardened from the first boot.</span>
+        <span data-l="es">Linux-C.O.S es una sola distribución de seguridad para quien ataca (red team) <em>y</em> para quien defiende (blue team): las herramientas de Kali y Parrot instaladas de forma nativa, las de BlackArch en un contenedor, herramientas defensivas de verdad, un copiloto de IA local — y un sistema operativo protegido desde el primer arranque.</span>
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="download.html"><span data-l="en">Get Linux-C.O.S</span><span data-l="es">Obtener Linux-C.O.S</span></a>
+        <a class="btn btn-ghost" href="tools.html"><span data-l="en">Browse 3,300+ tools</span><span data-l="es">Ver más de 3.300 herramientas</span></a>
+      </div>
+      <div class="badge-row">
+        <span class="pill"><span class="dot" aria-hidden="true"></span><span data-l="en">Pre-release: first ISO built, boot testing in progress</span><span data-l="es">Pre-lanzamiento: primera ISO compilada, pruebas de arranque en curso</span></span>
+        <span class="pill"><span class="dot ok" aria-hidden="true"></span>XFCE · amd64 · LUKS2</span>
+      </div>
+    </div>
+    <div class="terminal" role="img" aria-label="Terminal running cos-help, the Linux-C.O.S quick start" data-aria-en="Terminal running cos-help, the Linux-C.O.S quick start" data-aria-es="Terminal ejecutando cos-help, el inicio rápido de Linux-C.O.S">
+      <div class="terminal-bar"><i></i><i></i><i></i><span>kali@linux-cos: ~</span></div>
+<pre><span class="p">kali@linux-cos</span>:~$ cos-help
+<span class="h"><span data-l="en">Offense</span><span data-l="es">Ofensiva</span></span>
+  apt list --installed 'kali-tools-*'
+  blackarch-shell           <span class="c"><span data-l="en"># BlackArch tools</span><span data-l="es"># herramientas de BlackArch</span></span>
+<span class="h"><span data-l="en">Defense</span><span data-l="es">Defensiva</span></span>
+  cos-stacks                <span class="c"># TheHive · MISP · Wazuh</span>
+  sudo ufw status verbose   <span class="c"><span data-l="en"># deny incoming</span><span data-l="es"># denegar entrante</span></span>
+<span class="p">kali@linux-cos</span>:~$ cos-stacks up misp
+==&gt; generating passwords for misp
+<span class="p">misp is starting.</span> Web UI: https://localhost:8443</pre>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="numbers-h">
+  <div class="container">
+    <h2 id="numbers-h" class="visually-hidden"><span data-l="en">In numbers</span><span data-l="es">En cifras</span></h2>
+    <div class="stats">
+      <div class="stat"><b>814</b><span data-l="en">Kali tools, native</span><span data-l="es">herramientas de Kali, nativas</span></div>
+      <div class="stat"><b>24</b><span data-l="en">Parrot-only extras on top</span><span data-l="es">extras exclusivos de Parrot</span></div>
+      <div class="stat"><b><span data-l="en">2,858</span><span data-l="es">2.858</span></b><span data-l="en">BlackArch tools via blackarch-shell</span><span data-l="es">de BlackArch vía blackarch-shell</span></div>
+      <div class="stat"><b>28</b><span data-l="en">Kali tool categories installed</span><span data-l="es">categorías de Kali instaladas</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="pillars-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Why Linux-C.O.S</span><span data-l="es">Por qué Linux-C.O.S</span></span>
+      <h2 id="pillars-h"><span data-l="en">Three things in one image</span><span data-l="es">Tres cosas en una sola imagen</span></h2>
+      <p class="lead"><span data-l="en">Most security distros pick a side. Linux-C.O.S ships both — and treats the machine it runs on as a target worth defending.</span><span data-l="es">La mayoría de las distros de seguridad eligen un bando. Linux-C.O.S trae los dos — y trata la máquina en la que corre como un objetivo que vale la pena defender.</span></p>
+    </div>
+    <div class="grid grid-3">
+      <a class="card card-link" href="features.html#offense">
+        <h3><span class="icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m4 17 6-6-6-6M12 19h8"/></svg></span><span data-l="en">Offense</span><span data-l="es">Ofensiva</span></h3>
+        <p><span data-l="en">Every Kali tool category plus Parrot's extras, installed natively. BlackArch's full catalog runs unmodified in a container with your home directory shared.</span><span data-l="es">Todas las categorías de Kali más los extras de Parrot, instalados de forma nativa. El catálogo completo de BlackArch corre sin modificar en un contenedor que comparte tu carpeta personal.</span></p>
+        <span class="more"><span data-l="en">Offensive toolset →</span><span data-l="es">Herramientas ofensivas →</span></span>
+      </a>
+      <a class="card card-link" href="features.html#defense">
+        <h3><span class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/></svg></span><span data-l="en">Defense</span><span data-l="es">Defensa</span></h3>
+        <p><span data-l="en">Suricata, YARA, ClamAV, osquery, AIDE, Lynis and the Wazuh agent ship natively. TheHive + Cortex, MISP and a full Wazuh SIEM (security monitoring) start with one command.</span><span data-l="es">Suricata, YARA, ClamAV, osquery, AIDE, Lynis y el agente de Wazuh vienen nativos. TheHive + Cortex, MISP y un SIEM Wazuh completo (monitorización de seguridad) arrancan con un comando.</span></p>
+        <span class="more"><span data-l="en">Blue-team stack →</span><span data-l="es">Stack blue-team →</span></span>
+      </a>
+      <a class="card card-link" href="features.html#hardening">
+        <h3><span class="icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><span data-l="en">Hardened by default</span><span data-l="es">Protegido por defecto</span></h3>
+        <p><span data-l="en">AppArmor enforcing, default-deny firewall, auditd rules, kernel sysctl hardening, sshd off, and LUKS2 full-disk encryption offered by the installer.</span><span data-l="es">AppArmor aplicando sus políticas, firewall que bloquea lo entrante, registro de auditoría (auditd), kernel reforzado, SSH apagado y cifrado de disco completo LUKS2 en el instalador.</span></p>
+        <span class="more"><span data-l="en">What is hardened →</span><span data-l="es">Qué se endurece →</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="ai-band" aria-labelledby="aiband-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">AI copilot</span><span data-l="es">Copiloto de IA</span></span>
+      <h2 id="aiband-h"><span data-l="en">A local AI for offense and defense</span><span data-l="es">Una IA local para ofensiva y defensa</span></h2>
+      <p class="lead"><span data-l="en"><code>cos-ai</code> runs a free, open-weight model on your own machine — no cloud, no API key. It explains tool output, suggests the next step for an authorized engagement, and writes blue-team detections. It assists; you stay in control.</span><span data-l="es"><code>cos-ai</code> ejecuta un modelo abierto y gratuito en tu propia máquina — sin nube, sin clave de API. Explica la salida de las herramientas, sugiere el siguiente paso en un trabajo autorizado y escribe detecciones blue-team. Asiste; tú mantienes el control.</span></p>
+    </div>
+    <div class="terminal" role="img" aria-label="Terminal running cos-ai" data-aria-en="Terminal running cos-ai" data-aria-es="Terminal ejecutando cos-ai">
+      <div class="terminal-bar"><i></i><i></i><i></i><span>kali@linux-cos: ~</span></div>
+<pre><span class="p">kali@linux-cos</span>:~$ nmap -sV 10.0.0.5 | cos-ai explain
+<span class="h">ai ></span> 10.0.0.5 exposes SSH (OpenSSH 8.2) and an outdated Apache 2.4.29
+      on 80. The Apache build is the thing to look at next; check the
+      version against known CVEs before anything else.
+<span class="p">kali@linux-cos</span>:~$ cos-ai blueteam "sigma rule for kerberoasting"
+<span class="h">ai ></span> <span class="c"># writes a Sigma rule mapped to ATT&amp;CK T1558.003 ...</span>
+<span class="p">kali@linux-cos</span>:~$ <span class="r">cos-ai setup</span>   <span class="c"># installs Ollama + a model, once</span></pre>
+    </div>
+    <p><a class="btn btn-ghost btn-sm" href="features.html#ai"><span data-l="en">How the AI copilot works →</span><span data-l="es">Cómo funciona el copiloto de IA →</span></a></p>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="arch-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">How it fits together</span><span data-l="es">Cómo encaja todo</span></span>
+      <h2 id="arch-h"><span data-l="en">One Debian-family base, three tool sources</span><span data-l="es">Una base de la familia Debian, tres fuentes de herramientas</span></h2>
+    </div>
+    <div class="arch">
+      <div class="arch-layer"><b>KALI</b><span data-l="en">kali-linux-everything + every kali-tools-* category, as .deb packages.</span><span data-l="es">kali-linux-everything + todas las categorías kali-tools-*, como paquetes .deb.</span></div>
+      <div class="arch-layer"><b>PARROT</b><span data-l="en">The Parrot-only tools, from Parrot's repo pinned as a low-priority fallback.</span><span data-l="es">Las herramientas exclusivas de Parrot, desde su repositorio fijado como respaldo de baja prioridad.</span></div>
+      <div class="arch-layer"><b>BLACKARCH</b><span data-l="en">An unmodified Arch userland in Docker — <code>blackarch-shell</code>.</span><span data-l="es">Un sistema Arch sin modificar en Docker — <code>blackarch-shell</code>.</span></div>
+      <div class="arch-layer arch-base"><b>KALI-ROLLING BASE · XFCE · HARDENING · BLUE-TEAM STACK</b><span data-l="en">Own name, branding, installer and defaults — built with Debian's live-build.</span><span data-l="es">Nombre, marca, instalador y valores por defecto propios — construido con live-build de Debian.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="start-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Get started</span><span data-l="es">Empieza</span></span>
+      <h2 id="start-h"><span data-l="en">From ISO to first scan in four steps</span><span data-l="es">De la ISO al primer escaneo en cuatro pasos</span></h2>
+    </div>
+    <ol class="steps">
+      <li><h3><span data-l="en">Get the ISO</span><span data-l="es">Consigue la ISO</span></h3><p><span data-l="en">Build it from source with Docker (any OS), or grab a release once published.</span><span data-l="es">Compílala desde el código con Docker (cualquier sistema), o descarga una versión cuando se publique.</span> <a href="download.html"><span data-l="en">Download options</span><span data-l="es">Opciones de descarga</span></a></p></li>
+      <li><h3><span data-l="en">Boot the live session</span><span data-l="es">Arranca la sesión live</span></h3><p><span data-l="en">USB stick or VM. You land on the desktop automatically (user <code>kali</code>, password <code>kali</code>).</span><span data-l="es">Memoria USB o máquina virtual. Entras al escritorio automáticamente (usuario <code>kali</code>, contraseña <code>kali</code>).</span></p></li>
+      <li><h3><span data-l="en">Open the Linux-C.O.S menu</span><span data-l="es">Abre el menú Linux-C.O.S</span></h3><p><span data-l="en">Quick Start, BlackArch Shell, Blue-Team Stacks and the offline guide live in their own folder of the applications menu.</span><span data-l="es">Inicio rápido, Shell de BlackArch, Stacks Blue-Team y la guía offline están en su propia carpeta del menú de aplicaciones.</span></p></li>
+      <li><h3><span data-l="en">Install, encrypted</span><span data-l="es">Instala, cifrado</span></h3><p><span data-l="en">Double-click “Install Linux-C.O.S” and tick “Encrypt system” for LUKS2.</span><span data-l="es">Doble clic en “Instalar Linux-C.O.S” y marca “Cifrar el sistema” para LUKS2.</span> <a href="docs.html#install"><span data-l="en">Install guide</span><span data-l="es">Guía de instalación</span></a></p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section-alt" aria-labelledby="cta-h">
+  <div class="container center">
+    <h2 id="cta-h"><span data-l="en">Ready to look inside?</span><span data-l="es">¿Listo para mirar dentro?</span></h2>
+    <p class="lead"><span data-l="en">Everything is open source — read the build, the hooks and the hardening before you trust them.</span><span data-l="es">Todo es código abierto — lee la compilación, los hooks y el hardening antes de confiar en ellos.</span></p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="docs.html"><span data-l="en">Read the docs</span><span data-l="es">Leer la documentación</span></a>
+      <a class="btn btn-ghost" href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener"><span data-l="en">View on GitHub</span><span data-l="es">Ver en GitHub</span></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="Linux-C.O.S" width="30" height="30"><span aria-hidden="true">LINUX-C.O.S</span></a>
+        <p><span data-l="en">Cyber Offensive &amp; defensive Security. A Kali-based distribution with Parrot and BlackArch tools, a blue-team stack and hardening on by default.</span><span data-l="es">Cyber Offensive &amp; defensive Security. Una distribución basada en Kali con herramientas de Parrot y BlackArch, stack blue-team y hardening activado por defecto.</span></p>
+        <p><span data-l="en">This site makes no third-party requests and sets no cookies.</span><span data-l="es">Este sitio no hace peticiones a terceros ni usa cookies.</span></p>
+      </div>
+      <div>
+        <h2><span data-l="en">Product</span><span data-l="es">Producto</span></h2>
+        <ul>
+          <li><a href="features.html"><span data-l="en">Features</span><span data-l="es">Características</span></a></li>
+          <li><a href="tools.html"><span data-l="en">Tool catalog</span><span data-l="es">Catálogo de herramientas</span></a></li>
+          <li><a href="download.html"><span data-l="en">Download &amp; build</span><span data-l="es">Descarga y compilación</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2><span data-l="en">Help</span><span data-l="es">Ayuda</span></h2>
+        <ul>
+          <li><a href="docs.html"><span data-l="en">Documentation</span><span data-l="es">Documentación</span></a></li>
+          <li><a href="faq.html"><span data-l="en">FAQ</span><span data-l="es">Preguntas frecuentes</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/issues" rel="noopener"><span data-l="en">Report a bug</span><span data-l="es">Reportar un error</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2><span data-l="en">Project</span><span data-l="es">Proyecto</span></h2>
+        <ul>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener"><span data-l="en">Source code</span><span data-l="es">Código fuente</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md" rel="noopener"><span data-l="en">Build notes</span><span data-l="es">Notas de compilación</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/releases" rel="noopener"><span data-l="en">Releases</span><span data-l="es">Versiones</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> <span data-l="en">Linux-C.O.S project</span><span data-l="es">Proyecto Linux-C.O.S</span> · v0.1 “Génesis”</span>
+      <span><span data-l="en">Kali, Parrot and BlackArch are trademarks of their respective owners; Linux-C.O.S is not affiliated with them.</span><span data-l="es">Kali, Parrot y BlackArch son marcas de sus respectivos dueños; Linux-C.O.S no está afiliado a ellos.</span></span>
+    </div>
+  </div>
+</footer>
+<button class="icon-btn to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+</body>
+</html>

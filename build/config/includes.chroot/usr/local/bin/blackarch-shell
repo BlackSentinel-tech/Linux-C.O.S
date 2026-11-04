@@ -1,33 +1,152 @@
 #!/bin/sh
-# Linux-C.O.S -- drops you into the pre-baked BlackArch container: every one
-# of the 2,858 BlackArch tools, running natively (real pacman-built Arch
-# binaries, not emulated), with your home directory bind-mounted so files
-# you touch there are the same files you see from the Debian side.
+# Linux-C.O.S -- drops you into the BlackArch container: BlackArch's tools
+# running natively (real pacman-built Arch binaries, not emulated), with
+# your home directory bind-mounted so files you touch there are the same
+# files you see from the Debian side.
+#
+# Which image you get depends on how the ISO was built (see
+# docs/BLACKARCH-INTEGRATION.md): the full `blackarch` group baked in at
+# build time, or BlackArch's official base image pulled on first boot, in
+# which case install what you need inside with `pacman -S <tool>` (or
+# `pacman -S blackarch` for everything -- tens of GB).
 set -e
 
 IMG=linux-cos/blackarch:latest
-NAME=blackarch-tools
+UPSTREAM=blackarchlinux/blackarch:latest
+# one persistent container per user: tools installed inside with pacman stay
+# installed between sessions (a --rm container would forget them on exit)
+NAME=blackarch-tools-$(id -un)
 
-if [ "$1" = "--update" ]; then
-  docker pull blackarchlinux/blackarch:latest
-  docker tag blackarchlinux/blackarch:latest "$IMG"
-  exit 0
-fi
+usage() {
+  cat <<'EOF'
+blackarch-shell -- open a shell with BlackArch's tools (Docker container)
 
-if ! docker image inspect "$IMG" >/dev/null 2>&1; then
-  echo "BlackArch image not loaded yet (first boot may still be pulling it -- check: journalctl -u linux-cos-firstboot)"
-  echo "or run: blackarch-shell --update"
+usage:
+  blackarch-shell             open (or re-join) the BlackArch shell
+  blackarch-shell <command>   run one command inside it, e.g. blackarch-shell nmap -h
+  blackarch-shell --update    pull BlackArch's official image (refuses to replace a
+                              full image baked into the ISO; --update --force does)
+  blackarch-shell --status    show whether the image is present / running
+  blackarch-shell --reset     delete your container (tools you installed with
+                              pacman are lost; your home directory is not)
+  blackarch-shell --help      this text
+
+Your home directory is mounted at the same path inside the container.
+Inside: `pacman -Ss <name>` searches tools, `pacman -S <name>` installs one --
+it stays installed until --reset (or --update, which needs a fresh container).
+EOF
+}
+
+docker_cmd() {
+  if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+    docker "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo docker "$@"
+  else
+    docker "$@"
+  fi
+}
+
+need_docker() {
+  if ! command -v docker >/dev/null 2>&1; then
+    echo "blackarch-shell: docker is not installed -- run: sudo apt install docker.io" >&2
+    exit 1
+  fi
+  if ! docker_cmd info >/dev/null 2>&1; then
+    echo "blackarch-shell: the Docker daemon is not running -- start it with: sudo systemctl start docker" >&2
+    exit 1
+  fi
+}
+
+case "${1:-}" in
+  -h|--help|help)
+    usage; exit 0 ;;
+  --update)
+    need_docker
+    # The ISO may carry the FULL blackarch group (build/blackarch-container/,
+    # labelled org.linux-cos.blackarch=full). Re-tagging the upstream base
+    # image over it would silently drop the 2,858 preinstalled tools.
+    kind=$(docker_cmd image inspect -f '{{ index .Config.Labels "org.linux-cos.blackarch" }}' "$IMG" 2>/dev/null || true)
+    if [ "$kind" = full ] && [ "${2:-}" != --force ]; then
+      echo "Your BlackArch image is the full one baked into this ISO (every tool preinstalled)."
+      echo "Replacing it with the upstream base image would remove those tools. Instead, update"
+      echo "it in place:   blackarch-shell pacman -Syu"
+      echo "or replace it anyway:   blackarch-shell --update --force"
+      exit 1
+    fi
+    echo "Pulling $UPSTREAM (this can take a while on the first run)..."
+    docker_cmd pull "$UPSTREAM"
+    docker_cmd tag "$UPSTREAM" "$IMG"
+    if docker_cmd container inspect "$NAME" >/dev/null 2>&1; then
+      echo "Done. Your existing container still uses the old image; to switch, run:"
+      echo "  blackarch-shell --reset   (tools you installed with pacman are lost)"
+    else
+      echo "Done. Run: blackarch-shell"
+    fi
+    exit 0 ;;
+  --reset)
+    need_docker
+    if docker_cmd container inspect "$NAME" >/dev/null 2>&1; then
+      docker_cmd rm -f "$NAME" >/dev/null
+      echo "Removed $NAME. The next blackarch-shell starts a fresh one."
+    else
+      echo "No container to remove."
+    fi
+    exit 0 ;;
+  --status)
+    need_docker
+    if docker_cmd image inspect "$IMG" >/dev/null 2>&1; then
+      echo "image:     present ($IMG)"
+    else
+      echo "image:     missing -- run: blackarch-shell --update"
+    fi
+    case "$(docker_cmd container inspect -f '{{.State.Running}}' "$NAME" 2>/dev/null || true)" in
+      true)  echo "container: running ($NAME)" ;;
+      false) echo "container: stopped ($NAME, starts on the next blackarch-shell)" ;;
+      *)     echo "container: none yet (created on the first blackarch-shell)" ;;
+    esac
+    exit 0 ;;
+  --)
+    shift ;;
+  -*)
+    echo "blackarch-shell: unknown option '$1'" >&2
+    usage >&2
+    exit 1 ;;
+esac
+
+need_docker
+
+if ! docker_cmd image inspect "$IMG" >/dev/null 2>&1; then
+  echo "The BlackArch image is not on this machine yet."
+  if systemctl is-active --quiet linux-cos-blackarch-pull.service 2>/dev/null; then
+    echo "It is still downloading in the background -- follow it with:"
+    echo "  journalctl -fu linux-cos-blackarch-pull"
+  else
+    echo "Download it now with:  blackarch-shell --update"
+  fi
   exit 1
 fi
 
-if docker ps --format '{{.Names}}' | grep -qx "$NAME"; then
-  exec docker exec -it "$NAME" zsh
-fi
+# -t only when we really have a terminal, so `blackarch-shell nmap -h | less`
+# and scripts work too.
+if [ -t 0 ] && [ -t 1 ]; then TTY=-it; else TTY=-i; fi
 
-exec docker run -it --rm \
-  --name "$NAME" \
-  --network host \
-  --cap-add NET_RAW --cap-add NET_ADMIN \
-  -v "$HOME:$HOME" \
-  -w "$HOME" \
-  "$IMG" zsh
+if [ $# -eq 0 ]; then set -- zsh; fi
+
+state=$(docker_cmd container inspect -f '{{.State.Running}}' "$NAME" 2>/dev/null || true)
+case "$state" in
+  true) ;;
+  false) docker_cmd start "$NAME" >/dev/null ;;
+  *)
+    # long-lived and idle; every shell or command is an `exec` into it
+    docker_cmd run -d \
+      --name "$NAME" \
+      --hostname blackarch \
+      --network host \
+      --cap-add NET_RAW --cap-add NET_ADMIN \
+      -v "$HOME:$HOME" \
+      -w "$HOME" \
+      "$IMG" sleep infinity >/dev/null ;;
+esac
+
+docker_cmd exec "$TTY" -w "$HOME" "$NAME" "$@"

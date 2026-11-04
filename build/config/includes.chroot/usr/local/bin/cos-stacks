@@ -5,21 +5,402 @@
 # decided at deploy time, exactly like Security Onion's own setup wizard
 # does it -- baking a live SIEM into a squashfs image is how you end up with
 # every install sharing the same default admin password.
+#
+# Passwords: for stacks whose secrets can be injected through environment
+# variables (MISP), the first `cos-stacks up <stack>` writes a per-user env
+# file with random values (mode 600) that every later run reuses. TheHive
+# and Wazuh keep their users in their own databases/config and start with
+# their upstream first-login defaults -- `cos-stacks creds <stack>` says so
+# and tells you to change them. Every web UI and API is bound to 127.0.0.1;
+# the only ports published on the network are Wazuh's agent ports.
+#
+# Each stack lives in $STACKS_DIR/<name>/ with:
+#   stack.meta         key=value: description, url, ram, kind (compose|wazuh)
+#   docker-compose.yml (compose stacks only)
+#   secrets.list       names of the variables to fill with random secrets
 set -e
-STACKS_DIR=/opt/linux-cos/blueteam-stacks
+
+STACKS_DIR=${COS_STACKS_DIR:-/opt/linux-cos/blueteam-stacks}
+STATE_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/linux-cos/stacks
+WAZUH_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/linux-cos/wazuh-docker
+# compose >= 2.24.4 understands the `!override` tag the Wazuh override uses
+COMPOSE_MIN=2.24.4
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); DIM=$(printf '\033[2m'); RED=$(printf '\033[31m')
+  GRN=$(printf '\033[32m'); YEL=$(printf '\033[33m'); RST=$(printf '\033[0m')
+else
+  B=''; DIM=''; RED=''; GRN=''; YEL=''; RST=''
+fi
+
+die()  { printf '%scos-stacks: %s%s\n' "$RED" "$*" "$RST" >&2; exit 1; }
+info() { printf '%s==>%s %s\n' "$B" "$RST" "$*"; }
+warn() { printf '%s!!  %s%s\n' "$YEL" "$*" "$RST"; }
 
 usage() {
-  echo "usage: cos-stacks list | up <stack> | down <stack> | logs <stack>"
-  echo "stacks available:"
-  ls -1 "$STACKS_DIR" 2>/dev/null | sed 's/^/  - /'
+  cat <<EOF
+${B}cos-stacks${RST} -- blue-team platforms on demand (Docker)
+
+usage:
+  cos-stacks                 interactive menu (when run in a terminal)
+  cos-stacks list            every stack, with its status
+  cos-stacks info   <stack>  what it is, where it listens, what it needs
+  cos-stacks up     <stack>  start it (MISP: generates random passwords)
+  cos-stacks down   <stack>  stop it (data volumes are kept)
+  cos-stacks status [stack]  running containers
+  cos-stacks logs   <stack>  follow the logs (Ctrl+C to stop)
+  cos-stacks creds  <stack>  credentials to log in with
+  cos-stacks help            this text
+
+Web UIs and APIs listen on 127.0.0.1 only (Docker-published ports bypass
+ufw). Exception: Wazuh's agent ports 1514/1515, so agents can enroll.
+EOF
 }
 
-[ -z "$1" ] && { usage; exit 1; }
+# --- docker access ---------------------------------------------------------
+# The installed user is in the docker group (Calamares users.conf) and so is
+# the live user (auto/config's user-default-groups), but a group change only
+# applies to new logins -- fall back to sudo instead of failing obscurely.
+docker_cmd() {
+  if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+    docker "$@"
+  elif command -v sudo >/dev/null 2>&1; then
+    sudo docker "$@"
+  else
+    docker "$@"
+  fi
+}
 
-case "$1" in
-  list) usage ;;
-  up)   cd "$STACKS_DIR/$2" && docker compose up -d ;;
-  down) cd "$STACKS_DIR/$2" && docker compose down ;;
-  logs) cd "$STACKS_DIR/$2" && docker compose logs -f ;;
-  *) usage; exit 1 ;;
+compose() {
+  if docker_cmd compose version >/dev/null 2>&1; then
+    docker_cmd compose "$@"
+  elif command -v docker-compose >/dev/null 2>&1; then
+    if [ -w /var/run/docker.sock ] || [ "$(id -u)" -eq 0 ]; then
+      docker-compose "$@"
+    else
+      sudo docker-compose "$@"
+    fi
+  else
+    die "docker compose is not installed -- run: sudo apt install docker-compose"
+  fi
+}
+
+version_ge() { # version_ge A B -- true when version A >= B (numeric, dotted)
+  [ "$(printf '%s\n%s\n' "$2" "$1" | sort -t. -k1,1n -k2,2n -k3,3n | head -n 1)" = "$2" ]
+}
+
+DOCKER_STATE='' # checked once per run: every docker call may be a sudo call
+docker_up() {
+  if [ -z "$DOCKER_STATE" ]; then
+    if docker_cmd info >/dev/null 2>&1; then DOCKER_STATE=up; else DOCKER_STATE=down; fi
+  fi
+  [ "$DOCKER_STATE" = up ]
+}
+
+need_docker() {
+  command -v docker >/dev/null 2>&1 || die "docker is not installed -- run: sudo apt install docker.io docker-compose"
+  if ! docker_up; then
+    die "the Docker daemon is not running -- start it with: sudo systemctl start docker"
+  fi
+}
+
+# --- stack metadata --------------------------------------------------------
+stacks() {
+  for d in "$STACKS_DIR"/*/; do
+    [ -f "${d}stack.meta" ] && basename "$d"
+  done
+  return 0
+}
+
+meta() { # meta <stack> <key>
+  sed -n "s/^$2=//p" "$STACKS_DIR/$1/stack.meta" 2>/dev/null | head -n 1
+}
+
+valid_stack() { # valid_stack <name> -- rejects empty names, typos, ../ tricks
+  case "$1" in
+    ''|*/*|.*) return 1 ;;
+  esac
+  [ -f "$STACKS_DIR/$1/stack.meta" ]
+}
+
+require_stack() {
+  if [ -z "$1" ]; then
+    printf 'cos-stacks: missing stack name. Available stacks:\n' >&2
+    stacks | sed 's/^/  - /' >&2
+    exit 1
+  fi
+  if ! valid_stack "$1"; then
+    printf '%scos-stacks: unknown stack "%s".%s Available stacks:\n' "$RED" "$1" "$RST" >&2
+    stacks | sed 's/^/  - /' >&2
+    exit 1
+  fi
+}
+
+project() { # compose project name of a stack
+  case "$(meta "$1" kind)" in
+    wazuh) echo single-node ;;  # upstream's directory name
+    *)     echo "cos-$1" ;;
+  esac
+}
+
+running_count() { # running containers of a stack, by compose label
+  # (not `compose ps`: that re-reads the compose file, whose ${VAR:?}
+  # secrets only exist in the env file -- it would always say "stopped")
+  docker_cmd ps -q --filter "label=com.docker.compose.project=$(project "$1")" 2>/dev/null | grep -c . || true
+}
+
+status_word() { # status_word <stack> [width] -- colored, padded to width
+  w=${2:-0}
+  if ! docker_up; then
+    printf "%s%-${w}s%s" "$DIM" "unknown" "$RST"; return
+  fi
+  n=$(running_count "$1")
+  if [ "${n:-0}" -gt 0 ]; then
+    printf "%s%-${w}s%s" "$GRN" "running" "$RST"
+  else
+    printf "%s%-${w}s%s" "$DIM" "stopped" "$RST"
+  fi
+}
+
+cols() { # terminal width, for keeping menu lines from wrapping
+  c=$(tput cols 2>/dev/null || true)
+  case "$c" in ''|*[!0-9]*) c=${COLUMNS:-80} ;; esac
+  echo "$c"
+}
+
+short() { # short <text> <max> -- cut to fit, with an ellipsis
+  if [ "${#1}" -le "$2" ]; then printf '%s' "$1"; else printf '%s...' "$(printf '%s' "$1" | cut -c1-$(($2 - 3)))"; fi
+}
+
+# --- secrets -----------------------------------------------------------------
+random_secret() {
+  LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom 2>/dev/null | head -c 24
+}
+
+env_file() { echo "$STATE_DIR/$1.env"; }
+
+has_secrets() { # the stack's secrets.list names at least one variable
+  [ -f "$STACKS_DIR/$1/secrets.list" ] && grep -q '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list"
+}
+
+ensure_secrets() {
+  f=$(env_file "$1")
+  mkdir -p "$STATE_DIR"
+  chmod 700 "$STATE_DIR" 2>/dev/null || true
+  [ -f "$f" ] || ( umask 077; : > "$f" )
+  has_secrets "$1" || return 0
+  grep -q . "$f" || info "generating random passwords for $1 (stored in $f)"
+  # add any variable that is not set yet (keeps existing ones stable)
+  grep '^[[:space:]]*[A-Za-z_]' "$STACKS_DIR/$1/secrets.list" | while read -r var; do
+    grep -q "^$var=" "$f" || printf '%s=%s\n' "$var" "$(random_secret)" >> "$f"
+  done
+}
+
+# compose for a regular stack, always with its env file (the compose files
+# interpolate ${VAR:?} secrets). Only `up` may create the env file.
+stack_compose() { # stack_compose <stack> <compose args...>
+  _st=$1; shift
+  _env=$(env_file "$_st")
+  [ -f "$_env" ] || die "$_st was never started here (no $_env) -- start it with: cos-stacks up $_st"
+  compose -p "cos-$_st" --env-file "$_env" -f "$STACKS_DIR/$_st/docker-compose.yml" "$@"
+}
+
+# --- wazuh -----------------------------------------------------------------
+# The manager must not be older than the agents reporting to it, and the
+# native wazuh-agent comes from Wazuh's rolling 4.x repo -- so deploy the
+# wazuh-docker release matching the installed agent (fallback: a known one).
+wazuh_tag() {
+  if [ -n "${COS_WAZUH_TAG:-}" ]; then echo "$COS_WAZUH_TAG"; return; fi
+  v=$(dpkg-query -W -f='${Version}' wazuh-agent 2>/dev/null | sed 's/-.*//') || v=''
+  case "$v" in
+    [0-9]*.[0-9]*.[0-9]*) echo "v$v" ;;
+    *) echo v4.9.0 ;;
+  esac
+}
+
+wazuh_compose() { # upstream compose + our override (localhost-only UIs/APIs)
+  [ -f "$WAZUH_DIR/single-node/docker-compose.yml" ] || die "wazuh was never started here -- start it with: cos-stacks up wazuh"
+  cd "$WAZUH_DIR/single-node"
+  compose -f docker-compose.yml -f "$STACKS_DIR/wazuh/docker-compose.linux-cos.yml" "$@"
+}
+
+wazuh_up() {
+  command -v git >/dev/null 2>&1 || die "git is required -- run: sudo apt install git"
+  cv=$(compose version --short 2>/dev/null | sed 's/^v//') || cv=''
+  if [ -z "$cv" ] || ! version_ge "$cv" "$COMPOSE_MIN"; then
+    die "docker compose ${cv:-?} is too old (need $COMPOSE_MIN+ to keep the Wazuh UI/API on localhost) -- run: sudo apt install --only-upgrade docker-compose"
+  fi
+  tag=$(wazuh_tag)
+  if dpkg-query -W wazuh-agent >/dev/null 2>&1; then why="matching the installed wazuh-agent"; else why="no wazuh-agent installed, using a known release"; fi
+  if [ -d "$WAZUH_DIR/.git" ]; then
+    # an earlier clone stays put; warn if apt has since moved the agent past it
+    have=$(git -C "$WAZUH_DIR" describe --tags --exact-match 2>/dev/null || true)
+    if [ -n "$have" ] && [ "$have" != "$tag" ] && version_ge "${tag#v}" "${have#v}"; then
+      warn "this manager is $have but the local wazuh-agent is ${tag#v}: agents newer than the manager are refused."
+      warn "Upgrade: cos-stacks down wazuh, move $WAZUH_DIR away, then cos-stacks up wazuh"
+    fi
+  else
+    info "fetching the official wazuh-docker deployment ($tag, $why)"
+    mkdir -p "$(dirname "$WAZUH_DIR")"
+    git clone --depth 1 -b "$tag" https://github.com/wazuh/wazuh-docker.git "$WAZUH_DIR" \
+      || die "could not clone wazuh-docker $tag -- is the network up? (pick another release with COS_WAZUH_TAG=v4.x.y)"
+  fi
+  cd "$WAZUH_DIR/single-node"
+  if [ ! -d config/wazuh_indexer_ssl_certs ] || [ -z "$(ls -A config/wazuh_indexer_ssl_certs 2>/dev/null)" ]; then
+    info "generating the indexer TLS certificates (one time)"
+    compose -f generate-indexer-certs.yml run --rm generator
+  fi
+  wazuh_compose up -d
+  printf '\n%swazuh is starting.%s Dashboard: https://localhost\n' "$GRN" "$RST"
+  warn "Wazuh starts with its UPSTREAM DEFAULT passwords (admin / SecretPassword)."
+  warn "Change them before exposing anything: cos-stacks creds wazuh"
+}
+
+# --- actions -----------------------------------------------------------------
+cmd_list() {
+  docker_up || true  # decide once here, not in every $(status_word) subshell
+  w=$(( $(cols) - 28 )); [ "$w" -lt 20 ] && w=20
+  printf '%s%-16s %-9s %s%s\n' "$B" "STACK" "STATUS" "DESCRIPTION" "$RST"
+  for s in $(stacks); do
+    printf '%-16s %s %s\n' "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
+  done
+  docker_up || printf '\n%s(Docker is not running: start it with sudo systemctl start docker)%s\n' "$YEL" "$RST"
+  printf '\n%sDetails: cos-stacks info <stack>   Start: cos-stacks up <stack>%s\n' "$DIM" "$RST"
+}
+
+cmd_info() {
+  require_stack "$1"
+  docker_up || true
+  printf '%s%s%s\n' "$B" "$1" "$RST"
+  printf '  what   : %s\n' "$(meta "$1" description)"
+  printf '  web UI : %s\n' "$(meta "$1" url)"
+  printf '  needs  : %s RAM free, network on first start (images are pulled)\n' "$(meta "$1" ram)"
+  printf '  status : %s\n' "$(status_word "$1")"
+  note=$(meta "$1" note)
+  if [ -n "$note" ]; then
+    w=$(( $(cols) - 11 )); [ "$w" -lt 30 ] && w=30
+    printf '%s\n' "$note" | fold -s -w "$w" | sed '1s/^/  note   : /; 2,$s/^/           /'
+  fi
+  return 0
+}
+
+cmd_up() {
+  require_stack "$1"; need_docker
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_up; return ;;
+  esac
+  ensure_secrets "$1"
+  info "starting $1 (the first start downloads several GB of images)"
+  stack_compose "$1" up -d
+  printf '\n%s%s is starting.%s Web UI: %s\n' "$GRN" "$1" "$RST" "$(meta "$1" url)"
+  printf 'Credentials: cos-stacks creds %s    Logs: cos-stacks logs %s\n' "$1" "$1"
+}
+
+cmd_down() {
+  require_stack "$1"; need_docker
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_compose down ;;
+    *)     stack_compose "$1" down ;;
+  esac
+  info "$1 stopped (data kept; its volumes: docker volume ls --filter label=com.docker.compose.project=$(project "$1"))"
+}
+
+cmd_logs() {
+  require_stack "$1"; need_docker
+  printf '%s(following logs -- Ctrl+C to stop)%s\n' "$DIM" "$RST"
+  case "$(meta "$1" kind)" in
+    wazuh) wazuh_compose logs -f ;;
+    *)     stack_compose "$1" logs -f ;;
+  esac
+}
+
+cmd_status() {
+  need_docker
+  if [ -n "$1" ]; then
+    require_stack "$1"
+    case "$(meta "$1" kind)" in
+      wazuh) wazuh_compose ps ;;
+      *)     stack_compose "$1" ps ;;
+    esac
+  else
+    cmd_list
+  fi
+}
+
+cmd_creds() {
+  require_stack "$1"
+  case "$(meta "$1" kind)" in
+    wazuh)
+      echo "Wazuh uses its upstream defaults until you change them:"
+      echo "  dashboard / indexer: admin / SecretPassword"
+      echo "  API (127.0.0.1:55000): wazuh-wui / MyS3cr37P450r.*-"
+      echo "Change them: https://documentation.wazuh.com/current/deployment-options/docker/wazuh-container.html#change-the-password-of-wazuh-users"
+      return ;;
+  esac
+  note=$(meta "$1" creds_note)
+  if has_secrets "$1"; then
+    f=$(env_file "$1")
+    [ -f "$f" ] || die "no credentials yet -- they are generated by: cos-stacks up $1"
+    cat "$f"
+  fi
+  [ -n "$note" ] && printf '%s\n' "$note"
+  return 0
+}
+
+menu() {
+  while :; do
+    DOCKER_STATE=''; docker_up || true  # re-check: the daemon may have been started meanwhile
+    w=$(( $(cols) - 33 )); [ "$w" -lt 20 ] && w=20
+    printf '\n%sLinux-C.O.S blue-team stacks%s\n' "$B" "$RST"
+    docker_up || printf '%s  Docker is not running -- start it with: sudo systemctl start docker%s\n' "$YEL" "$RST"
+    i=0
+    for s in $(stacks); do
+      i=$((i + 1))
+      printf '  %s%d)%s %-16s %s %s\n' "$B" "$i" "$RST" "$s" "$(status_word "$s" 9)" "$(short "$(meta "$s" description)" "$w")"
+    done
+    printf '  %sq)%s quit    %sEnter)%s refresh\n' "$B" "$RST" "$B" "$RST"
+    printf 'Pick a stack [1-%d, q]: ' "$i"
+    if ! read -r pick; then echo; exit 0; fi
+    case "$pick" in
+      q|Q) exit 0 ;;
+      '') continue ;;
+      *[!0-9]*) echo "Not a valid choice: type a number from 1 to $i, or q."; continue ;;
+    esac
+    if [ "$pick" -lt 1 ] || [ "$pick" -gt "$i" ]; then
+      echo "Not a valid choice: type a number from 1 to $i, or q."; continue
+    fi
+    s=$(stacks | sed -n "${pick}p")
+    echo
+    cmd_info "$s"
+    while :; do
+      printf '  [u]p  [d]own  [l]ogs  [c]reds  [b]ack: '
+      if ! read -r act; then echo; exit 0; fi
+      # Ctrl+C stops the child (logs -f) and comes back here, instead of
+      # killing this menu and the terminal window it was launched in
+      trap 'echo' INT
+      case "$act" in
+        u|U) ( cmd_up "$s" ) || true ;;
+        d|D) ( cmd_down "$s" ) || true ;;
+        l|L) ( cmd_logs "$s" ) || true ;;
+        c|C) ( cmd_creds "$s" ) || true ;;
+        b|B|'') trap - INT; break ;;
+        *) echo "  Unknown key: use u, d, l, c or b." ;;
+      esac
+      trap - INT
+    done
+  done
+}
+
+case "${1:-}" in
+  '')            if [ -t 0 ] && [ -t 1 ]; then menu; else usage; exit 1; fi ;;
+  menu)          menu ;;
+  list|ls)       cmd_list ;;
+  info)          cmd_info "${2:-}" ;;
+  up|start)      cmd_up "${2:-}" ;;
+  down|stop)     cmd_down "${2:-}" ;;
+  logs)          cmd_logs "${2:-}" ;;
+  status|ps)     cmd_status "${2:-}" ;;
+  creds)         cmd_creds "${2:-}" ;;
+  -h|--help|help) usage ;;
+  *)             printf 'cos-stacks: unknown command "%s"\n\n' "$1" >&2; usage >&2; exit 1 ;;
 esac

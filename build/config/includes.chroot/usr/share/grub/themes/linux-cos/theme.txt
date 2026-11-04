@@ -1,0 +1,39 @@
+# Linux-C.O.S GRUB theme (installed systems). Enabled by
+# /etc/default/grub.d/zz-linux-cos.cfg; artwork is rendered by
+# scripts/render-boot-art.mjs from the brand SVG.
+# Fonts: only "Unifont Regular 16" is guaranteed to be loaded by GRUB's
+# 00_header (unicode.pf2), so this theme sticks to it.
+
+title-text: ""
+desktop-image: "background.png"
+desktop-color: "#05070d"
+terminal-font: "Unifont Regular 16"
+
++ boot_menu {
+    left = 30%
+    top = 42%
+    width = 40%
+    height = 40%
+    item_font = "Unifont Regular 16"
+    item_color = "#9aa4c7"
+    selected_item_font = "Unifont Regular 16"
+    selected_item_color = "#ffffff"
+    item_height = 34
+    item_padding = 10
+    item_spacing = 6
+    icon_width = 0
+    icon_height = 0
+    selected_item_pixmap_style = "select_*.png"
+    scrollbar = false
+}
+
++ label {
+    id = "__timeout__"
+    left = 0
+    top = 88%
+    width = 100%
+    align = "center"
+    color = "#7c88b3"
+    font = "Unifont Regular 16"
+    text = "Booting the highlighted entry in %d s  -  arrows to choose, Enter to boot, e to edit"
+}

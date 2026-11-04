@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AI Assistant
+Name[es]=Asistente de IA
+GenericName=Local security AI copilot
+Comment=Local AI copilot for offensive and defensive security (runs on this machine)
+Comment[es]=Copiloto de IA local para seguridad ofensiva y defensiva (corre en este equipo)
+TryExec=cos-ai
+Exec=cos-pause cos-ai
+Icon=utilities-terminal
+Terminal=true
+Categories=X-Linux-COS;System;Security;
+Keywords=ai;ia;assistant;asistente;llm;ollama;copilot;gpt;
