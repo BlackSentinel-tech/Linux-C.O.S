@@ -103,6 +103,43 @@ the BlackArch-as-container tradeoff.
   `lb config` outside the container/volume; delete the stray output, don't
   try to keep it in sync with anything.
 
+- **Calamares never created a user.** The `exec` sequence had no `users`
+  job (the `users` *page* only collects input), and also lacked
+  `displaymanager`, `networkcfg`, `hwclock`, `initramfscfg`/`initramfs`.
+  `scripts/lint.sh` now fails if `users` or `initramfs` go missing again.
+- **Calamares aborted at the last step**: `packages.conf` did a plain
+  `remove` of `calamares-settings-linux-cos`, a package that never existed
+  (our settings are plain files). With the apt backend an unknown name in
+  `remove` fails the whole install; it is `try_remove` now (lint-enforced).
+- The installed system inherited the live session's lightdm autologin for
+  `kali` (an account that doesn't exist there) and dead installer icons;
+  `shellprocess.conf` removes them.
+- `ufw --force enable` ran at first boot but `ufw.service` stayed disabled
+  from the build hook, so the firewall was gone after the next reboot.
+  `linux-cos-firstboot` now re-enables the unit.
+- `linux-cos-firstboot` also ran in the live session (no marker survives a
+  live boot) and started a multi-GB `docker pull` into the RAM overlay. It
+  is live-aware now (firewall only), and the pull is its own unit
+  (`linux-cos-blackarch-pull.service`, never in live) instead of a `&`
+  child of a oneshot service.
+- `docker compose` was never installed (only `docker.io`), so `cos-stacks`
+  could not start anything -- `docker-compose` is in `base.list.chroot`.
+- Stacks published their ports on `0.0.0.0` -- Docker-published ports
+  bypass ufw entirely -- and shipped shared `change-me` passwords. Ports are
+  `127.0.0.1` now and `cos-stacks` generates per-user random secrets
+  (both lint-enforced).
+- The live user wasn't in the `docker`/`wireshark` groups
+  (`user-default-groups=` in `--bootappend-live`), and `splash` was missing
+  from the kernel command line, so the Plymouth theme never showed.
+- The Plymouth hook sed'ed background colors into a `.script` file that the
+  `spinner` theme doesn't have (it is a two-step theme); colors now go in
+  the `[two-step]` section of the `.plymouth` file.
+- `unattended-upgrades` targeted Debian's `-security` origin, which a
+  kali-rolling system never has; it silently did nothing.
+- `0035-usrlocal-scripts.hook.chroot` duplicated every script by hand and
+  had drifted (e.g. `linux-cos-live-password` only existed in the hook). It
+  is generated now: `python3 scripts/sync-usrlocal-hook.py` (CI checks it).
+
 ## Layout
 
 ```
@@ -116,12 +153,45 @@ build/
     hooks/normal/           -- build-time chroot hooks, numbered = order
     includes.chroot/        -- files copied verbatim into the ISO's filesystem
   blackarch-container/      -- Dockerfile for the full BlackArch tool image
+  config/includes.binary/   -- files for the ISO itself (boot menu splash
+                               images for GRUB and isolinux)
   branding/                 -- wallpapers/logo (placeholders -- see TODO)
   docs/
     BLACKARCH-INTEGRATION.md -- why BlackArch is a container, and the real
                                  size/time tradeoff on baking it into the ISO
   output/                   -- finished .iso lands here after a build
 ```
+
+What the user gets, by location inside `config/includes.chroot/`:
+
+```
+usr/local/bin/cos-help            quick start (ES/EN) -- also "Quick Start" in the menu
+usr/local/bin/cos-stacks          blue-team stacks: interactive menu, up/down/logs/creds
+usr/local/bin/blackarch-shell     BlackArch container: shell, one-off commands, --status
+usr/local/bin/cos-pause           keeps menu-launched terminals open until Enter
+usr/local/bin/linux-cos-session-setup   per-user: wallpaper on every monitor, trusted installer icon
+usr/local/sbin/linux-cos-firstboot      firewall (+ BlackArch image on installed systems)
+usr/local/sbin/linux-cos-blackarch-pull one-time image download (its own systemd unit)
+etc/xdg/menus/applications-merged/linux-cos.menu + usr/share/applications/linux-cos-*.desktop
+                                  the "Linux-C.O.S" folder in the XFCE applications menu
+usr/share/grub/themes/linux-cos/ + etc/default/grub.d/zz-linux-cos.cfg
+                                  GRUB theme on installed systems
+usr/share/doc/linux-cos/README.md the offline user guide ("User Guide" in the menu)
+opt/linux-cos/blueteam-stacks/<stack>/{stack.meta,secrets.list,docker-compose.yml}
+```
+
+Edit the scripts under `usr/local/{bin,sbin}/` and then run
+`python3 scripts/sync-usrlocal-hook.py` -- the 0035 hook is generated from
+them. Boot artwork is rendered by `node scripts/render-boot-art.mjs`.
+
+## Checking changes without building an ISO
+
+```bash
+scripts/lint.sh          # shellcheck, YAML, Calamares invariants, desktop files, drift
+tests/cli/run.sh         # cos-stacks / blackarch-shell / cos-help against a fake docker
+```
+
+CI (`.github/workflows/ci.yml`) runs both plus the website tests on every push.
 
 ## Building
 
@@ -184,8 +254,13 @@ GRUB to desktop, not a sign anything is hung.
 - [ ] decide BlackArch baked-in vs. first-boot (docs/BLACKARCH-INTEGRATION.md)
       -- currently first-boot (nothing baked in), so first real boot needs
       network to get `blackarch-shell` working
-- [ ] GRUB theme/background isn't done yet (boots to a plain text GRUB menu
-      before Plymouth takes over) -- cosmetic only, not blocking
+- [ ] boot-test the new boot menus: the installed-system GRUB theme
+      (`usr/share/grub/themes/linux-cos/`) and the live ISO splash images in
+      `config/includes.binary/` -- the latter rely on live-build placing its
+      own `boot/grub/splash.png` / `isolinux/splash.png` at those paths, which
+      is live-build's documented layout but not yet confirmed on this ISO
+- [ ] boot-test the XFCE "Linux-C.O.S" menu folder and the session-setup
+      autostart (wallpaper on every monitor, trusted installer launcher)
 - [ ] Secure Boot is explicitly disabled (`--uefi-secure-boot disable`) --
       fine for VM testing, but this ISO will not boot on real hardware with
       Secure Boot on until that's revisited (needs Kali's own shim/signed

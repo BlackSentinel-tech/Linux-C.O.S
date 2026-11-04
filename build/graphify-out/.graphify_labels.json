@@ -2,11 +2,17 @@
   "0": "Linux-C.O.S",
   "1": "cos-stacks",
   "2": "Why BlackArch is a container, not native packages",
-  "3": "Status",
+  "3": "cmd_down",
   "4": "config",
   "5": "build.sh",
   "6": "build-inside.sh",
   "7": "wazuh/README.md",
   "8": "blackarch-shell",
-  "9": "linux-cos-firstboot"
+  "9": "linux-cos-firstboot",
+  "10": "Linux-C.O.S user guide",
+  "11": "cos-help",
+  "12": "linux-cos-session-setup",
+  "13": "cos-pause",
+  "14": "linux-cos-blackarch-pull",
+  "15": "linux-cos-live-password"
 }
