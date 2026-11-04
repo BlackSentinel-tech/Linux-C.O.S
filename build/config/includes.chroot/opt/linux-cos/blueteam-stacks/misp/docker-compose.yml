@@ -1,17 +1,19 @@
 # Linux-C.O.S blue-team stack: MISP (threat intel platform).
 # Bring up with: cos-stacks up misp
-# First run: change every password below before exposing this beyond
-# localhost -- these placeholders are intentionally not secure defaults.
-version: "3.8"
+# Passwords are NOT in this file: cos-stacks generates random ones on the
+# first run (see `cos-stacks creds misp`). Running this file by hand without
+# them fails on purpose instead of falling back to a shared default.
+# Ports are bound to 127.0.0.1: Docker-published ports bypass ufw entirely,
+# so publishing on 0.0.0.0 would expose MISP to the whole network.
 
 services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: change-me-root
+      MYSQL_ROOT_PASSWORD: ${MISP_DB_ROOT_PASSWORD:?run this stack with cos-stacks up misp}
       MYSQL_DATABASE: misp
       MYSQL_USER: misp
-      MYSQL_PASSWORD: change-me-misp
+      MYSQL_PASSWORD: ${MISP_DB_PASSWORD:?run this stack with cos-stacks up misp}
     volumes:
       - misp-db:/var/lib/mysql
     restart: unless-stopped
@@ -23,14 +25,14 @@ services:
   misp:
     image: coolacid/misp-docker:core-latest
     depends_on: [db, redis]
-    ports: ["8443:443"]
+    ports: ["127.0.0.1:8443:443"]
     environment:
       MYSQL_HOST: db
       MYSQL_DATABASE: misp
       MYSQL_USER: misp
-      MYSQL_PASSWORD: change-me-misp
+      MYSQL_PASSWORD: ${MISP_DB_PASSWORD:?run this stack with cos-stacks up misp}
       MISP_ADMIN_EMAIL: admin@linux-cos.local
-      MISP_ADMIN_PASSPHRASE: change-me-admin
+      MISP_ADMIN_PASSPHRASE: ${MISP_ADMIN_PASSPHRASE:?run this stack with cos-stacks up misp}
       MISP_BASEURL: https://localhost:8443
       REDIS_FQDN: redis
     volumes:

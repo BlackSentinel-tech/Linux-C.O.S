@@ -1,0 +1,6 @@
+description=TheHive + Cortex -- incident case management + IOC analysis
+url=http://localhost:9000 (TheHive), http://localhost:9001 (Cortex)
+ram=6 GB
+kind=compose
+note=First run: open Cortex, create an org and an API key, then link it in TheHive.
+creds_note=TheHive 4 first login: admin@thehive.local / secret -- change it on first login.

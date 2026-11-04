@@ -1,7 +1,11 @@
 [Unit]
-Description=Linux-C.O.S first boot setup
+Description=Linux-C.O.S first boot setup (firewall, BlackArch image)
+Documentation=file:///usr/share/doc/linux-cos/README.md
 After=network-online.target docker.service
 Wants=network-online.target
+# Installed systems: once, ever. Live sessions have no marker (the live
+# filesystem resets every boot), so it runs each time there -- the script
+# itself only does the RAM-safe firewall setup in that case.
 ConditionPathExists=!/var/lib/linux-cos/firstboot-done
 
 [Service]

@@ -1,0 +1,18 @@
+#!/bin/sh
+# Linux-C.O.S -- pulls BlackArch's official image once, on an installed
+# system whose ISO didn't have the full image baked in. Started by
+# linux-cos-firstboot (linux-cos-blackarch-pull.service); safe to re-run.
+set -e
+
+IMG=linux-cos/blackarch:latest
+UPSTREAM=blackarchlinux/blackarch:latest
+
+if docker image inspect "$IMG" >/dev/null 2>&1; then
+  echo "[linux-cos] $IMG already present, nothing to do"
+  exit 0
+fi
+
+echo "[linux-cos] pulling $UPSTREAM"
+docker pull "$UPSTREAM"
+docker tag "$UPSTREAM" "$IMG"
+echo "[linux-cos] BlackArch image ready -- run: blackarch-shell"

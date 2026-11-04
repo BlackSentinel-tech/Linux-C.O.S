@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=User Guide
+Name[es]=Guía de usuario
+Comment=The Linux-C.O.S guide (works offline)
+Comment[es]=La guía de Linux-C.O.S (funciona sin conexión)
+Exec=xdg-open /usr/share/doc/linux-cos/README.md
+Icon=help-contents
+Terminal=false
+Categories=X-Linux-COS;System;Documentation;
+Keywords=guide;guía;docs;manual;

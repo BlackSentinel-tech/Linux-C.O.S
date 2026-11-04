@@ -1,0 +1,5 @@
+description=MISP -- threat-intelligence sharing platform (IOCs, events, feeds)
+url=https://localhost:8443
+ram=4 GB
+kind=compose
+creds_note=Log in as admin@linux-cos.local with MISP_ADMIN_PASSPHRASE.

@@ -1,5 +1,6 @@
 #!/bin/sh
-# Linux-C.O.S -- build orchestrator, run from macOS.
+# Linux-C.O.S -- build orchestrator. Run from macOS, Linux or Windows
+# (WSL2) with Docker available.
 #
 # usage: ./build.sh
 #
@@ -17,6 +18,15 @@
 set -e
 cd "$(dirname "$0")"
 
+if ! command -v docker >/dev/null 2>&1; then
+  echo "[linux-cos] docker is not installed or not on PATH -- see build/README.md" >&2
+  exit 1
+fi
+if ! docker info >/dev/null 2>&1; then
+  echo "[linux-cos] the Docker daemon is not reachable (is Docker Desktop / dockerd running?)" >&2
+  exit 1
+fi
+
 echo "[linux-cos] building the build environment image"
 docker build -t cos-builder .
 
@@ -28,8 +38,15 @@ mkdir -p output cache
 # under emulation during the build -- registering binfmt handlers here is
 # what makes that possible at all, but expect the build to run noticeably
 # slower than on x86_64 hardware because of it.
-echo "[linux-cos] registering QEMU binfmt handlers for cross-arch (amd64 on arm64 host)"
-docker run --rm --privileged tonistiigi/binfmt --install amd64
+# On an x86_64 host (Linux, Intel Mac, Windows/WSL2) there is nothing to
+# emulate, so skip it there.
+case "$(uname -m)" in
+  x86_64|amd64)
+    echo "[linux-cos] native amd64 host -- no QEMU emulation needed" ;;
+  *)
+    echo "[linux-cos] registering QEMU binfmt handlers for cross-arch (amd64 on $(uname -m) host)"
+    docker run --rm --privileged tonistiigi/binfmt --install amd64 ;;
+esac
 
 # live-build's chroot needs mknod (real device nodes for debootstrap).
 # Docker Desktop's bind mount of this macOS directory is virtiofs/gRPC-fuse

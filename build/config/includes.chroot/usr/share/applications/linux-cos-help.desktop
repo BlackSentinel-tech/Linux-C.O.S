@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Quick Start
+Name[es]=Inicio rápido
+GenericName=Linux-C.O.S quick start
+Comment=What to run first: offense, defense and system commands
+Comment[es]=Qué ejecutar primero: comandos de ofensiva, defensa y sistema
+Exec=cos-pause cos-help
+Icon=help-browser
+Terminal=true
+Categories=X-Linux-COS;System;
+Keywords=help;ayuda;start;inicio;linux-cos;

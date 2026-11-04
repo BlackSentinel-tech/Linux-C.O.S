@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Blue-Team Stacks
+Name[es]=Stacks Blue-Team
+GenericName=TheHive, Cortex, MISP, Wazuh
+Comment=Start and stop TheHive/Cortex, MISP and Wazuh on demand
+Comment[es]=Inicia y detiene TheHive/Cortex, MISP y Wazuh bajo demanda
+Exec=cos-pause cos-stacks menu
+Icon=network-server
+Terminal=true
+Categories=X-Linux-COS;System;Security;
+Keywords=siem;wazuh;misp;thehive;cortex;blue;team;soc;

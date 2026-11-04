@@ -1,8 +1,14 @@
 [Desktop Entry]
+Version=1.0
 Type=Application
 Name=Install Linux-C.O.S
-Comment=Install Linux-C.O.S to disk
+Name[es]=Instalar Linux-C.O.S
+GenericName=System installer
+Comment=Install Linux-C.O.S to disk (LUKS full-disk encryption available)
+Comment[es]=Instala Linux-C.O.S en el disco (cifrado completo LUKS disponible)
+TryExec=calamares
 Exec=pkexec /usr/bin/calamares
 Icon=/usr/share/backgrounds/linux-cos/logo.png
 Terminal=false
-Categories=System;
+Categories=X-Linux-COS;System;
+Keywords=install;instalar;calamares;installer;

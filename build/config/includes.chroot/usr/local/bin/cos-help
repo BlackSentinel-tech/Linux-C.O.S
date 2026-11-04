@@ -1,0 +1,94 @@
+#!/bin/sh
+# Linux-C.O.S -- quick start in the terminal. The MOTD only shows on console
+# and SSH logins (pam_motd), never in an XFCE terminal, so this is the one
+# place a desktop user can always ask "what do I run here?".
+# Spanish when $LANG is es_*, English otherwise.
+set -e
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); C=$(printf '\033[36m'); R=$(printf '\033[0m')
+else
+  B=''; C=''; R=''
+fi
+
+topic=${1:-}
+case "${LC_ALL:-${LC_MESSAGES:-${LANG:-}}}" in
+  es*) L=es ;;
+  *)   L=en ;;
+esac
+case "$topic" in
+  --es) L=es; topic=${2:-} ;;
+  --en) L=en; topic=${2:-} ;;
+esac
+
+if [ "$L" = es ]; then
+  T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
+  T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
+  T_KALI="herramientas de Kali/Parrot instaladas (menú de aplicaciones o terminal)"
+  T_BA="shell con las herramientas de BlackArch (contenedor)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú interactivo)"
+  T_SVC="estado de los servicios de defensa"
+  T_FW="estado del firewall (deny entrante por defecto)"
+  T_UPD="actualizar todo el sistema"
+  T_INST="instalar en disco (solo en la sesión live)"
+  T_DOC="guía completa"
+  T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
+  T_TOPICS="Temas: cos-help [offense|defense|install|system]"
+else
+  T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
+  T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
+  T_KALI="installed Kali/Parrot tools (applications menu or terminal)"
+  T_BA="shell with BlackArch's tools (container)"
+  T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (interactive menu)"
+  T_SVC="status of the defensive services"
+  T_FW="firewall status (default deny incoming)"
+  T_UPD="update the whole system"
+  T_INST="install to disk (live session only)"
+  T_DOC="full guide"
+  T_LIVE="Live session: user kali / password kali. Nothing is kept after shutdown."
+  T_TOPICS="Topics: cos-help [offense|defense|install|system]"
+fi
+
+line() { printf '  %s%-46s%s %s\n' "$C" "$1" "$R" "$2"; }
+
+offense() {
+  printf '%s%s%s\n' "$B" "$T_OFF" "$R"
+  line "apt list --installed 'kali-tools-*'" "$T_KALI"
+  line "blackarch-shell" "$T_BA"
+  line "blackarch-shell --update" "docker pull blackarchlinux/blackarch"
+}
+defense() {
+  printf '%s%s%s\n' "$B" "$T_DEF" "$R"
+  line "cos-stacks" "$T_STACKS"
+  line "systemctl status auditd apparmor wazuh-agent" "$T_SVC"
+  line "sudo ufw status verbose" "$T_FW"
+  line "sudo lynis audit system" "Lynis"
+  line "sudo apt install falco sysdig" "Falco/Sysdig (DKMS, post-boot)"
+}
+system() {
+  printf '%s%s%s\n' "$B" "$T_SYS" "$R"
+  line "sudo apt update && sudo apt full-upgrade" "$T_UPD"
+  [ -d /run/live/medium ] && line "Install Linux-C.O.S (desktop icon)" "$T_INST"
+  return 0
+}
+install_topic() {
+  printf '%s%s%s\n' "$B" "Calamares" "$R"
+  line "pkexec calamares" "$T_INST"
+  line "LUKS2 / ext4 / btrfs / xfs" "partition.conf"
+}
+
+printf '\n%s%s%s\n\n' "$B" "$T_TITLE" "$R"
+case "$topic" in
+  offense|ofensiva)  offense ;;
+  defense|defensiva) defense ;;
+  install|instalar)  install_topic ;;
+  system|sistema)    system ;;
+  -h|--help|'')
+    offense; echo; defense; echo; system ;;
+  *) echo "$T_TOPICS"; exit 1 ;;
+esac
+
+echo
+[ -d /run/live/medium ] && printf '%s\n' "$T_LIVE"
+printf '%s%s:%s %s  (%s)\n' "$B" "$T_MORE" "$R" "/usr/share/doc/linux-cos/README.md" "$T_DOC"
+printf '%s\n\n' "$T_TOPICS"

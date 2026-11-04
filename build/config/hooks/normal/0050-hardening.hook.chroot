@@ -77,10 +77,19 @@ cat > /etc/audit/rules.d/linux-cos.rules <<'EOF'
 -a always,exit -F arch=b64 -S execve -k exec
 EOF
 
-# --- unattended security upgrades on the Debian base -----------------------
+# --- unattended upgrades: ready, but opt-in --------------------------------
+# kali-rolling has no separate -security suite (see auto/config), so there
+# is no "security updates only" origin to restrict to -- the only origin is
+# the whole rolling archive. Upgrading all of it unattended can break a
+# working toolset mid-engagement, so the policy is written here but periodic
+# runs are NOT switched on. Turn them on with:
+#     sudo dpkg-reconfigure -plow unattended-upgrades
+# (An earlier version targeted Debian's "-security" origin, which a
+# kali-rolling system never has -- it silently did nothing.)
 cat > /etc/apt/apt.conf.d/50unattended-upgrades-linux-cos <<'EOF'
 Unattended-Upgrade::Origins-Pattern {
-        "origin=Debian,codename=${distro_codename}-security";
+        "origin=Kali,archive=kali-rolling";
 };
 Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
 EOF
