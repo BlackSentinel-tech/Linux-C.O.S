@@ -1,65 +1,89 @@
-# Graph Report - build  (2026-09-09)
+# Graph Report - build  (2026-11-04)
 
 ## Corpus Check
-- 9 files · ~21,663 words
+- 15 files · ~79,858 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 27 nodes · 19 edges · 10 communities (2 shown, 8 thin omitted)
+- 82 nodes · 145 edges · 16 communities (6 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `6d9a2988`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Linux-C.O.S
 - cos-stacks
 - Why BlackArch is a container, not native packages
-- Status
+- cmd_down
 - config
 - build.sh
 - build-inside.sh
 - wazuh/README.md
 - blackarch-shell
 - linux-cos-firstboot
+- Linux-C.O.S user guide
+- cos-help
+- linux-cos-session-setup
+- cos-pause
+- linux-cos-blackarch-pull
+- linux-cos-live-password
 
 ## God Nodes (most connected - your core abstractions)
-1. `Linux-C.O.S` - 6 edges
-2. `Status` - 3 edges
-3. `Why BlackArch is a container, not native packages` - 2 edges
-4. `build-inside.sh script` - 1 edges
-5. `build.sh script` - 1 edges
-6. `Real bugs found and fixed getting here (keep this list -- every one of` - 1 edges
-7. `these will bite again if a fix gets reverted by accident)` - 1 edges
-8. `Layout` - 1 edges
-9. `Building` - 1 edges
-10. `Testing the ISO` - 1 edges
+1. `Linux-C.O.S` - 7 edges
+2. `Linux-C.O.S user guide` - 7 edges
+3. `Status` - 3 edges
+4. `3. Defensive stack` - 2 edges
+5. `Why BlackArch is a container, not native packages` - 2 edges
+6. `build-inside.sh script` - 1 edges
+7. `build.sh script` - 1 edges
+8. `Real bugs found and fixed getting here (keep this list -- every one of` - 1 edges
+9. `these will bite again if a fix gets reverted by accident)` - 1 edges
+10. `Layout` - 1 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `cos-stacks script` --calls--> `cmd_down()`  [EXTRACTED]
+  build/config/includes.chroot/usr/local/bin/cos-stacks → build/config/includes.chroot/usr/local/bin/cos-stacks  _Bridges community 1 → community 3_
 
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 8 thin omitted)
+## Communities (16 total, 10 thin omitted)
 
 ### Community 0 - "Linux-C.O.S"
-Cohesion: 0.33
-Nodes (5): Building, Layout, Linux-C.O.S, Testing the ISO, TODO (known gaps, in rough priority order)
+Cohesion: 0.20
+Nodes (9): Building, Checking changes without building an ISO, Layout, Linux-C.O.S, Real bugs found and fixed getting here (keep this list -- every one of, Status, Testing the ISO, these will bite again if a fix gets reverted by accident) (+1 more)
 
-### Community 3 - "Status"
+### Community 1 - "cos-stacks"
+Cohesion: 0.28
+Nodes (13): cos-stacks script, cmd_creds(), cmd_info(), cmd_list(), docker_cmd(), docker_up(), env_file(), menu() (+5 more)
+
+### Community 3 - "cmd_down"
+Cohesion: 0.40
+Nodes (13): cmd_down(), cmd_logs(), cmd_status(), cmd_up(), compose(), die(), ensure_secrets(), info() (+5 more)
+
+### Community 8 - "blackarch-shell"
+Cohesion: 0.80
+Nodes (4): blackarch-shell script, docker_cmd(), need_docker(), usage()
+
+### Community 10 - "Linux-C.O.S user guide"
+Cohesion: 0.22
+Nodes (8): 1. Live session, 2. Offensive tools, 3. Defensive stack, 4. Installing to disk, 5. Hardening reference, 6. Help & bugs, Heavy platforms: `cos-stacks`, Linux-C.O.S user guide
+
+### Community 11 - "cos-help"
 Cohesion: 0.67
-Nodes (3): Real bugs found and fixed getting here (keep this list -- every one of, Status, these will bite again if a fix gets reverted by accident)
+Nodes (6): cos-help script, defense(), install_topic(), line(), offense(), system()
 
 ## Knowledge Gaps
-- **10 isolated node(s):** `build-inside.sh script`, `build.sh script`, `Real bugs found and fixed getting here (keep this list -- every one of`, `these will bite again if a fix gets reverted by accident)`, `Layout` (+5 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 21 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **8 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **17 isolated node(s):** `build-inside.sh script`, `build.sh script`, `Real bugs found and fixed getting here (keep this list -- every one of`, `these will bite again if a fix gets reverted by accident)`, `Layout` (+12 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 35 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Linux-C.O.S` connect `Linux-C.O.S` to `Status`?**
-  _High betweenness centrality (0.077) - this node is a cross-community bridge._
-- **Why does `Status` connect `Status` to `Linux-C.O.S`?**
-  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **What connects `build-inside.sh script`, `build.sh script`, `Real bugs found and fixed getting here (keep this list -- every one of` to the rest of the system?**
-  _10 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _17 weakly-connected nodes found - possible documentation gaps or missing edges._

@@ -82,7 +82,7 @@ compose() {
 
 need_docker() {
   command -v docker >/dev/null 2>&1 || die "docker is not installed -- run: sudo apt install docker.io docker-compose"
-  if ! docker_cmd info >/dev/null 2>&1; then
+  if ! docker_up; then
     die "the Docker daemon is not running -- start it with: sudo systemctl start docker"
   fi
 }
@@ -119,19 +119,39 @@ require_stack() {
   fi
 }
 
-running_count() { # number of running containers for a stack (0 if docker is down)
+project() { # compose project name of a stack
   case "$(meta "$1" kind)" in
-    wazuh)
-      [ -f "$WAZUH_DIR/single-node/docker-compose.yml" ] || { echo 0; return; }
-      compose -f "$WAZUH_DIR/single-node/docker-compose.yml" ps -q 2>/dev/null | grep -c . || true ;;
-    *)
-      compose -p "cos-$1" -f "$STACKS_DIR/$1/docker-compose.yml" ps -q 2>/dev/null | grep -c . || true ;;
+    wazuh) echo single-node ;;  # upstream's directory name
+    *)     echo "cos-$1" ;;
   esac
+}
+
+running_count() { # running containers of a stack, by compose label
+  # (not `compose ps`: that re-reads the compose file, whose ${VAR:?}
+  # secrets only exist in the env file -- it would always say "stopped")
+  docker_cmd ps -q --filter "label=com.docker.compose.project=$(project "$1")" 2>/dev/null | grep -c . || true
+}
+
+DOCKER_STATE='' # checked once per run: every docker call may be a sudo call
+docker_up() {
+  if [ -z "$DOCKER_STATE" ]; then
+    if docker_cmd info >/dev/null 2>&1; then DOCKER_STATE=up; else DOCKER_STATE=down; fi
+  fi
+  [ "$DOCKER_STATE" = up ]
+}
+
+# compose for a regular stack, always with its env file (the compose files
+# interpolate ${VAR:?} secrets). Only `up` may create the env file.
+stack_compose() { # stack_compose <stack> <compose args...>
+  _st=$1; shift
+  _env=$(env_file "$_st")
+  [ -f "$_env" ] || die "$_st was never started here (no $_env) -- start it with: cos-stacks up $_st"
+  compose -p "cos-$_st" --env-file "$_env" -f "$STACKS_DIR/$_st/docker-compose.yml" "$@"
 }
 
 status_word() { # status_word <stack> [width] -- colored, padded to width
   w=${2:-0}
-  if ! docker_cmd info >/dev/null 2>&1; then
+  if ! docker_up; then
     printf "%s%-${w}s%s" "$DIM" "unknown" "$RST"; return
   fi
   n=$(running_count "$1")
@@ -167,6 +187,7 @@ ensure_secrets() {
 
 # --- actions -----------------------------------------------------------------
 cmd_list() {
+  docker_up || true  # decide once here, not in every $(status_word) subshell
   printf '%s%-16s %-9s %s%s\n' "$B" "STACK" "STATUS" "DESCRIPTION" "$RST"
   for s in $(stacks); do
     printf '%-16s %s %s\n' "$s" "$(status_word "$s" 9)" "$(meta "$s" description)"
@@ -176,6 +197,7 @@ cmd_list() {
 
 cmd_info() {
   require_stack "$1"
+  docker_up || true
   printf '%s%s%s\n' "$B" "$1" "$RST"
   printf '  what   : %s\n' "$(meta "$1" description)"
   printf '  web UI : %s\n' "$(meta "$1" url)"
@@ -211,7 +233,7 @@ cmd_up() {
   esac
   ensure_secrets "$1"
   info "starting $1 (the first start downloads several GB of images)"
-  compose -p "cos-$1" --env-file "$(env_file "$1")" -f "$STACKS_DIR/$1/docker-compose.yml" up -d
+  stack_compose "$1" up -d
   printf '\n%s%s is starting.%s Web UI: %s\n' "$GRN" "$1" "$RST" "$(meta "$1" url)"
   printf 'Credentials: cos-stacks creds %s    Logs: cos-stacks logs %s\n' "$1" "$1"
 }
@@ -223,7 +245,7 @@ cmd_down() {
       [ -d "$WAZUH_DIR/single-node" ] || die "wazuh was never started"
       cd "$WAZUH_DIR/single-node" && compose down ;;
     *)
-      compose -p "cos-$1" --env-file "$(env_file "$1")" -f "$STACKS_DIR/$1/docker-compose.yml" down ;;
+      stack_compose "$1" down ;;
   esac
   info "$1 stopped (data volumes kept; remove them with: docker volume ls | grep cos-$1)"
 }
@@ -232,7 +254,7 @@ cmd_logs() {
   require_stack "$1"; need_docker
   case "$(meta "$1" kind)" in
     wazuh) cd "$WAZUH_DIR/single-node" 2>/dev/null || die "wazuh was never started"; compose logs -f ;;
-    *) compose -p "cos-$1" --env-file "$(env_file "$1")" -f "$STACKS_DIR/$1/docker-compose.yml" logs -f ;;
+    *) stack_compose "$1" logs -f ;;
   esac
 }
 
@@ -242,7 +264,7 @@ cmd_status() {
     require_stack "$1"
     case "$(meta "$1" kind)" in
       wazuh) cd "$WAZUH_DIR/single-node" 2>/dev/null || die "wazuh was never started"; compose ps ;;
-      *) compose -p "cos-$1" -f "$STACKS_DIR/$1/docker-compose.yml" ps ;;
+      *) stack_compose "$1" ps ;;
     esac
   else
     cmd_list
@@ -264,6 +286,7 @@ cmd_creds() {
 
 menu() {
   while :; do
+    DOCKER_STATE=''; docker_up || true  # re-check: the daemon may have been started meanwhile
     printf '\n%sLinux-C.O.S blue-team stacks%s\n' "$B" "$RST"
     i=0
     for s in $(stacks); do

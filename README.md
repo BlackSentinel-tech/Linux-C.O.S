@@ -39,3 +39,35 @@ cd build
 Boot `build/output/live-image-amd64.hybrid.iso` on real hardware or in a VM
 (VirtualBox, VMware, QEMU/KVM, or Hyper-V). As a Linux OS it then runs natively
 on that machine regardless of which host you built it from.
+
+## Website
+
+`website/` is the project's site (English/Spanish, no third-party requests):
+home, features, a searchable catalog of all 3,361 tools, download/build
+steps, docs and FAQ. It is plain static HTML, published to GitHub Pages by
+`.github/workflows/pages.yml` on every push to `main`.
+
+```sh
+python3 -m http.server 8765 --directory website   # preview at http://127.0.0.1:8765/
+python3 scripts/build-website.py                  # after editing website/_src/pages/*
+python3 scripts/build-website-data.py             # after changing data/*.json
+```
+
+## Checks
+
+Everything that can be verified without building a 15 GB ISO is checked on
+every push (`.github/workflows/ci.yml`):
+
+```sh
+scripts/lint.sh                              # shell, YAML, installer invariants, desktop files, drift
+tests/cli/run.sh                             # the shipped CLI tools against a fake docker
+cd tests/website && npm install && npm test  # website end-to-end in Chromium
+```
+
+## Known gaps
+
+- Not boot-tested yet on a VM or real hardware: the first ISO was built, the
+  installer path and the boot menus still need a real run (see
+  [`build/README.md`](build/README.md#todo-known-gaps-in-rough-priority-order)).
+- Secure Boot must be disabled (no signed shim/grub path yet).
+- No prebuilt ISO is published yet; build it from source.

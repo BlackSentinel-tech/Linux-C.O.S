@@ -61,7 +61,7 @@ if "users" not in exec_mods:
 for need in ("mount", "unpackfs", "fstab", "bootloader", "umount", "initramfs", "displaymanager"):
     if need not in exec_mods:
         errors.append(f"calamares: '{need}' missing from the exec sequence")
-if exec_mods.index("initramfs") > exec_mods.index("bootloader"):
+if {"initramfs", "bootloader"} <= set(exec_mods) and exec_mods.index("initramfs") > exec_mods.index("bootloader"):
     errors.append("calamares: initramfs must run before bootloader")
 pk = yaml.safe_load((inc / "modules/packages.conf").read_text())
 for op in pk["operations"]:
