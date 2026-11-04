@@ -88,6 +88,19 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Verify the ISO boots BIOS + UEFI
+        working-directory: build/output
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xorriso
+          iso="${{ steps.meta.outputs.iso }}"
+          xorriso -indev "$iso" -report_el_torito plain 2>/dev/null | tee eltorito.txt
+          {
+            echo "### Boot modes"
+            if grep -qiE 'platform.*(0x00|bios|80x86)' eltorito.txt; then echo "- BIOS (isolinux): present"; else echo "- :warning: BIOS boot image not found"; fi
+            if grep -qiE 'platform.*(0xef|uefi)|efi' eltorito.txt; then echo "- UEFI (grub-efi): present"; else echo "- :warning: UEFI boot image not found -- this ISO is BIOS-only (boot VMs in legacy mode)"; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -f eltorito.txt
+
       - name: Upload the ISO as a downloadable artifact
         uses: actions/upload-artifact@v4
         with:

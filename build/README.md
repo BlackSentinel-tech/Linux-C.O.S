@@ -240,8 +240,9 @@ build -- read `docs/BLACKARCH-INTEGRATION.md`, it changes final ISO size a lot.
 
 **Live session login: `kali` / `kali`** (autologin is on by default, so
 you shouldn't even see the prompt -- see it above if autologin is ever off).
-The ISO is **amd64 (x86_64)** and a hybrid image (boots from USB or as a
-DVD/optical image). Secure Boot must be **off** (no signed bootloader yet).
+The ISO is **amd64 (x86_64)** and a **BIOS + UEFI hybrid** (boots from USB
+or as a DVD/optical image, in legacy or EFI firmware). Secure Boot must be
+**off** (the UEFI GRUB is unsigned).
 
 ### VirtualBox (Windows, Linux, Intel Mac)
 
@@ -251,10 +252,11 @@ Works natively because the host is x86_64.
 2. Memory 4096 MB+; CPUs 2+.
 3. To test the installer, add a 60+ GB virtual disk (the live session alone
    needs none).
-4. Settings -> System -> enable **EFI** (Calamares installs a GRUB EFI
-   loader). Settings -> Storage -> attach the `.iso` to the optical drive.
+4. Settings -> Storage -> attach the `.iso` to the optical drive. Firmware:
+   the default (BIOS) boots via isolinux; Settings -> System -> **EFI** also
+   boots (via GRUB). If one won't start, switch to the other.
 5. Start. For the install path, double-click **Install Linux-C.O.S** on the
-   desktop.
+   desktop -- Calamares installs the matching GRUB (BIOS or UEFI) for the VM.
 
 On an **Apple Silicon** Mac VirtualBox can't run an x86_64 guest (it lists
 the type but `VBoxManage startvm` fails with
@@ -270,6 +272,9 @@ the type but `VBoxManage startvm` fails with
 4. Memory 4096 MB+; add a 60+ GB disk to test the installer.
 5. Leave "Use Virtualization" / "Hardware OpenGL Acceleration" unchecked --
    neither applies when emulating a different architecture than the host.
+6. UTM's x86_64 default is UEFI, which the hybrid ISO boots. If it doesn't,
+   open the VM's **QEMU** settings and turn **UEFI Boot** off (SeaBIOS /
+   legacy), which boots the same ISO via isolinux.
 
 This is pure software emulation (QEMU TCG) -- boot is genuinely slow,
 several minutes from GRUB to desktop, not a sign anything is hung.
@@ -288,8 +293,16 @@ is offered on the partitioning page.
 - [ ] run the `Build ISO` workflow on the default branch and confirm the
       slim profile finishes within the runner's disk/time budget (the config
       is in place; it has not been run end-to-end yet)
+- [ ] **verify the new BIOS+UEFI hybrid actually builds and boots.** The
+      first (and only) real build so far was BIOS-only -- its log says
+      "No grub-efi* package found". `--bootloaders syslinux,grub-efi` plus
+      `mtools`/`grub-efi-amd64-bin` in the Dockerfile now request the UEFI
+      half too; this is the standard Kali/Debian-live hybrid setup, but it
+      has not been rebuilt here. If the grub-efi stage ever fails the build,
+      the fallback is to drop back to `--bootloaders syslinux` (BIOS only)
+      and boot VMs in legacy mode.
 - [ ] boot-test in VirtualBox/UTM (see "Running and installing the ISO"
-      above) -- not done yet
+      above), in both firmware modes -- not done yet
 - [ ] boot-test the Calamares install path specifically once the live
       session boots -- `unpackfs.conf`'s squashfs path
       (`/run/live/medium/live/filesystem.squashfs`) was written from

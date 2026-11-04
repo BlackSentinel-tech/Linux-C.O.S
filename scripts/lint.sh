@@ -135,6 +135,14 @@ for u in "$INC"/etc/systemd/system/*.service; do
 done
 ok "units point at shipped scripts"
 
+echo "bootloader inputs (BIOS + UEFI hybrid)"
+if grep -q 'grub-efi' build/auto/config; then
+  grep -q '\bmtools\b' build/Dockerfile || bad "auto/config requests grub-efi but build/Dockerfile lacks mtools (the UEFI FAT image needs it)"
+  grep -q 'grub-efi-amd64-bin' build/config/package-lists/bootloaders.list.chroot || bad "grub-efi requested but grub-efi-amd64-bin missing from bootloaders.list.chroot (Calamares UEFI install)"
+  grep -q 'syslinux' build/auto/config || bad "grub-efi set without syslinux -- the ISO would lose legacy BIOS boot"
+  [ "$fail" -eq 0 ] && ok "grub-efi hybrid inputs present (syslinux + mtools + grub-efi-amd64-bin)"
+fi
+
 echo "python"
 if python3 -m py_compile scripts/*.py; then ok "py_compile"; else bad "py_compile"; fi
 

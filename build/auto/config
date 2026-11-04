@@ -23,6 +23,16 @@
 # package-lists/installer.list.chroot), running from the live desktop
 # session -- also how Kali's own live images do it. Leaving d-i enabled
 # just builds a second, redundant, broken installer.
+#
+# --bootloaders "syslinux,grub-efi": make the ISO a real BIOS+UEFI hybrid so
+# it boots in any VM or machine without the user guessing a firmware mode --
+# syslinux/isolinux for legacy BIOS (VirtualBox's default, UTM with UEFI
+# off), grub-efi for UEFI (UTM's default x86_64 firmware, VirtualBox with
+# EFI enabled). grub-efi here is UNSIGNED, which is fine because
+# --uefi-secure-boot disable is set; this is unrelated to the signed
+# shim/grub that --debian-installer live would have demanded. The host build
+# image needs mtools + dosfstools to assemble the EFI FAT image (see
+# ../Dockerfile), and grub-efi-amd64-bin is pulled from Kali's repo.
 set -e
 
 # Cross-building (arm64 host, e.g. Apple Silicon -> amd64 ISO) needs QEMU
@@ -53,6 +63,7 @@ lb config noauto \
     --security false \
     --updates false \
     --uefi-secure-boot disable \
+    --bootloaders "syslinux,grub-efi" \
     --mirror-bootstrap "https://http.kali.org/kali" \
     --mirror-chroot "https://http.kali.org/kali" \
     --mirror-binary "https://http.kali.org/kali" \
