@@ -231,8 +231,16 @@ wazuh_up() {
     die "docker compose ${cv:-?} is too old (need $COMPOSE_MIN+ to keep the Wazuh UI/API on localhost) -- run: sudo apt install --only-upgrade docker-compose"
   fi
   tag=$(wazuh_tag)
-  if [ ! -d "$WAZUH_DIR/.git" ]; then
-    info "fetching the official wazuh-docker deployment ($tag, matching the installed wazuh-agent)"
+  if dpkg-query -W wazuh-agent >/dev/null 2>&1; then why="matching the installed wazuh-agent"; else why="no wazuh-agent installed, using a known release"; fi
+  if [ -d "$WAZUH_DIR/.git" ]; then
+    # an earlier clone stays put; warn if apt has since moved the agent past it
+    have=$(git -C "$WAZUH_DIR" describe --tags --exact-match 2>/dev/null || true)
+    if [ -n "$have" ] && [ "$have" != "$tag" ] && version_ge "${tag#v}" "${have#v}"; then
+      warn "this manager is $have but the local wazuh-agent is ${tag#v}: agents newer than the manager are refused."
+      warn "Upgrade: cos-stacks down wazuh, move $WAZUH_DIR away, then cos-stacks up wazuh"
+    fi
+  else
+    info "fetching the official wazuh-docker deployment ($tag, $why)"
     mkdir -p "$(dirname "$WAZUH_DIR")"
     git clone --depth 1 -b "$tag" https://github.com/wazuh/wazuh-docker.git "$WAZUH_DIR" \
       || die "could not clone wazuh-docker $tag -- is the network up? (pick another release with COS_WAZUH_TAG=v4.x.y)"
@@ -269,7 +277,10 @@ cmd_info() {
   printf '  needs  : %s RAM free, network on first start (images are pulled)\n' "$(meta "$1" ram)"
   printf '  status : %s\n' "$(status_word "$1")"
   note=$(meta "$1" note)
-  [ -n "$note" ] && printf '  note   : %s\n' "$note"
+  if [ -n "$note" ]; then
+    w=$(( $(cols) - 11 )); [ "$w" -lt 30 ] && w=30
+    printf '%s\n' "$note" | fold -s -w "$w" | sed '1s/^/  note   : /; 2,$s/^/           /'
+  fi
   return 0
 }
 

@@ -6,33 +6,33 @@
     "semantic_hash": ""
   },
   "build-inside.sh": {
-    "mtime": 1793759989.8130748,
-    "seen": 1793776965.462486,
-    "ast_hash": "cef25d6e7c4cae500bed92553114f75d",
+    "mtime": 1793777805.699975,
+    "seen": 1793795524.3857527,
+    "ast_hash": "4cc79d3f418c00339d650eba716b12a7",
     "semantic_hash": ""
   },
   "build.sh": {
-    "mtime": 1793760609.2346041,
-    "seen": 1793776965.4624884,
-    "ast_hash": "2e21a8a7ef4532405675a7209fbf979c",
+    "mtime": 1793777805.6997437,
+    "seen": 1793795524.385758,
+    "ast_hash": "dfd940d3691d990e796d894feb2e191b",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/blackarch-shell": {
-    "mtime": 1793760407.258589,
-    "seen": 1793776965.4624896,
-    "ast_hash": "45278daec3c84b7429a4bc4552e04431",
+    "mtime": 1793795364.7104774,
+    "seen": 1793795524.385761,
+    "ast_hash": "3c8cf38d750132e675e25e4a9c24178e",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/cos-stacks": {
-    "mtime": 1793761852.9273574,
-    "seen": 1793776965.4624937,
-    "ast_hash": "1eaa358ec6dc1b387a2531a069eb9cc7",
+    "mtime": 1793795377.5027428,
+    "seen": 1793795524.3857682,
+    "ast_hash": "4a921b6bb6ebff55d8e8ce0184b60e7f",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/sbin/linux-cos-firstboot": {
-    "mtime": 1793760427.2985902,
-    "seen": 1793776965.462497,
-    "ast_hash": "c61c50283652112ab355f8325029a1f2",
+    "mtime": 1793777700.7532263,
+    "seen": 1793795524.3858054,
+    "ast_hash": "41aab7e3e217946952675fcfec5a3059",
     "semantic_hash": ""
   },
   "README.md": {
@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/README.md": {
-    "mtime": 1793760384.5316343,
-    "seen": 1793776965.4625068,
-    "ast_hash": "55ca811f631dd58ceebdb1e118ecdc02",
+    "mtime": 1793777681.7197893,
+    "seen": 1793795524.3858175,
+    "ast_hash": "5365f302cadc879fdc570b492cec4c9c",
     "semantic_hash": ""
   },
   "docs/BLACKARCH-INTEGRATION.md": {
@@ -150,15 +150,15 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/cos-help": {
-    "mtime": 1793760486.356965,
-    "seen": 1793776965.462491,
-    "ast_hash": "93966ad3665070aa75cddf47ee772290",
+    "mtime": 1793795443.4135242,
+    "seen": 1793795524.385764,
+    "ast_hash": "06972530809c10c82444ef57c73afb29",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/cos-pause": {
-    "mtime": 1793760495.1385944,
-    "seen": 1793776965.4624925,
-    "ast_hash": "23832ec1a8761f6ae35ff53c81ea6462",
+    "mtime": 1793795364.71115,
+    "seen": 1793795524.385766,
+    "ast_hash": "9aa28aaa702c9ad115188906956c738f",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/linux-cos-session-setup": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/sbin/linux-cos-blackarch-pull": {
-    "mtime": 1793760427.3022745,
-    "seen": 1793776965.462496,
-    "ast_hash": "aed3c1f17fe19b7354e0c4c9bc56bde8",
+    "mtime": 1793777700.7589967,
+    "seen": 1793795524.3858023,
+    "ast_hash": "a007a1018593e8aa66d3f390b55ff6f4",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/sbin/linux-cos-live-password": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/share/doc/linux-cos/README.md": {
-    "mtime": 1793760686.1266057,
-    "seen": 1793776965.4625075,
-    "ast_hash": "202ebbc65b9f401e84d018a932ddb30e",
+    "mtime": 1793795453.9521003,
+    "seen": 1793795524.3858235,
+    "ast_hash": "636ea03f4c3198d309b978bf7f5041b9",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/share/grub/themes/linux-cos/theme.txt": {
@@ -261,6 +261,12 @@
     "mtime": 1793760656.5922754,
     "seen": 1793776965.4625354,
     "ast_hash": "2933dd8f195b3327f00cc8d4ddb41663",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/blueteam-stacks/wazuh/docker-compose.linux-cos.yml": {
+    "mtime": 1793777681.7092252,
+    "seen": 1793795524.385821,
+    "ast_hash": "022b0e590b4020fd5fcd00e4ffa7de13",
     "semantic_hash": ""
   }
 }

@@ -1,6 +1,6 @@
 {
   "0": "Linux-C.O.S",
-  "1": "cos-stacks",
+  "1": "cos-stacks script",
   "2": "Why BlackArch is a container, not native packages",
   "3": "cmd_down",
   "4": "config",
@@ -14,5 +14,8 @@
   "12": "linux-cos-session-setup",
   "13": "cos-pause",
   "14": "linux-cos-blackarch-pull",
-  "15": "linux-cos-live-password"
+  "15": "linux-cos-live-password",
+  "16": "cos-stacks",
+  "17": "cmd_up",
+  "18": "require_stack"
 }

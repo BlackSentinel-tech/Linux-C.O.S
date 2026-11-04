@@ -3,8 +3,12 @@
 # Menu launchers use it (Terminal=true entries in the XFCE "Linux-C.O.S"
 # folder) so a short command's output -- or an error such as "Docker is not
 # running" -- doesn't vanish with the terminal window the instant it exits.
+# Ctrl+C belongs to the command (e.g. stopping `cos-stacks logs`), not to
+# this wrapper: keep the window open afterwards either way
+trap ':' INT
 "$@"
 status=$?
+trap - INT
 printf '\nPress Enter to close / Pulsa Enter para cerrar '
 read -r _ || true
 exit "$status"

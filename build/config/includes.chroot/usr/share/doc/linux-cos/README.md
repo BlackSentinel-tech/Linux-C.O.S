@@ -32,6 +32,8 @@ fill your RAM). Run `blackarch-shell --update` if you really want it there.
   * `blackarch-shell nmap -h` runs a single command.
   * `blackarch-shell --status` / `--update` / `--help`.
   * Inside: `pacman -Ss <name>` to search, `pacman -S <name>` to install.
+    Your container is kept between sessions, so installed tools stay until
+    `blackarch-shell --reset`.
 
 ## 3. Defensive stack
 
