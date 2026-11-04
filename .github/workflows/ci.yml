@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint (shell, YAML, desktop entries, generated files)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install linters
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck yamllint desktop-file-utils libxml2-utils python3-yaml
+      - name: Lint
+        run: scripts/lint.sh
+
+  cli:
+    name: CLI tools (mocked Docker)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: cos-stacks / blackarch-shell / cos-help tests
+        run: tests/cli/run.sh
+
+  website:
+    name: Website end-to-end (Chromium)
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: tests/website
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Playwright + Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Test
+        run: npm test

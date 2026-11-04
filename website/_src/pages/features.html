@@ -1,0 +1,108 @@
+<!--
+title_en: Features
+title_es: Características
+desc_en: What ships in Linux-C.O.S: Kali and Parrot tools, BlackArch in a container, a native blue-team layer, on-demand SIEM stacks, OS hardening and an encrypted installer.
+desc_es: Qué incluye Linux-C.O.S: herramientas de Kali y Parrot, BlackArch en un contenedor, una capa blue-team nativa, stacks SIEM bajo demanda, hardening del sistema y un instalador cifrado.
+nav: features
+-->
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow"><span data-l="en">Features</span><span data-l="es">Características</span></span>
+    <h1><span data-l="en">Everything in the image</span><span data-l="es">Todo lo que trae la imagen</span></h1>
+    <p class="lead"><span data-l="en">Exactly what is installed, what is running, and what is one command away — with the reasons behind each choice.</span><span data-l="es">Exactamente qué está instalado, qué está corriendo y qué está a un comando — con el porqué de cada decisión.</span></p>
+  </div>
+</section>
+
+<section class="section" id="offense" aria-labelledby="offense-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Red team</span><span data-l="es">Red team</span></span>
+      <h2 id="offense-h"><span data-l="en">Offensive toolset</span><span data-l="es">Herramientas ofensivas</span></h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Kali</h3>
+        <p><span data-l="en"><code>kali-linux-everything</code> plus each of the 28 <code>kali-tools-*</code> categories listed explicitly, so a failing category is visible in the build log instead of hidden inside one metapackage.</span><span data-l="es"><code>kali-linux-everything</code> más cada una de las 28 categorías <code>kali-tools-*</code> listadas explícitamente, para que una categoría que falle se vea en el log en lugar de quedar escondida dentro de un metapaquete.</span></p>
+      </div>
+      <div class="card">
+        <h3>Parrot</h3>
+        <p><span data-l="en">The tools Parrot ships that no Kali category covers (computed by diffing both catalogs). Parrot's repo is pinned at priority 1 — a pure fallback that can never replace a Kali library.</span><span data-l="es">Las herramientas de Parrot que ninguna categoría de Kali cubre (calculadas comparando ambos catálogos). El repositorio de Parrot está fijado con prioridad 1 — un respaldo que nunca puede reemplazar una biblioteca de Kali.</span></p>
+      </div>
+      <div class="card">
+        <h3>BlackArch</h3>
+        <p><span data-l="en">Arch packages can't be installed with apt, so BlackArch runs as itself in Docker: <code>blackarch-shell</code> opens it with your home directory mounted at the same path. One-off commands work too: <code>blackarch-shell nmap -h</code>.</span><span data-l="es">Los paquetes de Arch no se instalan con apt, así que BlackArch corre tal cual en Docker: <code>blackarch-shell</code> lo abre con tu carpeta personal montada en la misma ruta. También sirve para un comando suelto: <code>blackarch-shell nmap -h</code>.</span></p>
+      </div>
+    </div>
+    <p><a class="btn btn-ghost btn-sm" href="tools.html"><span data-l="en">Search the full tool catalog →</span><span data-l="es">Buscar en el catálogo completo →</span></a></p>
+  </div>
+</section>
+
+<section class="section section-alt" id="defense" aria-labelledby="defense-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Blue team</span><span data-l="es">Blue team</span></span>
+      <h2 id="defense-h"><span data-l="en">Defensive stack</span><span data-l="es">Stack defensivo</span></h2>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3><span data-l="en">Native, on every install</span><span data-l="es">Nativo, en cada instalación</span></h3>
+        <ul>
+          <li><strong>Suricata</strong> + suricata-update — <span data-l="en">IDS/IPS (installed, off until you enable it)</span><span data-l="es">IDS/IPS (instalado, apagado hasta que lo actives)</span></li>
+          <li><strong>YARA</strong>, <strong>ClamAV</strong> <span data-l="en">(signatures kept fresh)</span><span data-l="es">(firmas actualizadas)</span></li>
+          <li><strong>osquery</strong>, <strong>AIDE</strong>, <strong>Lynis</strong>, <strong>rkhunter</strong>, <strong>Tiger</strong></li>
+          <li><strong>Wireshark</strong>, <strong>tshark</strong>, <strong>tcpdump</strong></li>
+          <li><strong>Wazuh agent</strong> <span data-l="en">— point it at your manager</span><span data-l="es">— apúntalo a tu manager</span></li>
+          <li><span data-l="en"><strong>Falco</strong> &amp; <strong>Sysdig</strong> repos pre-configured: <code>sudo apt install falco sysdig</code> builds their driver against the running kernel.</span><span data-l="es">Repositorios de <strong>Falco</strong> y <strong>Sysdig</strong> preconfigurados: <code>sudo apt install falco sysdig</code> compila su driver contra el kernel en uso.</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span data-l="en">Heavy platforms, on demand</span><span data-l="es">Plataformas pesadas, bajo demanda</span></h3>
+        <p><span data-l="en">A SIEM baked into an image means every install shares the same admin password. <code>cos-stacks</code> starts them when you need them and generates random credentials on first run.</span><span data-l="es">Un SIEM horneado en una imagen significa que todas las instalaciones comparten la misma contraseña de admin. <code>cos-stacks</code> los arranca cuando los necesitas y genera credenciales aleatorias en el primer arranque.</span></p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Stack</th><th><span data-l="en">What</span><span data-l="es">Qué es</span></th></tr></thead>
+          <tbody>
+            <tr><td><code>thehive-cortex</code></td><td><span data-l="en">Case management + IOC analysis</span><span data-l="es">Gestión de casos + análisis de IOC</span></td></tr>
+            <tr><td><code>misp</code></td><td><span data-l="en">Threat-intelligence sharing</span><span data-l="es">Compartir inteligencia de amenazas</span></td></tr>
+            <tr><td><code>wazuh</code></td><td><span data-l="en">Manager + indexer + dashboard</span><span data-l="es">Manager + indexador + panel</span></td></tr>
+          </tbody>
+        </table></div>
+        <p><span data-l="en">Web UIs listen on 127.0.0.1 only — Docker-published ports bypass the firewall, so nothing is exposed by accident.</span><span data-l="es">Las interfaces web escuchan solo en 127.0.0.1 — los puertos publicados por Docker se saltan el firewall, así que nada queda expuesto por accidente.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="hardening" aria-labelledby="hardening-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Hardening</span><span data-l="es">Hardening</span></span>
+      <h2 id="hardening-h"><span data-l="en">A pentest box is also a box someone will try to pop</span><span data-l="es">Un equipo de pentest también es un equipo que alguien intentará vulnerar</span></h2>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th><span data-l="en">Layer</span><span data-l="es">Capa</span></th><th><span data-l="en">Default</span><span data-l="es">Por defecto</span></th><th><span data-l="en">Where</span><span data-l="es">Dónde</span></th></tr></thead>
+      <tbody>
+        <tr><td><span data-l="en">Firewall</span><span data-l="es">Firewall</span></td><td><span data-l="en">ufw: deny incoming, allow outgoing — enabled at first boot and kept across reboots</span><span data-l="es">ufw: denegar entrante, permitir saliente — activado en el primer arranque y persistente</span></td><td><code>linux-cos-firstboot</code></td></tr>
+        <tr><td>MAC</td><td><span data-l="en">AppArmor enforcing, extra profiles installed</span><span data-l="es">AppArmor en modo enforcing, perfiles extra instalados</span></td><td><code>apparmor.service</code></td></tr>
+        <tr><td><span data-l="en">Kernel</span><span data-l="es">Kernel</span></td><td>kptr_restrict=2, dmesg_restrict, ptrace_scope=1, unprivileged BPF off, kexec off, rp_filter, no redirects, SYN cookies</td><td><code>/etc/sysctl.d/99-linux-cos-hardening.conf</code></td></tr>
+        <tr><td><span data-l="en">Audit</span><span data-l="es">Auditoría</span></td><td><span data-l="en">auditd watches passwd, shadow, sudoers, sshd_config and every execve</span><span data-l="es">auditd vigila passwd, shadow, sudoers, sshd_config y cada execve</span></td><td><code>/etc/audit/rules.d/linux-cos.rules</code></td></tr>
+        <tr><td>SSH</td><td><span data-l="en">Off. If enabled: no root login, 3 tries, 20 s grace</span><span data-l="es">Apagado. Si lo activas: sin login de root, 3 intentos, 20 s de gracia</span></td><td><code>/etc/ssh/sshd_config.d/99-linux-cos.conf</code></td></tr>
+        <tr><td><span data-l="en">Disk</span><span data-l="es">Disco</span></td><td><span data-l="en">LUKS2 full-disk encryption offered by the installer</span><span data-l="es">Cifrado de disco completo LUKS2 en el instalador</span></td><td>Calamares</td></tr>
+        <tr><td><span data-l="en">Updates</span><span data-l="es">Actualizaciones</span></td><td><span data-l="en">Unattended upgrades policy ready, opt-in (a rolling base has no security-only suite)</span><span data-l="es">Política de actualizaciones automáticas lista, opcional (una base rolling no tiene suite solo de seguridad)</span></td><td><code>dpkg-reconfigure unattended-upgrades</code></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="section section-alt" id="desktop" aria-labelledby="desktop-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">Desktop &amp; installer</span><span data-l="es">Escritorio e instalador</span></span>
+      <h2 id="desktop-h"><span data-l="en">Light desktop, guided install</span><span data-l="es">Escritorio ligero, instalación guiada</span></h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><h3>XFCE</h3><p><span data-l="en">The same desktop Kali ships: light on RAM and GPU so it doesn't compete with Burp, Metasploit and your VMs. Arc-Dark + Papirus.</span><span data-l="es">El mismo escritorio que Kali: ligero en RAM y GPU para no competir con Burp, Metasploit y tus VMs. Arc-Dark + Papirus.</span></p></div>
+      <div class="card"><h3><span data-l="en">Linux-C.O.S menu</span><span data-l="es">Menú Linux-C.O.S</span></h3><p><span data-l="en">A dedicated folder in the applications menu: Quick Start, BlackArch Shell, Blue-Team Stacks, the offline User Guide and the installer.</span><span data-l="es">Una carpeta propia en el menú de aplicaciones: Inicio rápido, Shell de BlackArch, Stacks Blue-Team, la Guía de usuario offline y el instalador.</span></p></div>
+      <div class="card"><h3>Calamares</h3><p><span data-l="en">ext4, btrfs or xfs; LUKS2; swap file; branded slideshow; removes live-only packages and the live autologin from the installed system.</span><span data-l="es">ext4, btrfs o xfs; LUKS2; archivo de swap; presentación con la marca; elimina los paquetes de la sesión live y su autologin del sistema instalado.</span></p></div>
+    </div>
+  </div>
+</section>

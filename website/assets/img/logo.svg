@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c3faa"/>
+      <stop offset="100%" stop-color="#0a1f5c"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d6273c"/>
+      <stop offset="100%" stop-color="#7c0f1f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- shield outline: left half = blue team (defend), right half = red team (attack) -->
+  <path id="shield-left" d="M256 24 L96 84 V248 C96 356 160 428 256 480
+                             V24 Z" fill="url(#blue)"/>
+  <path id="shield-right" d="M256 24 L416 84 V248 C416 356 352 428 256 480
+                              V24 Z" fill="url(#red)"/>
+  <path d="M256 24 L96 84 V248 C96 356 160 428 256 480
+           C352 428 416 356 416 248 V84 Z"
+        fill="none" stroke="#eef2ff" stroke-width="8"/>
+
+  <!-- circuit seams along the shield's centerline, tying both halves together -->
+  <g stroke="#eef2ff" stroke-width="5" fill="none" opacity="0.9">
+    <path d="M256 60 V180"/>
+    <circle cx="256" cy="180" r="6" fill="#eef2ff"/>
+    <path d="M256 180 L300 210 V260"/>
+    <circle cx="300" cy="260" r="6" fill="#eef2ff"/>
+    <path d="M256 180 L212 210 V260"/>
+    <circle cx="212" cy="260" r="6" fill="#eef2ff"/>
+    <path d="M256 300 V420"/>
+    <circle cx="256" cy="300" r="6" fill="#eef2ff"/>
+  </g>
+
+  <!-- central lock body: the OS defending, wrapped by the ">_" of the OS attacking -->
+  <g transform="translate(256,300)">
+    <rect x="-46" y="-14" width="92" height="70" rx="10" fill="#eef2ff"/>
+    <path d="M-28 -14 V-38 a28 28 0 0 1 56 0 V-14" fill="none"
+          stroke="#eef2ff" stroke-width="12"/>
+    <circle cx="0" cy="16" r="9" fill="#0a1f5c"/>
+    <rect x="-4" y="16" width="8" height="20" fill="#0a1f5c"/>
+  </g>
+  <g transform="translate(140,150)" fill="#eef2ff">
+    <path d="M0 0 L26 16 L0 32 L0 22 L10 16 L0 10 Z"/>
+  </g>
+  <g transform="translate(372,150) scale(-1,1)" fill="#eef2ff">
+    <path d="M0 0 L26 16 L0 32 L0 22 L10 16 L0 10 Z"/>
+  </g>
+</svg>
