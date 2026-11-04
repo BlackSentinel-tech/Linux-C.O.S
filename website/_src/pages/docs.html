@@ -24,6 +24,7 @@ nav: docs
           <li><a href="#offense"><span data-l="en">Offensive tools</span><span data-l="es">Herramientas ofensivas</span></a></li>
           <li><a href="#blackarch">blackarch-shell</a></li>
           <li><a href="#stacks">cos-stacks</a></li>
+          <li><a href="#ai">cos-ai <span data-l="en">(AI)</span><span data-l="es">(IA)</span></a></li>
           <li><a href="#install"><span data-l="en">Installing to disk</span><span data-l="es">Instalar en disco</span></a></li>
           <li><a href="#firstboot"><span data-l="en">First boot</span><span data-l="es">Primer arranque</span></a></li>
           <li><a href="#hardening"><span data-l="en">Hardening reference</span><span data-l="es">Referencia de hardening</span></a></li>
@@ -93,6 +94,34 @@ cos-stacks down misp         <span data-l="en"># stop (data is kept)</span><span
     <div class="callout warn">
       <strong><span data-l="en">Passwords</span><span data-l="es">Contraseñas</span></strong>
       <p><span data-l="en">MISP's passwords are generated at random on its first start. TheHive and Wazuh start with their upstream first-login defaults — <code>cos-stacks creds &lt;stack&gt;</code> shows them; change them on first login.</span><span data-l="es">Las contraseñas de MISP se generan al azar en su primer arranque. TheHive y Wazuh empiezan con los valores de fábrica de sus proyectos — <code>cos-stacks creds &lt;stack&gt;</code> los muestra; cámbialos en el primer inicio de sesión.</span></p>
+    </div>
+
+        <h2 id="ai">cos-ai <span data-l="en">— the AI assistant</span><span data-l="es">— el asistente de IA</span></h2>
+    <p><span data-l="en">A local AI copilot for offensive and defensive work. It runs on this machine against a free, open-weight model served by <a href="https://ollama.com" rel="noopener">Ollama</a> — no cloud, no API key, offline once a model is downloaded. It assists; you review and run everything yourself, only on systems you are authorized to test.</span><span data-l="es">Un copiloto de IA local para trabajo ofensivo y defensivo. Corre en este equipo sobre un modelo abierto y gratuito servido por <a href="https://ollama.com" rel="noopener">Ollama</a> — sin nube, sin clave de API, offline una vez descargado el modelo. Asiste; tú revisas y ejecutas todo, solo en sistemas que tengas autorización para probar.</span></p>
+    <p><span data-l="en">Set it up once (installs Ollama and downloads a model, a few GB):</span><span data-l="es">Actívalo una vez (instala Ollama y descarga un modelo, unos GB):</span></p>
+    <div class="code"><pre>cos-ai setup</pre></div>
+    <div class="code ref"><pre>cos-ai                                   <span data-l="en"># chat with the default assistant</span><span data-l="es"># chatea con el asistente por defecto</span>
+cos-ai ask "what is a SYN scan?"         <span data-l="en"># one-shot question</span><span data-l="es"># pregunta directa</span>
+nmap -sV target | cos-ai explain         <span data-l="en"># explain tool output</span><span data-l="es"># explica la salida</span>
+cos-ai suggest "enumerate an SMB host"   <span data-l="en"># prints commands for you to run</span><span data-l="es"># imprime comandos para que los ejecutes</span>
+cos-ai blueteam "write a Sigma rule"     <span data-l="en"># use a specific profile</span><span data-l="es"># usa un perfil concreto</span>
+cos-ai models   ;   cos-ai status</pre></div>
+    <p><span data-l="en">The profiles are the built-in "agents"; add your own as a markdown file under <code>/opt/linux-cos/ai/profiles/</code>:</span><span data-l="es">Los perfiles son los "agentes" incluidos; añade el tuyo como un archivo markdown en <code>/opt/linux-cos/ai/profiles/</code>:</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th><span data-l="en">Profile</span><span data-l="es">Perfil</span></th><th><span data-l="en">For</span><span data-l="es">Para</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>assistant</code></td><td><span data-l="en">general security Q&amp;A (default)</span><span data-l="es">consultas generales de seguridad (por defecto)</span></td></tr>
+        <tr><td><code>recon</code></td><td><span data-l="en">reconnaissance &amp; enumeration</span><span data-l="es">reconocimiento y enumeración</span></td></tr>
+        <tr><td><code>webapp</code></td><td><span data-l="en">web application testing</span><span data-l="es">pruebas de aplicaciones web</span></td></tr>
+        <tr><td><code>exploit</code></td><td><span data-l="en">vulnerability analysis &amp; exploitation (authorized)</span><span data-l="es">análisis de vulnerabilidades y explotación (autorizada)</span></td></tr>
+        <tr><td><code>blueteam</code></td><td><span data-l="en">SOC analyst: triage and detections (Suricata/YARA/Sigma)</span><span data-l="es">analista SOC: triaje y detecciones (Suricata/YARA/Sigma)</span></td></tr>
+        <tr><td><code>forensics</code></td><td>DFIR</td></tr>
+        <tr><td><code>report</code></td><td><span data-l="en">writing up findings</span><span data-l="es">redactar hallazgos</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout">
+      <strong><span data-l="en">Copilot, not autopilot</span><span data-l="es">Copiloto, no piloto automático</span></strong>
+      <p><span data-l="en"><code>cos-ai suggest</code> prints commands; it never runs them, and nothing attacks a target on its own. The live session does not set up AI (the model would fill RAM) — run <code>cos-ai setup</code> on an installed system. Any Ollama model works: <code>cos-ai pull qwen2.5-coder:7b</code>.</span><span data-l="es"><code>cos-ai suggest</code> imprime comandos; nunca los ejecuta, y nada ataca un objetivo por su cuenta. La sesión live no instala la IA (el modelo llenaría la RAM) — ejecuta <code>cos-ai setup</code> en un sistema instalado. Vale cualquier modelo de Ollama: <code>cos-ai pull qwen2.5-coder:7b</code>.</span></p>
     </div>
 
     <h2 id="install"><span data-l="en">Installing to disk</span><span data-l="es">Instalar en disco</span></h2>

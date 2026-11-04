@@ -31,9 +31,14 @@ if [ "$L" = es ]; then
   T_FW="estado del firewall (deny entrante por defecto)"
   T_UPD="actualizar todo el sistema"
   T_INST="instalar en disco (solo en la sesión live)"
+  T_AI="Copiloto de IA local (ofensiva + defensiva)"
+  T_AIK="asistente general de seguridad (red + blue)"
+  T_AISET="instalar IA: Ollama + modelo (unos GB, una vez)"
+  T_AIX="explicar la salida de una herramienta"
+  T_AISG="red team: sugiere comandos (los ejecutas tú)"
   T_DOC="guía completa"
   T_LIVE="Sesión live: usuario kali / contraseña kali. Nada se guarda al apagar."
-  T_TOPICS="Temas: cos-help [ofensiva|defensiva|instalar|sistema|guia (o guide)]"
+  T_TOPICS="Temas: cos-help [ofensiva|defensiva|ia|instalar|sistema|guia (o guide)]"
   T_UNKNOWN="Tema desconocido"
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
@@ -45,9 +50,14 @@ else
   T_FW="firewall status (default deny incoming)"
   T_UPD="update the whole system"
   T_INST="install to disk (live session only)"
+  T_AI="local AI copilot (offensive + defensive)"
+  T_AIK="general security assistant (red + blue)"
+  T_AISET="set up AI: Ollama + a model (a few GB, one time)"
+  T_AIX="explain a tool's output"
+  T_AISG="red team: suggests commands (you run them)"
   T_DOC="full guide"
   T_LIVE="Live session: user kali / password kali. Nothing is kept after shutdown."
-  T_TOPICS="Topics: cos-help [offense|defense|install|system|guide]"
+  T_TOPICS="Topics: cos-help [offense|defense|ai|install|system|guide]"
   T_UNKNOWN="Unknown topic"
 fi
 
@@ -81,6 +91,14 @@ system() {
   [ -d /run/live/medium ] && line "Install Linux-C.O.S (desktop icon)" "$T_INST"
   return 0
 }
+ai() {
+  printf '%s%s%s\n' "$B" "AI" "$R"
+  line "cos-ai" "$T_AIK"
+  line "cos-ai blueteam \"detect kerberoasting\"" "$T_AI"
+  line "nmap -sV host | cos-ai explain" "$T_AIX"
+  line "cos-ai suggest \"...\"" "$T_AISG"
+  line "cos-ai setup" "$T_AISET"
+}
 install_topic() {
   printf '%s%s%s\n' "$B" "Calamares" "$R"
   line "pkexec calamares" "$T_INST"
@@ -99,10 +117,11 @@ printf '\n%s%s%s\n\n' "$B" "$T_TITLE" "$R"
 case "$topic" in
   offense|ofensiva)  offense ;;
   defense|defensiva) defense ;;
+  ai|ia)             ai ;;
   install|instalar)  install_topic ;;
   system|sistema)    system ;;
   -h|--help|'')
-    offense; echo; defense; echo; system ;;
+    offense; echo; defense; echo; ai; echo; system ;;
   *) printf '%s: "%s"\n%s\n' "$T_UNKNOWN" "$topic" "$T_TOPICS"; exit 1 ;;
 esac
 

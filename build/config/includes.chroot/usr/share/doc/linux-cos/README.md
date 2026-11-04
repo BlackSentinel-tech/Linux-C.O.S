@@ -22,7 +22,49 @@ an OS that is hardened by default.
 The live session never downloads the BlackArch image by itself (it would
 fill your RAM). Run `blackarch-shell --update` if you really want it there.
 
-## 2. Offensive tools
+## 2. AI assistant (`cos-ai`)
+
+A local AI copilot for both offensive and defensive work. It runs entirely
+on this machine against a free, open-weight model served by **Ollama** --
+no cloud, no API key, offline once a model is downloaded. It **assists**:
+you review and run everything yourself, only on systems you may test.
+
+Set it up once (installs Ollama, downloads a model, a few GB):
+
+```bash
+cos-ai setup
+```
+
+Then:
+
+```bash
+cos-ai                                   # chat with the general assistant
+cos-ai ask "what does a SYN scan look like on the wire?"
+nmap -sV target | cos-ai explain         # explain tool output
+cos-ai suggest "enumerate an SMB host"   # prints commands for you to run
+cos-ai blueteam "write a Sigma rule for kerberoasting"
+cos-ai report < notes.txt                # draft a report from notes
+cos-ai models        # what is downloaded      cos-ai status
+cos-ai pull qwen2.5-coder:7b             # try another model
+```
+
+The "agents" are profiles under `/opt/linux-cos/ai/profiles/` -- drop your
+own markdown file there to add one:
+
+| profile | for |
+|---|---|
+| `assistant` | general security Q&A (default) |
+| `recon` | reconnaissance & enumeration |
+| `webapp` | web application testing |
+| `exploit` | vulnerability analysis & exploitation (authorized) |
+| `blueteam` | SOC analyst: triage, detections (Suricata/YARA/Sigma) |
+| `forensics` | DFIR / forensics |
+| `report` | writing up findings |
+
+`cos-ai suggest` prints commands; it never runs them. The assistant is a
+copilot, not an autopilot: nothing attacks a target on its own.
+
+## 3. Offensive tools
 
 * **Kali + Parrot (native):** every `kali-tools-*` category plus the
   Parrot-only extras. Find them in the applications menu, or list them:
@@ -35,7 +77,7 @@ fill your RAM). Run `blackarch-shell --update` if you really want it there.
     Your container is kept between sessions, so installed tools stay until
     `blackarch-shell --reset`.
 
-## 3. Defensive stack
+## 4. Defensive stack
 
 Running out of the box: **AppArmor** (enforcing), **auditd** (identity, sudo,
 sshd and exec rules), **ClamAV** signature updates, **ufw** firewall (set up
@@ -85,7 +127,7 @@ Passwords: MISP's are generated at random on the first `up` (see
 first-login defaults -- `cos-stacks creds <stack>` shows them; change them on
 first login.
 
-## 4. Installing to disk
+## 5. Installing to disk
 
 The installer (Calamares) offers ext4, btrfs or xfs, and **LUKS2 full-disk
 encryption** -- tick "Encrypt system" on the partitioning page. Requirements:
@@ -101,7 +143,7 @@ firewall before the network starts, and `linux-cos-blackarch-pull` then loads
 (or downloads, in the background) the BlackArch image:
 `journalctl -u linux-cos-firstboot -u linux-cos-blackarch-pull`.
 
-## 5. Hardening reference
+## 6. Hardening reference
 
 | File | What |
 |---|---|
@@ -110,7 +152,7 @@ firewall before the network starts, and `linux-cos-blackarch-pull` then loads
 | `/etc/ssh/sshd_config.d/99-linux-cos.conf` | sshd defaults (sshd itself is off) |
 | `/etc/apt/apt.conf.d/50unattended-upgrades-linux-cos` | opt-in auto-updates (`sudo dpkg-reconfigure -plow unattended-upgrades`) |
 
-## 6. Help & bugs
+## 7. Help & bugs
 
 * Project: https://github.com/BlackSentinel-tech/Linux-C.O.S
 * Report a bug: https://github.com/BlackSentinel-tech/Linux-C.O.S/issues
