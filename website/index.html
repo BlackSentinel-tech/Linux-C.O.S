@@ -45,8 +45,8 @@
         <span data-l="es"><span class="split-blue">Defiende</span> tu máquina. <span class="split-red">Ataca</span> desde ella.</span>
       </h1>
       <p class="lead">
-        <span data-l="en">Linux-C.O.S is one security distribution for attackers (red team) <em>and</em> defenders (blue team): Kali's and Parrot's tools installed natively, BlackArch's tools in a container, real defensive tooling — and an operating system that is hardened from the first boot.</span>
-        <span data-l="es">Linux-C.O.S es una sola distribución de seguridad para quien ataca (red team) <em>y</em> para quien defiende (blue team): las herramientas de Kali y Parrot instaladas de forma nativa, las de BlackArch en un contenedor, herramientas defensivas de verdad — y un sistema operativo protegido desde el primer arranque.</span>
+        <span data-l="en">Linux-C.O.S is one security distribution for attackers (red team) <em>and</em> defenders (blue team): Kali's and Parrot's tools installed natively, BlackArch's tools in a container, real defensive tooling, a local AI copilot — and an operating system that is hardened from the first boot.</span>
+        <span data-l="es">Linux-C.O.S es una sola distribución de seguridad para quien ataca (red team) <em>y</em> para quien defiende (blue team): las herramientas de Kali y Parrot instaladas de forma nativa, las de BlackArch en un contenedor, herramientas defensivas de verdad, un copiloto de IA local — y un sistema operativo protegido desde el primer arranque.</span>
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="download.html"><span data-l="en">Get Linux-C.O.S</span><span data-l="es">Obtener Linux-C.O.S</span></a>
@@ -109,6 +109,27 @@
         <span class="more"><span data-l="en">What is hardened →</span><span data-l="es">Qué se endurece →</span></span>
       </a>
     </div>
+  </div>
+</section>
+
+<section class="section" id="ai-band" aria-labelledby="aiband-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">AI copilot</span><span data-l="es">Copiloto de IA</span></span>
+      <h2 id="aiband-h"><span data-l="en">A local AI for offense and defense</span><span data-l="es">Una IA local para ofensiva y defensa</span></h2>
+      <p class="lead"><span data-l="en"><code>cos-ai</code> runs a free, open-weight model on your own machine — no cloud, no API key. It explains tool output, suggests the next step for an authorized engagement, and writes blue-team detections. It assists; you stay in control.</span><span data-l="es"><code>cos-ai</code> ejecuta un modelo abierto y gratuito en tu propia máquina — sin nube, sin clave de API. Explica la salida de las herramientas, sugiere el siguiente paso en un trabajo autorizado y escribe detecciones blue-team. Asiste; tú mantienes el control.</span></p>
+    </div>
+    <div class="terminal" role="img" aria-label="Terminal running cos-ai" data-aria-en="Terminal running cos-ai" data-aria-es="Terminal ejecutando cos-ai">
+      <div class="terminal-bar"><i></i><i></i><i></i><span>kali@linux-cos: ~</span></div>
+<pre><span class="p">kali@linux-cos</span>:~$ nmap -sV 10.0.0.5 | cos-ai explain
+<span class="h">ai ></span> 10.0.0.5 exposes SSH (OpenSSH 8.2) and an outdated Apache 2.4.29
+      on 80. The Apache build is the thing to look at next; check the
+      version against known CVEs before anything else.
+<span class="p">kali@linux-cos</span>:~$ cos-ai blueteam "sigma rule for kerberoasting"
+<span class="h">ai ></span> <span class="c"># writes a Sigma rule mapped to ATT&amp;CK T1558.003 ...</span>
+<span class="p">kali@linux-cos</span>:~$ <span class="r">cos-ai setup</span>   <span class="c"># installs Ollama + a model, once</span></pre>
+    </div>
+    <p><a class="btn btn-ghost btn-sm" href="features.html#ai"><span data-l="en">How the AI copilot works →</span><span data-l="es">Cómo funciona el copiloto de IA →</span></a></p>
   </div>
 </section>
 

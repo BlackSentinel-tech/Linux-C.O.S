@@ -16,6 +16,16 @@
   "14": "linux-cos-blackarch-pull",
   "15": "linux-cos-live-password",
   "16": "cos-stacks",
-  "17": "cmd_up",
-  "18": "require_stack"
+  "17": "cos-ai",
+  "18": "require_stack",
+  "19": "docker_up",
+  "20": "assistant.md",
+  "21": "_base.md",
+  "22": "blueteam.md",
+  "23": "explain.md",
+  "24": "exploit.md",
+  "25": "forensics.md",
+  "26": "recon.md",
+  "27": "report.md",
+  "28": "webapp.md"
 }

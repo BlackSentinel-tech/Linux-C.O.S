@@ -73,7 +73,32 @@ nav: features
   </div>
 </section>
 
-<section class="section" id="hardening" aria-labelledby="hardening-h">
+<section class="section" id="ai" aria-labelledby="ai-h">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><span data-l="en">AI copilot</span><span data-l="es">Copiloto de IA</span></span>
+      <h2 id="ai-h"><span data-l="en">A security AI that runs on your machine</span><span data-l="es">Una IA de seguridad que corre en tu máquina</span></h2>
+      <p class="lead"><span data-l="en"><code>cos-ai</code> is a local copilot for red <em>and</em> blue work, on a free open-weight model served by Ollama — no cloud, no API key, offline once a model is downloaded. It assists; you review and run everything yourself.</span><span data-l="es"><code>cos-ai</code> es un copiloto local para trabajo red <em>y</em> blue, sobre un modelo abierto y gratuito servido por Ollama — sin nube, sin clave de API, offline una vez descargado el modelo. Asiste; tú revisas y ejecutas todo.</span></p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3><span data-l="en">Understand &amp; plan</span><span data-l="es">Entiende y planifica</span></h3>
+        <p><span data-l="en">Pipe tool output in for a plain explanation, or ask for the next step. <code>nmap -sV host | cos-ai explain</code>.</span><span data-l="es">Pásale la salida de una herramienta para una explicación clara, o pide el siguiente paso. <code>nmap -sV host | cos-ai explain</code>.</span></p>
+      </div>
+      <div class="card">
+        <h3><span data-l="en">Offense, with a human in the loop</span><span data-l="es">Ofensiva, con un humano en el bucle</span></h3>
+        <p><span data-l="en"><code>cos-ai suggest "…"</code> proposes commands for an authorized engagement and prints them for you to run — it never attacks a target on its own.</span><span data-l="es"><code>cos-ai suggest "…"</code> propone comandos para un trabajo autorizado y los imprime para que los ejecutes tú — nunca ataca un objetivo por su cuenta.</span></p>
+      </div>
+      <div class="card">
+        <h3><span data-l="en">Defense &amp; detections</span><span data-l="es">Defensa y detecciones</span></h3>
+        <p><span data-l="en">The <code>blueteam</code> profile triages alerts and writes Suricata, YARA and Sigma rules mapped to MITRE ATT&amp;CK.</span><span data-l="es">El perfil <code>blueteam</code> clasifica alertas y escribe reglas Suricata, YARA y Sigma mapeadas a MITRE ATT&amp;CK.</span></p>
+      </div>
+    </div>
+    <p><span data-l="en">Profiles (the built-in agents): <code>assistant</code>, <code>recon</code>, <code>webapp</code>, <code>exploit</code>, <code>blueteam</code>, <code>forensics</code>, <code>report</code> — add your own under <code>/opt/linux-cos/ai/profiles/</code>. Set it up with <code>cos-ai setup</code>.</span><span data-l="es">Perfiles (los agentes incluidos): <code>assistant</code>, <code>recon</code>, <code>webapp</code>, <code>exploit</code>, <code>blueteam</code>, <code>forensics</code>, <code>report</code> — añade los tuyos en <code>/opt/linux-cos/ai/profiles/</code>. Actívalo con <code>cos-ai setup</code>.</span></p>
+  </div>
+</section>
+
+<section class="section section-alt" id="hardening" aria-labelledby="hardening-h">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow"><span data-l="en">Hardening</span><span data-l="es">Hardening</span></span>
@@ -95,7 +120,7 @@ nav: features
   </div>
 </section>
 
-<section class="section section-alt" id="desktop" aria-labelledby="desktop-h">
+<section class="section" id="desktop" aria-labelledby="desktop-h">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow"><span data-l="en">Desktop &amp; installer</span><span data-l="es">Escritorio e instalador</span></span>

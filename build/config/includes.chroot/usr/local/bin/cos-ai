@@ -1,0 +1,252 @@
+#!/bin/sh
+# Linux-C.O.S -- local AI assistant for offensive and defensive security
+# work. It runs entirely on this machine against a free, open-weight model
+# served by Ollama (http://127.0.0.1:11434): no cloud, no API key, works
+# offline once a model is pulled.
+#
+# It is a COPILOT, not an autopilot. Every profile below helps a human
+# operator understand output, plan the next step, write detections or draft
+# a report -- and `cos-ai suggest` PRINTS commands for you to review and run
+# yourself. cos-ai never executes an attack (or any command) against a
+# target on its own. Use it only on systems you are authorized to test.
+#
+# Profiles (the "agents") live in $AI_DIR/profiles/<name>.md and are layered
+# on top of _base.md. Add your own by dropping a markdown file there.
+set -eu
+
+AI_DIR=${COS_AI_DIR:-/opt/linux-cos/ai}
+PROFILE_DIR="$AI_DIR/profiles"
+HOST=${OLLAMA_HOST:-http://127.0.0.1:11434}
+MODEL=${COS_AI_MODEL:-llama3.1:8b}
+STATE_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/linux-cos/ai
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+  B=$(printf '\033[1m'); DIM=$(printf '\033[2m'); CY=$(printf '\033[36m')
+  GRN=$(printf '\033[32m'); YEL=$(printf '\033[33m'); RED=$(printf '\033[31m'); RST=$(printf '\033[0m')
+else
+  B=''; DIM=''; CY=''; GRN=''; YEL=''; RED=''; RST=''
+fi
+
+die()  { printf '%scos-ai: %s%s\n' "$RED" "$*" "$RST" >&2; exit 1; }
+info() { printf '%s==>%s %s\n' "$B" "$RST" "$*"; }
+
+usage() {
+  cat <<EOF
+${B}cos-ai${RST} -- local security AI assistant (offensive + defensive)
+
+usage:
+  cos-ai                      chat with the default assistant (interactive)
+  cos-ai <profile> [prompt]   chat/ask using a specific profile (below)
+  cos-ai ask "<question>"     one-shot question, prints the answer
+  cos-ai explain              explain piped tool output
+                                e.g.  nmap -sV host | cos-ai explain
+  cos-ai suggest "<goal>"     suggest commands for an AUTHORIZED engagement
+                                (prints them; never runs them)
+  cos-ai profiles             list the available profiles
+  cos-ai models               list installed models
+  cos-ai pull <model>         download a model (e.g. qwen2.5-coder:7b)
+  cos-ai setup                install Ollama + pull the default model
+  cos-ai status               show Ollama / model status
+  cos-ai help                 this text
+
+profiles:
+EOF
+  list_profiles | sed 's/^/  /'
+  cat <<EOF
+
+options:
+  --model <name>   use another model for this run (default: $MODEL)
+  --profile <name> pick a profile explicitly
+
+The model runs locally via Ollama. Nothing leaves this machine. cos-ai
+assists; you review and run anything yourself, only on systems you may test.
+EOF
+}
+
+# --- profiles --------------------------------------------------------------
+list_profiles() {
+  for f in "$PROFILE_DIR"/*.md; do
+    b=$(basename "$f" .md)
+    case "$b" in _*) continue ;; esac
+    [ -f "$f" ] || continue
+    desc=$(sed -n 's/^> //p' "$f" | head -n 1)
+    printf '%-10s %s\n' "$b" "$desc"
+  done 2>/dev/null
+  return 0
+}
+
+valid_profile() {
+  case "$1" in ''|_*|*/*|.*) return 1 ;; esac
+  [ -f "$PROFILE_DIR/$1.md" ]
+}
+
+system_prompt() { # system_prompt <profile>
+  [ -f "$PROFILE_DIR/_base.md" ] && cat "$PROFILE_DIR/_base.md"
+  if [ -f "$PROFILE_DIR/$1.md" ]; then printf '\n\n'; cat "$PROFILE_DIR/$1.md"; fi
+}
+
+# --- ollama plumbing -------------------------------------------------------
+have_ollama() { command -v ollama >/dev/null 2>&1; }
+
+ollama_up() { curl -fsS --max-time 3 "$HOST/api/tags" >/dev/null 2>&1; }
+
+model_present() { # model_present <model> -- matches "name" or "name:tag"
+  curl -fsS --max-time 5 "$HOST/api/tags" 2>/dev/null \
+    | jq -e --arg m "$1" '[.models[]?.name] | any(. == $m or startswith($m + ":"))' >/dev/null 2>&1
+}
+
+need_backend() {
+  if ! have_ollama && ! ollama_up; then
+    cat >&2 <<EOF
+${RED}cos-ai: no local model backend yet.${RST}
+Set it up once (installs Ollama and downloads a model, a few GB):
+  cos-ai setup
+Already have Ollama elsewhere? Point cos-ai at it: OLLAMA_HOST=http://host:11434
+EOF
+    exit 1
+  fi
+  if ! ollama_up; then
+    info "starting the Ollama service"
+    if ! { command -v systemctl >/dev/null 2>&1 && sudo -n systemctl start ollama 2>/dev/null; }; then
+      ollama serve >/dev/null 2>&1 &
+    fi
+    i=0; while [ $i -lt 20 ] && ! ollama_up; do sleep 0.5; i=$((i + 1)); done
+    ollama_up || die "the Ollama service is not responding at $HOST"
+  fi
+  if ! model_present "$MODEL"; then
+    cat >&2 <<EOF
+${YEL}cos-ai: the model "$MODEL" is not downloaded yet.${RST}
+Get it (a few GB, one time):   cos-ai pull $MODEL
+Or pick one you already have:  cos-ai models
+EOF
+    exit 1
+  fi
+}
+
+# POST a messages array (on stdin as JSON) to /api/chat, print the reply text
+chat_call() { # chat_call  (reads messages JSON from stdin)
+  jq -nc --arg model "$MODEL" --slurpfile msgs /dev/stdin \
+      '{model: $model, messages: $msgs[0], stream: false, options: {temperature: 0.3}}' \
+    | curl -fsS --max-time 600 "$HOST/api/chat" -H 'Content-Type: application/json' -d @- \
+    | jq -r 'if .error then "cos-ai: model error: " + .error else (.message.content // "") end'
+}
+
+# one exchange: system + user -> answer
+one_shot() { # one_shot <profile> <user-text>
+  need_backend
+  sys=$(system_prompt "$1"); user=$2
+  jq -n --arg s "$sys" --arg u "$user" \
+      '[{role:"system",content:$s},{role:"user",content:$u}]' \
+    | chat_call
+}
+
+interactive() { # interactive <profile>
+  need_backend
+  prof=$1
+  mkdir -p "$STATE_DIR"
+  hist=$(mktemp "${TMPDIR:-/tmp}/cos-ai.XXXXXX")
+  trap 'rm -f "$hist"' EXIT INT TERM
+  jq -n --arg s "$(system_prompt "$prof")" '[{role:"system",content:$s}]' > "$hist"
+  printf '%s%s profile%s -- model %s. Type your question; Ctrl+D or "exit" to leave.\n' \
+    "$B" "$prof" "$RST" "$MODEL"
+  printf '%sReminder: only act on systems you are authorized to test.%s\n\n' "$DIM" "$RST"
+  while :; do
+    printf '%syou>%s ' "$CY" "$RST"
+    if ! IFS= read -r line; then echo; break; fi
+    case "$line" in ''|' ') continue ;; exit|quit|:q) break ;; esac
+    jq --arg u "$line" '. + [{role:"user",content:$u}]' "$hist" > "$hist.tmp" && mv "$hist.tmp" "$hist"
+    ans=$(chat_call < "$hist")
+    printf '%sai >%s %s\n\n' "$GRN" "$RST" "$ans"
+    jq --arg a "$ans" '. + [{role:"assistant",content:$a}]' "$hist" > "$hist.tmp" && mv "$hist.tmp" "$hist"
+  done
+}
+
+# --- setup / models --------------------------------------------------------
+cmd_setup() {
+  if ! have_ollama; then
+    info "installing Ollama (runs the official installer; needs sudo)"
+    echo "    This fetches https://ollama.com/install.sh -- review it first if you prefer:"
+    echo "    curl -fsSL https://ollama.com/install.sh | less"
+    printf 'Proceed? [y/N] '; read -r a; case "$a" in y|Y) ;; *) die "cancelled" ;; esac
+    curl -fsSL https://ollama.com/install.sh | sudo sh || die "Ollama install failed"
+  else
+    info "Ollama already installed"
+  fi
+  if command -v systemctl >/dev/null 2>&1; then sudo systemctl enable --now ollama 2>/dev/null || true; fi
+  i=0; while [ $i -lt 20 ] && ! ollama_up; do sleep 0.5; i=$((i + 1)); done
+  info "downloading the default model ($MODEL) -- a few GB, one time"
+  ollama pull "$MODEL" || die "could not pull $MODEL (network? try: cos-ai pull <model>)"
+  info "ready. Try:  cos-ai ask \"what does a SYN scan look like on the wire?\""
+}
+
+cmd_status() {
+  if have_ollama; then echo "ollama:  installed ($(ollama --version 2>/dev/null | head -n1))"; else echo "ollama:  not installed -- run: cos-ai setup"; fi
+  if ollama_up; then echo "service: up at $HOST"; else echo "service: not responding at $HOST"; fi
+  echo "model:   $MODEL $(model_present "$MODEL" 2>/dev/null && echo '(present)' || echo '(not downloaded -- cos-ai pull '"$MODEL"')')"
+  echo "profiles: $(list_profiles | wc -l | tr -d ' ') in $PROFILE_DIR"
+}
+
+cmd_models() {
+  have_ollama || ollama_up || die "no backend -- run: cos-ai setup"
+  if ollama_up; then
+    curl -fsS "$HOST/api/tags" | jq -r '.models[]? | "  " + .name + "  (" + (((.size // 0)/1073741824)|.*10|round/10|tostring) + " GB)"'
+  else
+    ollama list
+  fi
+}
+
+# --- argument parsing ------------------------------------------------------
+# global options first (--model / --profile), then a subcommand or profile
+PROFILE=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --model) MODEL=${2:?--model needs a value}; shift 2 ;;
+    --model=*) MODEL=${1#--model=}; shift ;;
+    --profile) PROFILE=${2:?--profile needs a value}; shift 2 ;;
+    --profile=*) PROFILE=${1#--profile=}; shift ;;
+    *) break ;;
+  esac
+done
+
+cmd=${1:-}
+case "$cmd" in
+  ''|chat)
+    p=${PROFILE:-assistant}
+    valid_profile "$p" || die "unknown profile \"$p\" (see: cos-ai profiles)"
+    if [ -t 0 ] && [ -t 1 ]; then interactive "$p"; else cat >&2; die "chat needs a terminal; use: cos-ai ask \"...\""; fi ;;
+  help|-h|--help) usage ;;
+  profiles) list_profiles ;;
+  status) cmd_status ;;
+  models) cmd_models ;;
+  setup) cmd_setup ;;
+  pull)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai pull <model>"
+    have_ollama || ollama_up || die "no backend -- run: cos-ai setup first"
+    ollama pull "$1" ;;
+  ask)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai ask \"<question>\""
+    one_shot "${PROFILE:-assistant}" "$*" ;;
+  explain)
+    [ -t 0 ] && die "pipe something in, e.g.:  nmap -sV host | cos-ai explain"
+    input=$(cat)
+    [ -n "$input" ] || die "nothing on stdin to explain"
+    one_shot "${PROFILE:-explain}" "Explain this security tool output for an authorized tester: what it means, what stands out, and what to look at next. Output:
+
+$input" ;;
+  suggest)
+    shift; [ $# -ge 1 ] || die "usage: cos-ai suggest \"<goal>\""
+    printf '%sThese are SUGGESTIONS for an authorized engagement. Review each one; cos-ai does not run them.%s\n\n' "$DIM" "$RST"
+    one_shot "${PROFILE:-recon}" "For an authorized security assessment, suggest concrete commands to: $*
+List each command with one line on what it does and what to watch for. Do not run anything." ;;
+  *)
+    # bare profile name: `cos-ai blueteam`, or `cos-ai recon "enumerate ..."`
+    if valid_profile "$cmd"; then
+      prof=$cmd; shift
+      if [ $# -ge 1 ]; then one_shot "$prof" "$*"
+      elif [ -t 0 ] && [ -t 1 ]; then interactive "$prof"
+      else one_shot "$prof" "$(cat)"; fi
+    else
+      printf 'cos-ai: unknown command or profile "%s"\n\n' "$cmd" >&2
+      usage >&2; exit 1
+    fi ;;
+esac

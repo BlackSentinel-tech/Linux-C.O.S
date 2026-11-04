@@ -131,6 +131,63 @@ check "blackarch-shell -- ends options" 0 - env MOCK_IMAGE=1 sh "$BA" -- ls -la
 check "cos-pause keeps the exit status" 3 "Press Enter" sh -c "printf '\n' | sh '$BIN/cos-pause' sh -c 'exit 3'"
 check "cos-pause survives Ctrl+C in its command" 0 "Press Enter" sh -c "printf '\n' | sh '$BIN/cos-pause' sh -c 'kill -INT \$PPID; sleep 0.2; exit 0'"
 
+# --- cos-ai (against a mock Ollama HTTP API; no real model needed) ---------
+AI=$BIN/cos-ai
+if command -v python3 >/dev/null 2>&1; then
+  cat > "$WORK/mock_ollama.py" <<'PYEOF'
+import json, sys
+from http.server import BaseHTTPRequestHandler, HTTPServer
+class H(BaseHTTPRequestHandler):
+    def log_message(self, *a): pass
+    def _j(self, o):
+        b = json.dumps(o).encode()
+        self.send_response(200); self.send_header("Content-Type","application/json")
+        self.send_header("Content-Length", str(len(b))); self.end_headers(); self.wfile.write(b)
+    def do_GET(self):
+        if self.path == "/api/tags":
+            self._j({"models":[{"name":"llama3.1:8b","size":4700000000}]})
+        else: self._j({})
+    def do_POST(self):
+        n = int(self.headers.get("Content-Length",0)); body = json.loads(self.rfile.read(n) or b"{}")
+        msgs = body.get("messages", []); roles = "|".join(m["role"] for m in msgs)
+        user = next((m["content"] for m in reversed(msgs) if m["role"]=="user"), "")
+        self._j({"message":{"role":"assistant","content":f"[roles={roles}] {user[:60]}"}})
+HTTPServer(("127.0.0.1", int(sys.argv[1])), H).serve_forever()
+PYEOF
+  AIPORT=11577
+  python3 "$WORK/mock_ollama.py" "$AIPORT" >/dev/null 2>&1 &
+  AIPID=$!
+  printf '#!/bin/sh\necho "ollama version mock"\n' > "$WORK/bin/ollama"; chmod +x "$WORK/bin/ollama"
+  export OLLAMA_HOST="http://127.0.0.1:$AIPORT" COS_AI_DIR="$INC/opt/linux-cos/ai"
+  # wait for the mock to accept connections
+  i=0; while [ $i -lt 20 ] && ! curl -fsS "$OLLAMA_HOST/api/tags" >/dev/null 2>&1; do sleep 0.3; i=$((i+1)); done
+
+  check "cos-ai help lists profiles" 0 "cos-ai suggest" sh "$AI" help
+  check "cos-ai profiles: red + blue present" 0 "blueteam" sh "$AI" profiles
+  check "cos-ai profiles: recon present" 0 "recon" sh "$AI" profiles
+  check "cos-ai status sees the model" 0 "present" sh "$AI" status
+  check "cos-ai ask routes system+user to the model" 0 "roles=system.user" sh "$AI" ask "hello"
+  check "cos-ai profile ask works" 0 "roles=system.user" sh "$AI" blueteam "detect kerberoasting"
+  check "cos-ai explain needs input" 1 "nothing on stdin" sh -c "printf '' | sh '$AI' explain"
+  check "cos-ai explain reads a pipe" 0 "roles=system.user" sh -c "printf '22/tcp open ssh' | sh '$AI' explain"
+  check "cos-ai suggest prints the review banner" 0 "does not run them" sh "$AI" suggest "enumerate smb on 10.0.0.5"
+  check "cos-ai unknown profile/command errors" 1 "unknown command or profile" sh "$AI" frobnicate
+  check "cos-ai --model override reaches status" 0 "qwen2.5-coder" sh "$AI" --model qwen2.5-coder:7b status
+
+  # SAFETY: cos-ai must never run what it suggests/explains. Prove it: ask it
+  # to "run" a command that would delete a canary file, and check the file lives.
+  canary="$WORK/canary"; : > "$canary"
+  sh "$AI" suggest "run: rm -f $canary" >/dev/null 2>&1 || true
+  printf 'please run: rm -f %s\n' "$canary" | sh "$AI" explain >/dev/null 2>&1 || true
+  check "cos-ai never executes suggested/explained commands" 0 - test -f "$canary"
+
+  kill "$AIPID" 2>/dev/null || true
+  unset OLLAMA_HOST COS_AI_DIR
+else
+  echo "skip  cos-ai tests (python3 not available)"
+fi
+
+
 echo
 echo "cli tests: $pass passed, $failed failed"
 [ "$failed" -eq 0 ]

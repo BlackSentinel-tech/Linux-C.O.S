@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/cos-help": {
-    "mtime": 1793795443.4135242,
-    "seen": 1793795524.385764,
-    "ast_hash": "06972530809c10c82444ef57c73afb29",
+    "mtime": 1793799091.5764565,
+    "seen": 1793799346.8611605,
+    "ast_hash": "04dc059aab6acdcc743562e8d1fa109e",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/local/bin/cos-pause": {
@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/share/doc/linux-cos/README.md": {
-    "mtime": 1793795453.9521003,
-    "seen": 1793795524.3858235,
-    "ast_hash": "636ea03f4c3198d309b978bf7f5041b9",
+    "mtime": 1793799164.8656943,
+    "seen": 1793799346.8611853,
+    "ast_hash": "2890e342954aa39d0d6d330ec51a8366",
     "semantic_hash": ""
   },
   "config/includes.chroot/usr/share/grub/themes/linux-cos/theme.txt": {
@@ -267,6 +267,66 @@
     "mtime": 1793777681.7092252,
     "seen": 1793795524.385821,
     "ast_hash": "022b0e590b4020fd5fcd00e4ffa7de13",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/usr/local/bin/cos-ai": {
+    "mtime": 1793799012.5559406,
+    "seen": 1793799346.8611584,
+    "ast_hash": "f0a77bbcc786ef71d94e530dd44b0f18",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/_base.md": {
+    "mtime": 1793798988.9559393,
+    "seen": 1793799346.8611715,
+    "ast_hash": "2302fcf05aee72c31a17a32d6d930782",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/assistant.md": {
+    "mtime": 1793798988.960453,
+    "seen": 1793799346.8611727,
+    "ast_hash": "3583385c160007db70547cf7b6579d12",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/blueteam.md": {
+    "mtime": 1793798988.966701,
+    "seen": 1793799346.8611739,
+    "ast_hash": "e8c65fba8262a25c592488f8d99f51e5",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/explain.md": {
+    "mtime": 1793798988.9712584,
+    "seen": 1793799346.8611746,
+    "ast_hash": "e21cf9d8091612e8e9f00801da1f8d6c",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/exploit.md": {
+    "mtime": 1793798988.9650636,
+    "seen": 1793799346.8611753,
+    "ast_hash": "bf62336483caea763ce4c5395253bf8b",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/forensics.md": {
+    "mtime": 1793798988.968321,
+    "seen": 1793799346.8611758,
+    "ast_hash": "c8ede4f6ea2cdef9d04b8e0b41409738",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/recon.md": {
+    "mtime": 1793798988.9619832,
+    "seen": 1793799346.8611772,
+    "ast_hash": "f825a4b2c89841080b1420151bbb6eab",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/report.md": {
+    "mtime": 1793798988.9697676,
+    "seen": 1793799346.861178,
+    "ast_hash": "8ac7826738672eb7d093655102691dca",
+    "semantic_hash": ""
+  },
+  "config/includes.chroot/opt/linux-cos/ai/profiles/webapp.md": {
+    "mtime": 1793798988.9635131,
+    "seen": 1793799346.8611786,
+    "ast_hash": "71a59d0557477ad53e9fb0588de7299d",
     "semantic_hash": ""
   }
 }

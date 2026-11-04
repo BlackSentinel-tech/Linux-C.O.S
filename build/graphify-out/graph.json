@@ -139,6 +139,21 @@
       "source_location": "L1"
     },
     {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
+      "label": "cmd_creds()",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "cos-stacks script",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cmd_creds()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L330"
+    },
+    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_info",
       "label": "cmd_info()",
       "_origin": "ast",
@@ -184,36 +199,6 @@
       "source_location": "L165"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_cmd",
-      "label": "docker_cmd()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "docker_cmd()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L64"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
-      "label": "docker_up()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "docker_up()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L93"
-    },
-    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_menu",
       "label": "menu()",
       "_origin": "ast",
@@ -244,66 +229,6 @@
       "source_location": "L115"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_running_count",
-      "label": "running_count()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "running_count()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L146"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
-      "label": "stacks()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "stacks()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L108"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_status_word",
-      "label": "status_word()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "status_word()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L152"
-    },
-    {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_usage",
-      "label": "usage()",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "cos-stacks script",
-      "file_type": "code",
-      "metadata": {
-        "language": "bash",
-        "kind": "bash_function"
-      },
-      "norm_label": "usage()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L40"
-    },
-    {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme",
       "label": "linux-cos/README.md",
       "_origin": "ast",
@@ -328,64 +253,76 @@
       "source_location": "L13"
     },
     {
-      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_2_offensive_tools",
-      "label": "2. Offensive tools",
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_2_ai_assistant_cos_ai",
+      "label": "2. AI assistant (`cos-ai`)",
       "_origin": "ast",
       "community": 10,
       "community_name": "Linux-C.O.S user guide",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "2. offensive tools",
+      "norm_label": "2. ai assistant (`cos-ai`)",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
       "source_location": "L25"
     },
     {
-      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_3_defensive_stack",
-      "label": "3. Defensive stack",
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_3_offensive_tools",
+      "label": "3. Offensive tools",
       "_origin": "ast",
       "community": 10,
       "community_name": "Linux-C.O.S user guide",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "3. defensive stack",
+      "norm_label": "3. offensive tools",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L38"
+      "source_location": "L67"
     },
     {
-      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_installing_to_disk",
-      "label": "4. Installing to disk",
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_defensive_stack",
+      "label": "4. Defensive stack",
       "_origin": "ast",
       "community": 10,
       "community_name": "Linux-C.O.S user guide",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "4. installing to disk",
+      "norm_label": "4. defensive stack",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L88"
+      "source_location": "L80"
     },
     {
-      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_hardening_reference",
-      "label": "5. Hardening reference",
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_installing_to_disk",
+      "label": "5. Installing to disk",
       "_origin": "ast",
       "community": 10,
       "community_name": "Linux-C.O.S user guide",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "5. hardening reference",
+      "norm_label": "5. installing to disk",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L104"
+      "source_location": "L130"
     },
     {
-      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_help_bugs",
-      "label": "6. Help & bugs",
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_hardening_reference",
+      "label": "6. Hardening reference",
       "_origin": "ast",
       "community": 10,
       "community_name": "Linux-C.O.S user guide",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "6. help & bugs",
+      "norm_label": "6. hardening reference",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L113"
+      "source_location": "L146"
+    },
+    {
+      "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_7_help_bugs",
+      "label": "7. Help & bugs",
+      "_origin": "ast",
+      "community": 10,
+      "community_name": "Linux-C.O.S user guide",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "7. help & bugs",
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L155"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_heavy_platforms_cos_stacks",
@@ -397,7 +334,7 @@
       "node_kind": "heading",
       "norm_label": "heavy platforms: `cos-stacks`",
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L62"
+      "source_location": "L104"
     },
     {
       "id": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
@@ -442,6 +379,21 @@
       "source_location": "L1"
     },
     {
+      "id": "config_includes_chroot_usr_local_bin_cos_help_ai",
+      "label": "ai()",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "cos-help",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "ai()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L94"
+    },
+    {
       "id": "config_includes_chroot_usr_local_bin_cos_help_defense",
       "label": "defense()",
       "_origin": "ast",
@@ -454,7 +406,7 @@
       },
       "norm_label": "defense()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L70"
+      "source_location": "L80"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_install_topic",
@@ -469,7 +421,7 @@
       },
       "norm_label": "install_topic()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L84"
+      "source_location": "L102"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_line",
@@ -484,7 +436,7 @@
       },
       "norm_label": "line()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L56"
+      "source_location": "L66"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_offense",
@@ -499,7 +451,7 @@
       },
       "norm_label": "offense()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L64"
+      "source_location": "L74"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_help_system",
@@ -514,7 +466,7 @@
       },
       "norm_label": "system()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L78"
+      "source_location": "L88"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_linux_cos_session_setup",
@@ -667,6 +619,81 @@
       "source_location": "L1"
     },
     {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
+      "label": "cmd_up()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cmd_up()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L287"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
+      "label": "ensure_secrets()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "ensure_secrets()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L186"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
+      "label": "env_file()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "env_file()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L180"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
+      "label": "has_secrets()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "has_secrets()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L182"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_info",
+      "label": "info()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "info()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L37"
+    },
+    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_project",
       "label": "project()",
       "_origin": "ast",
@@ -710,6 +737,21 @@
       "norm_label": "short()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
       "source_location": "L171"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_usage",
+      "label": "usage()",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "cos-stacks",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "usage()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L40"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_version_ge",
@@ -772,94 +814,274 @@
       "source_location": "L227"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_creds",
-      "label": "cmd_creds()",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai",
+      "label": "cos-ai",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
-        "kind": "bash_function"
+        "kind": "file"
       },
-      "norm_label": "cmd_creds()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L330"
+      "norm_label": "cos-ai",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L1"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_cmd_up",
-      "label": "cmd_up()",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "label": "cos-ai script",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
-        "kind": "bash_function"
+        "kind": "bash_entrypoint"
       },
-      "norm_label": "cmd_up()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L287"
+      "norm_label": "cos-ai script",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L1"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_ensure_secrets",
-      "label": "ensure_secrets()",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_chat_call",
+      "label": "chat_call()",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
         "kind": "bash_function"
       },
-      "norm_label": "ensure_secrets()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L186"
+      "norm_label": "chat_call()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L127"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_env_file",
-      "label": "env_file()",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "label": "cmd_models()",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
         "kind": "bash_function"
       },
-      "norm_label": "env_file()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L180"
+      "norm_label": "cmd_models()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L189"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_has_secrets",
-      "label": "has_secrets()",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "label": "cmd_setup()",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
         "kind": "bash_function"
       },
-      "norm_label": "has_secrets()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "norm_label": "cmd_setup()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L165"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_cmd_status",
+      "label": "cmd_status()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "cmd_status()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
       "source_location": "L182"
     },
     {
-      "id": "config_includes_chroot_usr_local_bin_cos_stacks_info",
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "label": "die()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "die()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L30"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "label": "have_ollama()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "have_ollama()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L89"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_info",
       "label": "info()",
       "_origin": "ast",
       "community": 17,
-      "community_name": "cmd_up",
+      "community_name": "cos-ai",
       "file_type": "code",
       "metadata": {
         "language": "bash",
         "kind": "bash_function"
       },
       "norm_label": "info()",
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
-      "source_location": "L37"
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L31"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_interactive",
+      "label": "interactive()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "interactive()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L143"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_list_profiles",
+      "label": "list_profiles()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "list_profiles()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L67"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_model_present",
+      "label": "model_present()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "model_present()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L93"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "label": "need_backend()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "need_backend()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L98"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "label": "ollama_up()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "ollama_up()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L91"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
+      "label": "one_shot()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "one_shot()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L135"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_system_prompt",
+      "label": "system_prompt()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "system_prompt()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L83"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_usage",
+      "label": "usage()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "usage()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L33"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_ai_valid_profile",
+      "label": "valid_profile()",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "cos-ai",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "valid_profile()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L78"
     },
     {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_require_stack",
@@ -877,6 +1099,21 @@
       "source_location": "L126"
     },
     {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_stacks",
+      "label": "stacks()",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "require_stack",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "stacks()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L108"
+    },
+    {
       "id": "config_includes_chroot_usr_local_bin_cos_stacks_valid_stack",
       "label": "valid_stack()",
       "_origin": "ast",
@@ -890,6 +1127,66 @@
       "norm_label": "valid_stack()",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
       "source_location": "L119"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_cmd",
+      "label": "docker_cmd()",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "docker_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "docker_cmd()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L64"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_docker_up",
+      "label": "docker_up()",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "docker_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "docker_up()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L93"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_running_count",
+      "label": "running_count()",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "docker_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "running_count()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L146"
+    },
+    {
+      "id": "config_includes_chroot_usr_local_bin_cos_stacks_status_word",
+      "label": "status_word()",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "docker_up",
+      "file_type": "code",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "norm_label": "status_word()",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-stacks",
+      "source_location": "L152"
     },
     {
       "id": "docs_blackarch_integration",
@@ -925,6 +1222,114 @@
       "node_kind": "heading",
       "norm_label": "why blackarch is a container, not native packages",
       "source_file": "build/docs/BLACKARCH-INTEGRATION.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_assistant",
+      "label": "assistant.md",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "assistant.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "assistant.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/assistant.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_base",
+      "label": "_base.md",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "_base.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "_base.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/_base.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_blueteam",
+      "label": "blueteam.md",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "blueteam.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "blueteam.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/blueteam.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_explain",
+      "label": "explain.md",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "explain.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "explain.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/explain.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_exploit",
+      "label": "exploit.md",
+      "_origin": "ast",
+      "community": 24,
+      "community_name": "exploit.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "exploit.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/exploit.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_forensics",
+      "label": "forensics.md",
+      "_origin": "ast",
+      "community": 25,
+      "community_name": "forensics.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "forensics.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/forensics.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_recon",
+      "label": "recon.md",
+      "_origin": "ast",
+      "community": 26,
+      "community_name": "recon.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "recon.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/recon.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_report",
+      "label": "report.md",
+      "_origin": "ast",
+      "community": 27,
+      "community_name": "report.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "report.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/report.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_includes_chroot_opt_linux_cos_ai_profiles_webapp",
+      "label": "webapp.md",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "webapp.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "webapp.md",
+      "source_file": "build/config/includes.chroot/opt/linux-cos/ai/profiles/webapp.md",
       "source_location": "L1"
     },
     {
@@ -1317,6 +1722,378 @@
       "weight": 1.0
     },
     {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_valid_profile",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_interactive",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_usage",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L217",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_list_profiles",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L218",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_status",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L219",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L220",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L221",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L224",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L190",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_info",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_status",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L183",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_cmd_status",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L184",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_interactive",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_interactive",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_chat_call",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_info",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_model_present",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L136",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_system_prompt",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L137",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_chat_call",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai_usage",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_list_profiles",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
       "source": "config_includes_chroot_usr_local_bin_cos_help__entry",
       "target": "config_includes_chroot_usr_local_bin_cos_help_offense",
       "relation": "calls",
@@ -1325,7 +2102,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L100",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -1337,7 +2114,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L101",
+      "source_location": "L119",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help__entry",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_ai",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -1349,7 +2138,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L102",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -1361,7 +2150,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L103",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_line",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -1373,7 +2174,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L72",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -1385,7 +2186,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L86",
+      "source_location": "L104",
       "weight": 1.0
     },
     {
@@ -1397,7 +2198,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L66",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -1409,7 +2210,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L80",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -2356,6 +3157,17 @@
       "weight": 1.0
     },
     {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai__entry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
       "source": "config_includes_chroot_usr_local_bin_cos_help",
       "target": "config_includes_chroot_usr_local_bin_cos_help__entry",
       "relation": "contains",
@@ -2444,36 +3256,14 @@
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_3_defensive_stack",
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_defensive_stack",
       "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_heavy_platforms_cos_stacks",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L62",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_hardening_reference",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
       "source_location": "L104",
-      "weight": 1.0
-    },
-    {
-      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_help_bugs",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -2489,7 +3279,40 @@
     },
     {
       "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_2_offensive_tools",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_5_installing_to_disk",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L130",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_6_hardening_reference",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L146",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_7_help_bugs",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_2_ai_assistant_cos_ai",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -2500,24 +3323,24 @@
     },
     {
       "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_3_defensive_stack",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_3_offensive_tools",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L38",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
       "source": "config_includes_chroot_usr_share_doc_linux_cos_readme_linux_c_o_s_user_guide",
-      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_installing_to_disk",
+      "target": "config_includes_chroot_usr_share_doc_linux_cos_readme_4_defensive_stack",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/share/doc/linux-cos/README.md",
-      "source_location": "L88",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -2675,47 +3498,179 @@
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_local_bin_cos_help",
-      "target": "config_includes_chroot_usr_local_bin_cos_help_line",
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_chat_call",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L56",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_local_bin_cos_help",
-      "target": "config_includes_chroot_usr_local_bin_cos_help_offense",
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_one_shot",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L64",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_local_bin_cos_help",
-      "target": "config_includes_chroot_usr_local_bin_cos_help_defense",
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_interactive",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L70",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
-      "source": "config_includes_chroot_usr_local_bin_cos_help",
-      "target": "config_includes_chroot_usr_local_bin_cos_help_system",
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_setup",
       "relation": "defines",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
-      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L165",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_status",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L182",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_cmd_models",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L189",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_die",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_info",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_usage",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_list_profiles",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_valid_profile",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
       "source_location": "L78",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_system_prompt",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_have_ollama",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L89",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_ollama_up",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_model_present",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_ai",
+      "target": "config_includes_chroot_usr_local_bin_cos_ai_need_backend",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-ai",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -2726,7 +3681,62 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
-      "source_location": "L84",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_line",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_offense",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_defense",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_system",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "config_includes_chroot_usr_local_bin_cos_help",
+      "target": "config_includes_chroot_usr_local_bin_cos_help_ai",
+      "relation": "defines",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "build/config/includes.chroot/usr/local/bin/cos-help",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -3116,5 +4126,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4f58b84f530075d231471354b2a18182dbcf7857"
+  "built_at_commit": "1dd5331440ad091e14af2b95119ffaf58dbfaf96"
 }
