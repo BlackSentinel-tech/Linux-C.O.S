@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" data-title-en="Tool catalog · Linux-C.O.S" data-title-es="Catálogo de herramientas · Linux-C.O.S" data-desc-en="Search every tool shipped by Linux-C.O.S — Kali and Parrot tools installed natively, and BlackArch&#x27;s 2,858 tools in blackarch-shell." data-desc-es="Busca cada herramienta de Linux-C.O.S — las de Kali y Parrot instaladas de forma nativa y las 2.858 de BlackArch en blackarch-shell.">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Wl7epaI7283ASZK5/nSRd7pHWHT+GMOsUTtI0TFr6p0='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Tool catalog · Linux-C.O.S</title>
+<meta name="description" content="Search every tool shipped by Linux-C.O.S — Kali and Parrot tools installed natively, and BlackArch&#x27;s 2,858 tools in blackarch-shell.">
+<meta name="theme-color" content="#070a14">
+<meta property="og:title" content="Tool catalog · Linux-C.O.S">
+<meta property="og:description" content="Search every tool shipped by Linux-C.O.S — Kali and Parrot tools installed natively, and BlackArch&#x27;s 2,858 tools in blackarch-shell.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/img/og.png">
+<link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<script>(function(){var d=document.documentElement,l,t;try{l=localStorage.getItem('cos-lang');t=localStorage.getItem('cos-theme')}catch(e){}if(l!=='es'&&l!=='en'){l=((navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase().indexOf('es')===0?'es':'en'}d.setAttribute('data-lang',l);d.lang=l;if(t==='light'||t==='dark')d.setAttribute('data-theme',t)})();</script>
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/tools.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main"><span data-l="en">Skip to content</span><span data-l="es">Saltar al contenido</span></a>
+<header class="site-header">
+  <nav class="nav container" aria-label="Main" data-aria-en="Main" data-aria-es="Principal">
+    <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>LINUX-C.O.S</span></a>
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="features.html"><span data-l="en">Features</span><span data-l="es">Características</span></a></li><li><a href="tools.html" aria-current="page"><span data-l="en">Tools</span><span data-l="es">Herramientas</span></a></li><li><a href="download.html"><span data-l="en">Download</span><span data-l="es">Descargar</span></a></li><li><a href="docs.html"><span data-l="en">Docs</span><span data-l="es">Documentación</span></a></li><li><a href="faq.html"><span data-l="en">FAQ</span><span data-l="es">Preguntas</span></a></li><li class="mobile-only"><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener">GitHub</a></li>
+    </ul>
+    <div class="nav-tools">
+      <a class="icon-btn nav-gh" href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener" aria-label="Linux-C.O.S on GitHub" data-aria-en="Linux-C.O.S on GitHub" data-aria-es="Linux-C.O.S en GitHub"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+      <button class="icon-btn" id="lang-toggle" type="button" aria-label="Cambiar a español"><span class="lang-code">ES</span></button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="l1" d="M4 7h16"/><path class="l2" d="M4 12h16"/><path class="l3" d="M4 17h16"/></svg></button>
+    </div>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow"><span data-l="en">Tool catalog</span><span data-l="es">Catálogo de herramientas</span></span>
+    <h1><span data-l="en">Find a tool</span><span data-l="es">Encuentra una herramienta</span></h1>
+    <p class="lead"><span data-l="en">Kali and Parrot tools are installed natively — run them from the menu or a terminal. BlackArch tools run inside <code>blackarch-shell</code>.</span><span data-l="es">Las herramientas de Kali y Parrot están instaladas de forma nativa — ejecútalas desde el menú o una terminal. Las de BlackArch corren dentro de <code>blackarch-shell</code>.</span></p>
+  </div>
+</section>
+
+<section class="section" id="explorer" aria-busy="true" aria-labelledby="results-heading">
+  <div class="container">
+    <div class="chart-card">
+      <div class="chart-head">
+        <div>
+          <h2><span data-l="en">Tools per category</span><span data-l="es">Herramientas por categoría</span></h2>
+          <p id="chart-sub"></p>
+        </div>
+        <div class="chart-actions">
+          <button class="btn btn-ghost btn-sm" id="chart-toggle" type="button" aria-pressed="false" aria-controls="cat-chart cat-table">Show as table</button>
+        </div>
+      </div>
+      <div class="bars" id="cat-chart"></div>
+      <div class="table-wrap" id="cat-table" hidden>
+        <table>
+          <thead><tr><th scope="col" data-col="cat">Category</th><th scope="col" data-col="n">Tools</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="results-heading" class="visually-hidden"><span data-l="en">Search the catalog</span><span data-l="es">Buscar en el catálogo</span></h2>
+    <form class="explorer-controls" role="search" aria-label="Tool search" data-aria-en="Tool search" data-aria-es="Búsqueda de herramientas">
+      <div class="field">
+        <label for="tool-q"><span data-l="en">Search by name or category</span><span data-l="es">Buscar por nombre o categoría</span></label>
+        <input class="input" id="tool-q" type="search" autocomplete="off" spellcheck="false" placeholder="nmap, sqlmap, wifi…" data-ph-en="nmap, sqlmap, wifi…" data-ph-es="nmap, sqlmap, wifi…">
+      </div>
+      <div class="field">
+        <label for="tool-cat"><span data-l="en">Category</span><span data-l="es">Categoría</span></label>
+        <select class="input" id="tool-cat"><option value="">All categories</option></select>
+      </div>
+      <button class="btn btn-ghost" id="clear-filters" type="button" hidden><span data-l="en">Clear filters</span><span data-l="es">Limpiar filtros</span></button>
+    </form>
+    <fieldset class="chips" id="src-chips">
+      <legend><span data-l="en">Source</span><span data-l="es">Origen</span></legend>
+      <button class="chip" type="button" data-src="all" aria-pressed="true"><span data-l="en">All</span><span data-l="es">Todas</span> <span class="n"></span></button>
+      <button class="chip" type="button" data-src="kali" aria-pressed="false">Kali <span class="n"></span></button>
+      <button class="chip" type="button" data-src="parrot" aria-pressed="false">Parrot <span class="n"></span></button>
+      <button class="chip" type="button" data-src="blackarch" aria-pressed="false">BlackArch <span class="n"></span></button>
+    </fieldset>
+
+    <div class="result-bar">
+      <span id="tool-count" role="status" aria-live="polite"></span>
+      <span><span class="src kali">Kali</span> <span class="src parrot">Parrot</span> <span data-l="en">native</span><span data-l="es">nativas</span> · <span class="src blackarch">BlackArch</span> <span data-l="en">in the container</span><span data-l="es">en el contenedor</span></span>
+    </div>
+    <p id="tool-status" class="empty">Loading the catalog…</p>
+    <ul class="tool-list" id="tool-list"></ul>
+    <div class="empty" id="tool-empty" hidden>
+      <p><span data-l="en">No tool matches these filters.</span><span data-l="es">Ninguna herramienta coincide con estos filtros.</span></p>
+      <button class="btn btn-ghost btn-sm" id="empty-clear" type="button"><span data-l="en">Clear filters</span><span data-l="es">Limpiar filtros</span></button>
+    </div>
+    <div class="load-more" id="load-more" hidden><button class="btn btn-ghost" type="button">Show more</button></div>
+
+    <div class="callout">
+      <strong><span data-l="en">About this list</span><span data-l="es">Sobre esta lista</span></strong>
+      <p><span data-l="en">Built from Kali's and Parrot's tool metapackages and BlackArch's package groups. A Parrot badge means Parrot lists the tool; a handful of Parrot-only names don't resolve on a Kali base and are skipped by the build (see the build notes). Inside the container, install any BlackArch tool with <code>pacman -S &lt;name&gt;</code>.</span><span data-l="es">Generada a partir de los metapaquetes de herramientas de Kali y Parrot y los grupos de paquetes de BlackArch. La etiqueta Parrot significa que Parrot lista la herramienta; algunos nombres exclusivos de Parrot no se resuelven sobre una base Kali y la compilación los omite (ver notas de compilación). Dentro del contenedor, instala cualquier herramienta de BlackArch con <code>pacman -S &lt;nombre&gt;</code>.</span></p>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>LINUX-C.O.S</span></a>
+        <p><span data-l="en">Cyber Offensive &amp; defensive Security. A Kali-based distribution with Parrot and BlackArch tools, a blue-team stack and hardening on by default.</span><span data-l="es">Cyber Offensive &amp; defensive Security. Una distribución basada en Kali con herramientas de Parrot y BlackArch, stack blue-team y hardening activado por defecto.</span></p>
+        <p><span data-l="en">This site makes no third-party requests and sets no cookies.</span><span data-l="es">Este sitio no hace peticiones a terceros ni usa cookies.</span></p>
+      </div>
+      <div>
+        <h2><span data-l="en">Product</span><span data-l="es">Producto</span></h2>
+        <ul>
+          <li><a href="features.html"><span data-l="en">Features</span><span data-l="es">Características</span></a></li>
+          <li><a href="tools.html"><span data-l="en">Tool catalog</span><span data-l="es">Catálogo de herramientas</span></a></li>
+          <li><a href="download.html"><span data-l="en">Download &amp; build</span><span data-l="es">Descarga y compilación</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2><span data-l="en">Help</span><span data-l="es">Ayuda</span></h2>
+        <ul>
+          <li><a href="docs.html"><span data-l="en">Documentation</span><span data-l="es">Documentación</span></a></li>
+          <li><a href="faq.html"><span data-l="en">FAQ</span><span data-l="es">Preguntas frecuentes</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/issues" rel="noopener"><span data-l="en">Report a bug</span><span data-l="es">Reportar un error</span></a></li>
+        </ul>
+      </div>
+      <div>
+        <h2><span data-l="en">Project</span><span data-l="es">Proyecto</span></h2>
+        <ul>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S" rel="noopener"><span data-l="en">Source code</span><span data-l="es">Código fuente</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md" rel="noopener"><span data-l="en">Build notes</span><span data-l="es">Notas de compilación</span></a></li>
+          <li><a href="https://github.com/BlackSentinel-tech/Linux-C.O.S/releases" rel="noopener"><span data-l="en">Releases</span><span data-l="es">Versiones</span></a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Linux-C.O.S project · v0.1 “Génesis”</span>
+      <span><span data-l="en">Kali, Parrot and BlackArch are trademarks of their respective owners; Linux-C.O.S is not affiliated with them.</span><span data-l="es">Kali, Parrot y BlackArch son marcas de sus respectivos dueños; Linux-C.O.S no está afiliado a ellos.</span></span>
+    </div>
+  </div>
+</footer>
+<button class="icon-btn to-top" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+</body>
+</html>

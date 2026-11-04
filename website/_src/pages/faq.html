@@ -1,0 +1,74 @@
+<!--
+title_en: FAQ
+title_es: Preguntas frecuentes
+desc_en: Answers about Linux-C.O.S: how it relates to Kali, Parrot and BlackArch, ISO size, Secure Boot, passwords, privacy and how to contribute.
+desc_es: Respuestas sobre Linux-C.O.S: su relación con Kali, Parrot y BlackArch, tamaño de la ISO, Secure Boot, contraseñas, privacidad y cómo contribuir.
+nav: faq
+-->
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">FAQ</span>
+    <h1><span data-l="en">Frequently asked questions</span><span data-l="es">Preguntas frecuentes</span></h1>
+    <p class="lead"><span data-l="en">Short, honest answers. Missing one? Ask on GitHub.</span><span data-l="es">Respuestas cortas y honestas. ¿Falta alguna? Pregunta en GitHub.</span></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="field faq-search">
+      <label for="faq-filter"><span data-l="en">Filter questions</span><span data-l="es">Filtrar preguntas</span></label>
+      <input class="input" id="faq-filter" type="search" autocomplete="off" placeholder="ISO, Secure Boot, password…" data-ph-en="ISO, Secure Boot, password…" data-ph-es="ISO, Secure Boot, contraseña…">
+    </div>
+    <p class="empty" id="faq-empty" role="status" hidden></p>
+    <div class="faq">
+      <details id="what-is-it">
+        <summary><span data-l="en">What is Linux-C.O.S, exactly?</span><span data-l="es">¿Qué es exactamente Linux-C.O.S?</span></summary>
+        <div class="answer"><p><span data-l="en">A security-focused Linux distribution with its own name, branding, defaults and installer, built on Kali's rolling repository — the same way Kali and Parrot are built on Debian. It combines offensive tooling (Kali, Parrot, BlackArch) with a blue-team stack and a hardened base.</span><span data-l="es">Una distribución Linux enfocada en seguridad, con nombre, marca, valores por defecto e instalador propios, construida sobre el repositorio rolling de Kali — igual que Kali y Parrot se construyen sobre Debian. Combina herramientas ofensivas (Kali, Parrot, BlackArch) con un stack blue-team y una base endurecida.</span></p></div>
+      </details>
+      <details id="affiliation">
+        <summary><span data-l="en">Is it affiliated with Kali, Parrot or BlackArch?</span><span data-l="es">¿Está afiliada a Kali, Parrot o BlackArch?</span></summary>
+        <div class="answer"><p><span data-l="en">No. It uses their public repositories and images, and credits them, but it is an independent project.</span><span data-l="es">No. Usa sus repositorios e imágenes públicos y les da crédito, pero es un proyecto independiente.</span></p></div>
+      </details>
+      <details id="why-container">
+        <summary><span data-l="en">Why is BlackArch in a container instead of installed?</span><span data-l="es">¿Por qué BlackArch va en un contenedor y no instalado?</span></summary>
+        <div class="answer"><p><span data-l="en">BlackArch is Arch Linux (pacman packages); Linux-C.O.S is Debian-family (apt). The formats don't interoperate, and repackaging 2,858 tools by hand would be a full-time job. Running BlackArch unmodified in Docker gives you the real binaries with your home directory shared.</span><span data-l="es">BlackArch es Arch Linux (paquetes pacman); Linux-C.O.S es de la familia Debian (apt). Los formatos no son compatibles, y reempaquetar 2.858 herramientas a mano sería un trabajo a tiempo completo. Ejecutar BlackArch sin modificar en Docker te da los binarios reales compartiendo tu carpeta personal.</span></p></div>
+      </details>
+      <details id="iso-size">
+        <summary><span data-l="en">Why is the ISO so big?</span><span data-l="es">¿Por qué la ISO es tan grande?</span></summary>
+        <div class="answer"><p><span data-l="en">It installs <code>kali-linux-everything</code> plus the blue-team layer: about 14.6 GiB. Baking the BlackArch image in makes it much larger — that's optional, see <a href="download.html#build">the build steps</a>.</span><span data-l="es">Instala <code>kali-linux-everything</code> más la capa blue-team: unos 14,6 GiB. Incluir la imagen de BlackArch la hace mucho más grande — es opcional, mira <a href="download.html#build">los pasos de compilación</a>.</span></p></div>
+      </details>
+      <details id="secure-boot">
+        <summary><span data-l="en">Does it work with Secure Boot?</span><span data-l="es">¿Funciona con Secure Boot?</span></summary>
+        <div class="answer"><p><span data-l="en">Not yet. Disable Secure Boot in your firmware to boot it. Signed boot is on the roadmap.</span><span data-l="es">Todavía no. Desactiva Secure Boot en tu firmware para arrancarla. El arranque firmado está en la hoja de ruta.</span></p></div>
+      </details>
+      <details id="password">
+        <summary><span data-l="en">What is the live session password?</span><span data-l="es">¿Cuál es la contraseña de la sesión live?</span></summary>
+        <div class="answer"><p><span data-l="en">User <code>kali</code>, password <code>kali</code> — the same convention as Kali's live images. The installed system uses the user and password you create in the installer.</span><span data-l="es">Usuario <code>kali</code>, contraseña <code>kali</code> — la misma convención que las imágenes live de Kali. El sistema instalado usa el usuario y la contraseña que crees en el instalador.</span></p></div>
+      </details>
+      <details id="stack-passwords">
+        <summary><span data-l="en">What are the TheHive / MISP passwords?</span><span data-l="es">¿Cuáles son las contraseñas de TheHive / MISP?</span></summary>
+        <div class="answer"><p><span data-l="en">MISP's are generated randomly the first time you run <code>cos-stacks up misp</code>; see them with <code>cos-stacks creds misp</code>. TheHive and Wazuh use their upstream first-login defaults, which you must change on first login (<code>cos-stacks creds</code> reminds you).</span><span data-l="es">Las de MISP se generan al azar la primera vez que ejecutas <code>cos-stacks up misp</code>; míralas con <code>cos-stacks creds misp</code>. TheHive y Wazuh usan sus valores iniciales de fábrica, que debes cambiar en el primer inicio de sesión (<code>cos-stacks creds</code> te lo recuerda).</span></p></div>
+      </details>
+      <details id="arm">
+        <summary><span data-l="en">Is there an ARM / Apple Silicon version?</span><span data-l="es">¿Hay versión para ARM / Apple Silicon?</span></summary>
+        <div class="answer"><p><span data-l="en">No — the ISO is amd64 only, because many tools still lack arm64 builds. You can build it on an Apple Silicon Mac and run it under emulation in UTM, which is slow.</span><span data-l="es">No — la ISO es solo amd64, porque muchas herramientas aún no tienen versión arm64. Puedes compilarla en un Mac con Apple Silicon y ejecutarla emulada en UTM, aunque es lento.</span></p></div>
+      </details>
+      <details id="updates">
+        <summary><span data-l="en">How do I update it?</span><span data-l="es">¿Cómo se actualiza?</span></summary>
+        <div class="answer"><p><span data-l="en">Like Kali: <code>sudo apt update &amp;&amp; sudo apt full-upgrade</code>. Automatic updates are prepared but opt-in, because upgrading a rolling toolset unattended can break it mid-engagement.</span><span data-l="es">Como Kali: <code>sudo apt update &amp;&amp; sudo apt full-upgrade</code>. Las actualizaciones automáticas están preparadas pero son opcionales, porque actualizar un conjunto rolling sin supervisión puede romperlo en medio de un trabajo.</span></p></div>
+      </details>
+      <details id="privacy">
+        <summary><span data-l="en">Does the OS or this website collect any data?</span><span data-l="es">¿El sistema o este sitio recopilan datos?</span></summary>
+        <div class="answer"><p><span data-l="en">No telemetry is added by Linux-C.O.S. This website loads nothing from third parties, sets no cookies, and only remembers your language and theme choice in your own browser.</span><span data-l="es">Linux-C.O.S no añade telemetría. Este sitio no carga nada de terceros, no usa cookies y solo recuerda tu idioma y tema en tu propio navegador.</span></p></div>
+      </details>
+      <details id="legal">
+        <summary><span data-l="en">Is it legal to use these tools?</span><span data-l="es">¿Es legal usar estas herramientas?</span></summary>
+        <div class="answer"><p><span data-l="en">Using security tools against systems you don't own or have written permission to test is illegal in most countries. Use Linux-C.O.S for authorized testing, research, learning and defense.</span><span data-l="es">Usar herramientas de seguridad contra sistemas que no son tuyos o sin permiso escrito para probarlos es ilegal en la mayoría de los países. Usa Linux-C.O.S para pruebas autorizadas, investigación, aprendizaje y defensa.</span></p></div>
+      </details>
+      <details id="contribute">
+        <summary><span data-l="en">How can I help?</span><span data-l="es">¿Cómo puedo ayudar?</span></summary>
+        <div class="answer"><p><span data-l="en">Boot-test the ISO and report what happens, review the hardening, or send a pull request. Everything lives in the <a href="{{REPO}}" rel="noopener">GitHub repository</a>.</span><span data-l="es">Prueba a arrancar la ISO y cuenta qué pasa, revisa el hardening o envía un pull request. Todo está en el <a href="{{REPO}}" rel="noopener">repositorio de GitHub</a>.</span></p></div>
+      </details>
+    </div>
+  </div>
+</section>

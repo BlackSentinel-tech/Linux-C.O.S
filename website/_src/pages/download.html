@@ -1,0 +1,118 @@
+<!--
+title_en: Download
+title_es: Descargar
+desc_en: Get Linux-C.O.S: build the ISO from source with Docker on Linux, macOS or Windows, verify it, and boot it on a USB stick or in a virtual machine.
+desc_es: Consigue Linux-C.O.S: compila la ISO desde el código con Docker en Linux, macOS o Windows, verifícala y arráncala desde un USB o en una máquina virtual.
+nav: download
+-->
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow"><span data-l="en">Download</span><span data-l="es">Descargar</span></span>
+    <h1><span data-l="en">Get Linux-C.O.S</span><span data-l="es">Consigue Linux-C.O.S</span></h1>
+    <p class="lead"><span data-l="en">Version 0.1 “Génesis” · amd64 · hybrid ISO (USB and DVD)</span><span data-l="es">Versión 0.1 “Génesis” · amd64 · ISO híbrida (USB y DVD)</span></p>
+    <div class="callout warn">
+      <strong><span data-l="en">Pre-release</span><span data-l="es">Pre-lanzamiento</span></strong>
+      <p><span data-l="en">The first full ISO has been built successfully, but boot testing on VMs and real hardware is still in progress, and no prebuilt ISO is published yet. Building it yourself is the supported path today — it also means you can audit every step.</span><span data-l="es">La primera ISO completa ya se compiló con éxito, pero las pruebas de arranque en VMs y hardware real siguen en curso y todavía no hay una ISO publicada. Compilarla tú mismo es la vía soportada hoy — y además te permite auditar cada paso.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2">
+      <div class="card">
+        <h2 class="h3"><span data-l="en">Build from source</span><span data-l="es">Compilar desde el código</span></h2>
+        <p><span data-l="en">Recommended. Runs inside Docker, so the build host can be Linux, macOS (Intel or Apple Silicon) or Windows 10/11 with WSL2.</span><span data-l="es">Recomendado. Corre dentro de Docker, así que el equipo puede ser Linux, macOS (Intel o Apple Silicon) o Windows 10/11 con WSL2.</span></p>
+        <a class="btn btn-primary" href="#build"><span data-l="en">Build steps</span><span data-l="es">Pasos de compilación</span></a>
+      </div>
+      <div class="card">
+        <h2 class="h3"><span data-l="en">Prebuilt ISO</span><span data-l="es">ISO precompilada</span></h2>
+        <p><span data-l="en">Published releases, with their SHA-256 checksums, appear on GitHub Releases. Watch the repository to be notified of the first one.</span><span data-l="es">Las versiones publicadas, con sus sumas SHA-256, aparecen en GitHub Releases. Sigue el repositorio para enterarte de la primera.</span></p>
+        <a class="btn btn-ghost" href="{{REPO}}/releases" rel="noopener"><span data-l="en">GitHub Releases</span><span data-l="es">GitHub Releases</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="requirements" aria-labelledby="req-h">
+  <div class="container">
+    <h2 id="req-h"><span data-l="en">Requirements</span><span data-l="es">Requisitos</span></h2>
+    <div class="grid grid-2">
+      <div>
+        <h3><span data-l="en">To run it</span><span data-l="es">Para usarla</span></h3>
+        <div class="table-wrap"><table>
+          <tbody>
+            <tr><th scope="row"><span data-l="en">CPU</span><span data-l="es">CPU</span></th><td>x86_64 (amd64)</td></tr>
+            <tr><th scope="row">RAM</th><td><span data-l="en">2 GB minimum, 4 GB+ recommended (8 GB+ for the SIEM stacks)</span><span data-l="es">2 GB mínimo, 4 GB+ recomendado (8 GB+ para los stacks SIEM)</span></td></tr>
+            <tr><th scope="row"><span data-l="en">Disk</span><span data-l="es">Disco</span></th><td><span data-l="en">20 GB minimum to install</span><span data-l="es">20 GB mínimo para instalar</span></td></tr>
+            <tr><th scope="row">USB</th><td><span data-l="en">16 GB+ stick (the full ISO is ~14.6 GiB)</span><span data-l="es">Memoria de 16 GB+ (la ISO completa pesa ~14,6 GiB)</span></td></tr>
+            <tr><th scope="row">Secure Boot</th><td><span data-l="en">Must be disabled for now</span><span data-l="es">Debe estar desactivado por ahora</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div>
+        <h3><span data-l="en">To build it</span><span data-l="es">Para compilarla</span></h3>
+        <div class="table-wrap"><table>
+          <tbody>
+            <tr><th scope="row">Docker</th><td><span data-l="en">With privileged containers allowed</span><span data-l="es">Con contenedores privilegiados permitidos</span></td></tr>
+            <tr><th scope="row"><span data-l="en">Disk</span><span data-l="es">Disco</span></th><td><span data-l="en">Tens of GB free</span><span data-l="es">Decenas de GB libres</span></td></tr>
+            <tr><th scope="row"><span data-l="en">Network</span><span data-l="es">Red</span></th><td><span data-l="en">Tens of GB of downloads (Kali + Parrot + blue-team packages)</span><span data-l="es">Decenas de GB de descarga (paquetes de Kali + Parrot + blue-team)</span></td></tr>
+            <tr><th scope="row"><span data-l="en">Time</span><span data-l="es">Tiempo</span></th><td><span data-l="en">Over an hour; slower on Apple Silicon (amd64 is emulated)</span><span data-l="es">Más de una hora; más lento en Apple Silicon (amd64 se emula)</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="build" aria-labelledby="build-h">
+  <div class="container">
+    <h2 id="build-h"><span data-l="en">Build the ISO</span><span data-l="es">Compilar la ISO</span></h2>
+    <ol class="steps">
+      <li>
+        <h3><span data-l="en">Get the source</span><span data-l="es">Descarga el código</span></h3>
+        <div class="code"><pre>git clone {{REPO}}.git
+cd Linux-C.O.S/build</pre></div>
+      </li>
+      <li>
+        <h3><span data-l="en">Decide on BlackArch (optional)</span><span data-l="es">Decide sobre BlackArch (opcional)</span></h3>
+        <p><span data-l="en">By default the BlackArch image is downloaded on the first boot of an installed system. To bake it into the ISO instead (much bigger ISO, zero download after boot):</span><span data-l="es">Por defecto la imagen de BlackArch se descarga en el primer arranque del sistema instalado. Para incluirla en la ISO (ISO mucho más grande, cero descargas después):</span></p>
+        <div class="code"><pre>docker build -t linux-cos/blackarch:latest blackarch-container/
+docker save linux-cos/blackarch:latest -o config/includes.chroot/opt/linux-cos/blackarch-image.tar</pre></div>
+      </li>
+      <li>
+        <h3><span data-l="en">Build (in the background)</span><span data-l="es">Compila (en segundo plano)</span></h3>
+        <div class="code"><pre>nohup ./build.sh &gt; build.out 2&gt;&amp;1 &amp;
+tail -f output/build.log</pre></div>
+        <p><span data-l="en">The ISO lands in <code>build/output/live-image-amd64.hybrid.iso</code>.</span><span data-l="es">La ISO queda en <code>build/output/live-image-amd64.hybrid.iso</code>.</span></p>
+      </li>
+      <li id="verify">
+        <h3><span data-l="en">Verify a downloaded ISO</span><span data-l="es">Verifica una ISO descargada</span></h3>
+        <p><span data-l="en">Compare the output with the <code>SHA256SUMS</code> file published next to the release:</span><span data-l="es">Compara el resultado con el archivo <code>SHA256SUMS</code> publicado junto a la versión:</span></p>
+        <div class="code"><pre>sha256sum -c SHA256SUMS --ignore-missing</pre></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section-alt" id="boot" aria-labelledby="boot-h">
+  <div class="container">
+    <h2 id="boot-h"><span data-l="en">Boot it</span><span data-l="es">Arráncala</span></h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3><span data-l="en">USB stick</span><span data-l="es">Memoria USB</span></h3>
+        <p><span data-l="en">Write the ISO with balenaEtcher, Rufus (DD mode) or <code>dd</code>. Double-check the device name — <code>dd</code> overwrites whatever you point it at.</span><span data-l="es">Graba la ISO con balenaEtcher, Rufus (modo DD) o <code>dd</code>. Revisa bien el nombre del dispositivo — <code>dd</code> sobrescribe lo que le indiques.</span></p>
+        <div class="code"><pre># Linux: find the stick with lsblk first
+sudo dd if=live-image-amd64.hybrid.iso of=/dev/sdX bs=4M status=progress conv=fsync</pre></div>
+      </div>
+      <div class="card">
+        <h3><span data-l="en">Virtual machine</span><span data-l="es">Máquina virtual</span></h3>
+        <ul>
+          <li><span data-l="en">VirtualBox, VMware, QEMU/KVM or Hyper-V: type Linux / Debian 64-bit, 4 GB RAM, 20 GB disk to test the installer.</span><span data-l="es">VirtualBox, VMware, QEMU/KVM o Hyper-V: tipo Linux / Debian 64-bit, 4 GB de RAM, disco de 20 GB para probar el instalador.</span></li>
+          <li><span data-l="en">Apple Silicon: use UTM in <strong>Emulate</strong> mode, architecture x86_64. Boot is slow (software emulation) — that's expected.</span><span data-l="es">Apple Silicon: usa UTM en modo <strong>Emular</strong>, arquitectura x86_64. El arranque es lento (emulación por software) — es normal.</span></li>
+        </ul>
+        <p><span data-l="en">Live login: <code>kali</code> / <code>kali</code> (autologin is on).</span><span data-l="es">Login live: <code>kali</code> / <code>kali</code> (con autologin).</span> <a href="docs.html#live"><span data-l="en">What next?</span><span data-l="es">¿Y ahora qué?</span></a></p>
+      </div>
+    </div>
+  </div>
+</section>

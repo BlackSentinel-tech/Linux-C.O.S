@@ -7,3 +7,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+# test dependencies / caches
+node_modules/
+__pycache__/
