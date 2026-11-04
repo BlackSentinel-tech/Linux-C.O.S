@@ -6,7 +6,8 @@
   'use strict';
 
   var root = document.documentElement;
-  var MOBILE_MAX = 960;
+  // the full Spanish menu needs ~1080px next to the logo and the 44px buttons
+  var MOBILE_MAX = 1100;
 
   function store(key, value) {
     try {
@@ -170,6 +171,26 @@
       finally { document.body.removeChild(ta); }
     });
   }
+  // any box that scrolls sideways (home terminal, wide tables) must be
+  // reachable by keyboard; code blocks are handled in initCopy
+  function initScrollRegions() {
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.terminal pre, .table-wrap'));
+    function sync() {
+      boxes.forEach(function (box) {
+        if (box.scrollWidth > box.clientWidth + 1) {
+          box.setAttribute('tabindex', '0');
+          box.setAttribute('role', 'region');
+          box.setAttribute('aria-label', lang() === 'es' ? 'Contenido desplazable' : 'Scrollable content');
+        } else {
+          box.removeAttribute('tabindex'); box.removeAttribute('role'); box.removeAttribute('aria-label');
+        }
+      });
+    }
+    sync();
+    window.addEventListener('resize', sync);
+    document.addEventListener('cos:langchange', sync);
+  }
+
   function initCopy() {
     document.querySelectorAll('.code').forEach(function (block) {
       var pre = block.querySelector('pre');
@@ -226,6 +247,8 @@
       h.appendChild(a);
     });
   }
+  // the docs TOC turns into a sidebar at 980px (its own CSS breakpoint)
+  function tocCollapsed() { return window.innerWidth < 980; }
   function initToc() {
     var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
     if (!links.length) return;
@@ -254,11 +277,11 @@
     links.forEach(function (a) {
       a.addEventListener('click', function () {
         var d = a.closest('details');
-        if (d && isMobile()) d.open = false;
+        if (d && tocCollapsed()) d.open = false;
       });
     });
     var d = document.querySelector('.toc details');
-    if (d && !isMobile()) d.open = true;
+    if (d && !tocCollapsed()) d.open = true;
   }
 
   // ---------- FAQ search + deep links -------------------------------------
@@ -313,6 +336,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initMenu();
     initCopy();
+    initScrollRegions();
     initAnchors();
     initToc();
     initFaq();
