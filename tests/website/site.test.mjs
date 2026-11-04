@@ -121,13 +121,17 @@ test('mobile menu: opens, traps focus, closes on Escape/link/outside click', asy
   assert.equal(await toggle.getAttribute('aria-label'), 'Close menu');
   await page.waitForTimeout(250);
   assert.ok(await firstLink.isVisible(), 'menu visible when open');
-  assert.equal(await page.evaluate(() => document.activeElement.innerText.trim()), 'Features', 'focus moves into the menu');
+  assert.equal(await page.evaluate(() => document.activeElement.innerText.trim()), 'Home', 'focus moves into the menu');
   assert.equal(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden', 'page scroll locked');
 
-  // focus trap: Shift+Tab from the toggle goes to the last link
+  // focus trap: Shift+Tab from the toggle stays in the header
   await toggle.focus();
   await page.keyboard.press('Shift+Tab');
-  assert.equal(await page.evaluate(() => document.activeElement.innerText.trim()), 'GitHub');
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'theme-toggle');
+  for (let i = 0; i < 20; i++) {
+    await page.keyboard.press('Tab');
+    assert.ok(await page.evaluate(() => !!document.activeElement.closest('.site-header')), `tab ${i} left the header`);
+  }
 
   await page.keyboard.press('Escape');
   assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
@@ -265,12 +269,14 @@ test('docs: table of contents tracks the section; copy buttons copy commands', a
   assert.equal(await page.locator('.toc details').getAttribute('open'), '', 'TOC expanded on desktop');
   await page.click('.toc a[href="#stacks"]');
   await page.waitForFunction(() => document.querySelector('.toc a.active')?.getAttribute('href') === '#stacks');
-  const btn = page.locator('#stacks ~ .code .copy-btn').first();
+  assert.equal(await page.locator('#stacks ~ .code.ref .copy-btn').count(), 0, 'reference listings get no copy button');
+  const btn = page.locator('#firstboot ~ .code .copy-btn').first();
   await btn.click();
   await page.waitForFunction(el => el.classList.contains('copied'), await btn.elementHandle());
   assert.equal((await btn.innerText()).trim(), 'Copied');
+  assert.equal(await btn.getAttribute('aria-label'), 'Copied', 'result is announced');
   const clip = await page.evaluate(() => navigator.clipboard.readText());
-  assert.ok(clip.startsWith('cos-stacks'), clip);
+  assert.ok(clip.startsWith('journalctl'), clip);
 });
 
 test('faq: filter narrows the list, deep link opens the answer', async () => {
@@ -295,4 +301,129 @@ test('security posture: strict CSP, no third-party requests', async () => {
     assert.doesNotMatch(csp, /unsafe-inline|unsafe-eval/);
   }
   assert.deepEqual(external, []);
+});
+
+// ---------- regressions found by the customer-experience agents ----------
+
+test('menu and header buttons do not make the page jump', async () => {
+  const page = await newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
+  await page.goto(`${base}/features.html`);
+  await page.evaluate(() => window.scrollTo(0, 1500));
+  await page.waitForTimeout(100);
+  // where the section being read sits on screen (switching language changes
+  // the text above it, so compare its position, not raw scrollY)
+  await page.evaluate(() => { window.__anchor = document.elementFromPoint(195, 420).closest('h2, h3, p, li, tr, .card') || document.elementFromPoint(195, 420); });
+  const anchorTop = () => page.evaluate(() => window.__anchor.getBoundingClientRect().top);
+  const t0 = await anchorTop();
+  await page.click('#menu-toggle');
+  await page.click('#lang-toggle');
+  assert.equal(await page.locator('#menu-toggle').getAttribute('aria-expanded'), 'true', 'switching language keeps the menu open');
+  await page.click('#theme-toggle');
+  await page.keyboard.press('Escape');
+  const t1 = await anchorTop();
+  assert.ok(Math.abs(t1 - t0) < 20, `content moved from ${t0} to ${t1}`);
+});
+
+test('keyboard on the chart: focus stays on the bar, pressing again clears', async () => {
+  const page = await newPage();
+  await page.goto(`${base}/tools.html`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#cat-chart .bar-row');
+  const bar = page.locator('#cat-chart .bar-row').nth(2);
+  const cat = await bar.getAttribute('data-cat');
+  await bar.focus();
+  await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(() => document.activeElement.getAttribute('data-cat')), cat);
+  assert.equal(await page.inputValue('#tool-cat'), cat);
+  assert.equal(await page.locator(`#cat-chart .bar-row[data-cat="${cat}"]`).getAttribute('aria-pressed'), 'true');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.inputValue('#tool-cat'), '');
+});
+
+test('catalog data: real categories, commands, only shipped Parrot tools', async () => {
+  const page = await newPage();
+  await page.goto(`${base}/tools.html?cat=Sniffing%20%26%20Spoofing&q=wireshark`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  assert.equal((await page.locator('#tool-list .tool-name').first().innerText()).trim(), 'wireshark');
+  await page.goto(`${base}/tools.html?q=msfconsole`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  assert.equal((await page.locator('#tool-list .tool-name').first().innerText()).trim(), 'metasploit-framework');
+  assert.match(await page.locator('#tool-list .tool-run').first().innerText(), /Run: msfconsole/);
+  await page.goto(`${base}/tools.html?q=metasploit%20framework`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  await page.goto(`${base}/tools.html?q=king-phisher`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-empty:not([hidden])');
+  await page.goto(`${base}/tools.html?q=burpsuite`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  assert.equal(await page.locator('#tool-count').innerText(), '1 tool');
+  await page.goto(`${base}/tools.html?src=toString&cat=forensics`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  assert.equal(await page.locator('.chip[data-src="all"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(await page.inputValue('#tool-cat'), 'Forensics', 'category matched case-insensitively');
+  assert.doesNotMatch(page.url(), /toString/, 'unusable params dropped from the URL');
+  // English searches don't match Spanish category labels
+  await page.fill('#tool-q', 'proteger');
+  await page.waitForSelector('#tool-empty:not([hidden])');
+  // BlackArch-only tools say how to run them
+  await page.goto(`${base}/tools.html?src=blackarch&q=0d1n`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#tool-list .tool');
+  assert.match(await page.locator('#tool-list .tool-run').first().innerText(), /blackarch-shell 0d1n/);
+  // empty result in one source offers the others
+  await page.goto(`${base}/tools.html?src=kali&q=0d1n`, { waitUntil: 'networkidle' });
+  await page.waitForSelector('#empty-src:not([hidden])');
+  await page.click('#empty-src button');
+  await page.waitForSelector('#tool-list .tool');
+  assert.deepEqual(page.errors, []);
+});
+
+test('source badges and primary buttons pass WCAG AA in every theme mode', async () => {
+  const ratio = (fg, bg) => {
+    const lum = c => { const v = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number).map(x => x / 255)
+      .map(x => x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+    const a = lum(fg), b = lum(bg); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  };
+  for (const colorScheme of ['dark', 'light']) {
+    const page = await newPage({ colorScheme });
+    await page.goto(`${base}/tools.html`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('#tool-list .src');
+    const pairs = await page.evaluate(() => {
+      const bgOf = el => { while (el) { const c = getComputedStyle(el).backgroundColor; if (c !== 'rgba(0, 0, 0, 0)') return c; el = el.parentElement; } return 'rgb(255,255,255)'; };
+      return ['.src.kali', '.src.parrot', '.src.blackarch'].map(sel => {
+        const el = document.querySelector('#tool-list ' + sel) || document.querySelector(sel);
+        return [sel, getComputedStyle(el).color, bgOf(el)];
+      });
+    });
+    for (const [sel, fg, bg] of pairs) assert.ok(ratio(fg, bg) >= 4.5, `${colorScheme} ${sel}: ${ratio(fg, bg).toFixed(2)}`);
+    await page.goto(`${base}/index.html`);
+    const [fg, bg] = await page.evaluate(() => { const b = document.querySelector('.btn-primary'); const cs = getComputedStyle(b); return [cs.color, cs.backgroundColor]; });
+    assert.ok(ratio(fg, bg) >= 4.5, `${colorScheme} .btn-primary: ${ratio(fg, bg).toFixed(2)}`);
+  }
+});
+
+test('language and theme buttons are correct before JavaScript runs', async () => {
+  const page = await newPage({ locale: 'es-ES', javaScriptEnabled: false });
+  await page.goto(`${base}/index.html`);
+  // the boot script is inline, so without JS the page stays English: the
+  // button must then offer Spanish -- the visible code comes from CSS state
+  assert.match(await page.locator('#lang-toggle').innerText(), /ES/);
+  const js = await newPage({ locale: 'es-ES' });
+  await js.goto(`${base}/index.html`);
+  assert.match(await js.locator('#lang-toggle').innerText(), /EN/);
+});
+
+test('faq: clearing the filter restores the collapsed list', async () => {
+  const page = await newPage();
+  await page.goto(`${base}/faq.html`);
+  await page.fill('#faq-filter', 'iso');
+  assert.ok((await page.locator('.faq details[open]').count()) > 0);
+  await page.fill('#faq-filter', '');
+  assert.equal(await page.locator('.faq details[open]').count(), 0);
+  await page.fill('#faq-filter', 'windows');
+  assert.ok(await page.locator('#windows').isVisible(), 'dual-boot question exists');
+});
+
+test('logo link has an accessible name at every width', async () => {
+  const page = await newPage({ viewport: { width: 320, height: 640 } });
+  await page.goto(`${base}/index.html`);
+  const names = await page.$$eval('a.brand', as => as.map(a => (a.querySelector('img')?.alt || '') + a.innerText));
+  assert.ok(names.every(n => n.includes('Linux-C.O.S')), names.join('|'));
 });

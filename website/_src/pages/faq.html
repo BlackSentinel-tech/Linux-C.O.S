@@ -33,6 +33,18 @@ nav: faq
         <summary><span data-l="en">Why is BlackArch in a container instead of installed?</span><span data-l="es">¿Por qué BlackArch va en un contenedor y no instalado?</span></summary>
         <div class="answer"><p><span data-l="en">BlackArch is Arch Linux (pacman packages); Linux-C.O.S is Debian-family (apt). The formats don't interoperate, and repackaging 2,858 tools by hand would be a full-time job. Running BlackArch unmodified in Docker gives you the real binaries with your home directory shared.</span><span data-l="es">BlackArch es Arch Linux (paquetes pacman); Linux-C.O.S es de la familia Debian (apt). Los formatos no son compatibles, y reempaquetar 2.858 herramientas a mano sería un trabajo a tiempo completo. Ejecutar BlackArch sin modificar en Docker te da los binarios reales compartiendo tu carpeta personal.</span></p></div>
       </details>
+      <details id="when-download">
+        <summary><span data-l="en">When can I just download the ISO?</span><span data-l="es">¿Cuándo podré simplemente descargar la ISO?</span></summary>
+        <div class="answer"><p><span data-l="en">When boot testing is done, releases will be published on GitHub Releases with SHA-256 checksums. Until then, build it yourself with Docker — <a href="download.html#build">the steps</a> work on Linux, macOS and Windows.</span><span data-l="es">Cuando terminen las pruebas de arranque, las versiones se publicarán en GitHub Releases con sus sumas SHA-256. Hasta entonces, compílala tú con Docker — <a href="download.html#build">los pasos</a> funcionan en Linux, macOS y Windows.</span></p></div>
+      </details>
+      <details id="usb">
+        <summary><span data-l="en">How do I start my computer from the USB stick?</span><span data-l="es">¿Cómo arranco el ordenador desde la memoria USB?</span></summary>
+        <div class="answer"><p><span data-l="en">Disable Secure Boot in the firmware setup, then press the boot-menu key while the computer starts (often F12, F9, F8 or Esc) and pick the USB stick. <a href="download.html#usb-boot">Step-by-step guide</a>.</span><span data-l="es">Desactiva Secure Boot en la configuración del firmware y pulsa la tecla del menú de arranque mientras se enciende el ordenador (suele ser F12, F9, F8 o Esc); elige la memoria USB. <a href="download.html#usb-boot">Guía paso a paso</a>.</span></p></div>
+      </details>
+      <details id="windows">
+        <summary><span data-l="en">Can I install it next to Windows?</span><span data-l="es">¿Puedo instalarla junto a Windows?</span></summary>
+        <div class="answer"><p><span data-l="en">Yes, but be careful: the installer's default “Erase disk” deletes Windows. Back up first, then choose “Install alongside” or manual partitioning. You need 60 GB of free space. Trying the live session first changes nothing on your disk.</span><span data-l="es">Sí, pero con cuidado: la opción por defecto del instalador, “Borrar disco”, elimina Windows. Haz una copia de seguridad y elige “Instalar junto a” o el particionado manual. Necesitas 60 GB libres. Probar la sesión live primero no cambia nada en tu disco.</span></p></div>
+      </details>
       <details id="iso-size">
         <summary><span data-l="en">Why is the ISO so big?</span><span data-l="es">¿Por qué la ISO es tan grande?</span></summary>
         <div class="answer"><p><span data-l="en">It installs <code>kali-linux-everything</code> plus the blue-team layer: about 14.6 GiB. Baking the BlackArch image in makes it much larger — that's optional, see <a href="download.html#build">the build steps</a>.</span><span data-l="es">Instala <code>kali-linux-everything</code> más la capa blue-team: unos 14,6 GiB. Incluir la imagen de BlackArch la hace mucho más grande — es opcional, mira <a href="download.html#build">los pasos de compilación</a>.</span></p></div>
@@ -46,8 +58,12 @@ nav: faq
         <div class="answer"><p><span data-l="en">User <code>kali</code>, password <code>kali</code> — the same convention as Kali's live images. The installed system uses the user and password you create in the installer.</span><span data-l="es">Usuario <code>kali</code>, contraseña <code>kali</code> — la misma convención que las imágenes live de Kali. El sistema instalado usa el usuario y la contraseña que crees en el instalador.</span></p></div>
       </details>
       <details id="stack-passwords">
-        <summary><span data-l="en">What are the TheHive / MISP passwords?</span><span data-l="es">¿Cuáles son las contraseñas de TheHive / MISP?</span></summary>
+        <summary><span data-l="en">What are the MISP / TheHive / Wazuh passwords?</span><span data-l="es">¿Cuáles son las contraseñas de MISP / TheHive / Wazuh?</span></summary>
         <div class="answer"><p><span data-l="en">MISP's are generated randomly the first time you run <code>cos-stacks up misp</code>; see them with <code>cos-stacks creds misp</code>. TheHive and Wazuh use their upstream first-login defaults, which you must change on first login (<code>cos-stacks creds</code> reminds you).</span><span data-l="es">Las de MISP se generan al azar la primera vez que ejecutas <code>cos-stacks up misp</code>; míralas con <code>cos-stacks creds misp</code>. TheHive y Wazuh usan sus valores iniciales de fábrica, que debes cambiar en el primer inicio de sesión (<code>cos-stacks creds</code> te lo recuerda).</span></p></div>
+      </details>
+      <details id="hardening">
+        <summary><span data-l="en">Is the firewall on? Is the disk encrypted?</span><span data-l="es">¿El firewall está activo? ¿El disco está cifrado?</span></summary>
+        <div class="answer"><p><span data-l="en">The ufw firewall blocks incoming connections from the first boot, before the network starts. Disk encryption (LUKS2) is offered by the installer — tick “Encrypt system”. AppArmor and auditd are on too. Details: <a href="features.html#hardening">hardening</a>.</span><span data-l="es">El firewall ufw bloquea las conexiones entrantes desde el primer arranque, antes de que arranque la red. El cifrado del disco (LUKS2) lo ofrece el instalador — marca “Cifrar el sistema”. AppArmor y auditd también están activos. Detalles: <a href="features.html#hardening">hardening</a>.</span></p></div>
       </details>
       <details id="arm">
         <summary><span data-l="en">Is there an ARM / Apple Silicon version?</span><span data-l="es">¿Hay versión para ARM / Apple Silicon?</span></summary>

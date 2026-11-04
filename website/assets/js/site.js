@@ -66,16 +66,13 @@
       el.setAttribute('title', el.getAttribute('data-title-' + l));
     });
     var lb = document.getElementById('lang-toggle');
-    if (lb) {
-      lb.setAttribute('aria-label', t('langSwitch'));
-      lb.setAttribute('title', t('langSwitch'));
-      lb.querySelector('.lang-code').textContent = l === 'es' ? 'EN' : 'ES';
-    }
+    if (lb) lb.setAttribute('title', t('langSwitch'));
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', currentTheme() === 'light' ? '#f5f7fc' : '#070a14');
     syncThemeButton();
     syncMenuButton();
     document.querySelectorAll('.copy-btn').forEach(function (b) {
-      if (!b.classList.contains('copied')) b.textContent = t('copy');
-      b.setAttribute('aria-label', t('copyLabel'));
+      if (!b.classList.contains('copied')) { b.textContent = t('copy'); b.setAttribute('aria-label', t('copyLabel')); }
     });
     var top = document.querySelector('.to-top');
     if (top) top.setAttribute('aria-label', t('toTop'));
@@ -92,10 +89,10 @@
     var b = document.getElementById('theme-toggle');
     if (!b) return;
     var th = currentTheme();
-    var label = th === 'dark' ? t('themeToLight') : t('themeToDark');
-    b.setAttribute('aria-label', label);
-    b.setAttribute('title', label);
-    b.setAttribute('data-current', th);
+    b.setAttribute('title', th === 'dark' ? t('themeToLight') : t('themeToDark'));
+    b.setAttribute('aria-pressed', th === 'light' ? 'true' : 'false');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', th === 'light' ? '#f5f7fc' : '#070a14');
   }
 
   // ---------- mobile menu ------------------------------------------------
@@ -119,9 +116,9 @@
     syncMenuButton();
     if (open) {
       var first = navList && navList.querySelector('a');
-      if (first) first.focus();
+      if (first) first.focus({ preventScroll: true });
     } else if (opts.returnFocus && menuBtn) {
-      menuBtn.focus();
+      menuBtn.focus({ preventScroll: true });
     }
   }
 
@@ -137,15 +134,21 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && menuOpen()) { setMenu(false, { returnFocus: true }); return; }
       if (e.key === 'Tab' && menuOpen() && isMobile()) {
-        // keep focus inside the open menu (+ its toggle button)
-        var items = [menuBtn].concat(Array.prototype.slice.call(navList.querySelectorAll('a')));
+        // keep focus inside the header while the menu covers the page: cycle
+        // through its visible controls (logo, links, ES/EN, theme, toggle)
+        var header = menuBtn.closest('.site-header');
+        var items = Array.prototype.slice.call(header.querySelectorAll('a[href], button'))
+          .filter(function (x) { return x.offsetParent !== null && !x.closest('[inert]'); });
+        if (!items.length) return;
+        e.preventDefault();
         var i = items.indexOf(document.activeElement);
-        if (e.shiftKey && i <= 0) { e.preventDefault(); items[items.length - 1].focus(); }
-        else if (!e.shiftKey && i === items.length - 1) { e.preventDefault(); items[0].focus(); }
+        var next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i === -1 || i === items.length - 1 ? 0 : i + 1);
+        items[next].focus({ preventScroll: true });
       }
     });
     document.addEventListener('click', function (e) {
-      if (menuOpen() && !e.target.closest('#primary-nav') && !e.target.closest('#menu-toggle')) setMenu(false);
+      // anything in the header (ES/EN, theme) keeps the menu open
+      if (menuOpen() && !e.target.closest('.site-header')) setMenu(false);
     });
     var wasMobile = isMobile();
     window.addEventListener('resize', function () {
@@ -170,7 +173,13 @@
   function initCopy() {
     document.querySelectorAll('.code').forEach(function (block) {
       var pre = block.querySelector('pre');
-      if (!pre || block.querySelector('.copy-btn')) return;
+      if (!pre) return;
+      // long lines scroll horizontally: make that reachable by keyboard
+      pre.setAttribute('tabindex', '0');
+      // reference listings (several independent commands) get no copy
+      // button: pasted at once they would all run, one after the other
+      if (block.classList.contains('ref') || block.querySelector('.copy-btn')) return;
+      block.classList.add('has-copy');
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'copy-btn'; b.textContent = t('copy');
       b.setAttribute('aria-label', t('copyLabel'));
@@ -182,10 +191,13 @@
           .join('\n').trim();
         copyText(text).then(function () {
           b.textContent = t('copied'); b.classList.add('copied');
+          b.setAttribute('aria-label', t('copied'));
         }, function () {
-          b.textContent = t('copyFail');
+          b.textContent = t('copyFail'); b.setAttribute('aria-label', t('copyFail'));
         }).then(function () {
-          setTimeout(function () { b.textContent = t('copy'); b.classList.remove('copied'); }, 1800);
+          setTimeout(function () {
+            b.textContent = t('copy'); b.classList.remove('copied'); b.setAttribute('aria-label', t('copyLabel'));
+          }, 1800);
         });
       });
       block.appendChild(b);
@@ -204,24 +216,28 @@
   }
   function initToc() {
     var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
-    if (!links.length || !('IntersectionObserver' in window)) return;
-    var byId = {};
-    links.forEach(function (a) { byId[a.getAttribute('href').slice(1)] = a; });
-    var visible = {};
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { visible[en.target.id] = en.isIntersecting; });
-      var firstVisible = links.map(function (a) { return a.getAttribute('href').slice(1); })
-        .filter(function (id) { return visible[id]; })[0];
-      if (firstVisible) {
-        links.forEach(function (a) { a.classList.remove('active'); a.removeAttribute('aria-current'); });
-        byId[firstVisible].classList.add('active');
-        byId[firstVisible].setAttribute('aria-current', 'location');
-      }
-    }, { rootMargin: '-80px 0px -60% 0px' });
-    Object.keys(byId).forEach(function (id) {
-      var sec = document.getElementById(id);
-      if (sec) obs.observe(sec);
-    });
+    if (!links.length) return;
+    var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    var current = null;
+    function update() {
+      // the section being read = the last one whose heading is above a line
+      // just under the sticky header (works the same scrolling up or down)
+      var line = 120, idx = 0;
+      sections.forEach(function (sec, i) { if (sec && sec.getBoundingClientRect().top <= line) idx = i; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) idx = sections.length - 1;
+      if (links[idx] === current) return;
+      if (current) { current.classList.remove('active'); current.removeAttribute('aria-current'); }
+      current = links[idx];
+      current.classList.add('active');
+      current.setAttribute('aria-current', 'location');
+    }
+    var queued = false;
+    window.addEventListener('scroll', function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; update(); });
+    }, { passive: true });
+    update();
     // on mobile the TOC is a <details>: close it after picking a section
     links.forEach(function (a) {
       a.addEventListener('click', function () {
@@ -247,15 +263,22 @@
     window.addEventListener('hashchange', openFromHash);
     if (!input) return;
     var none = document.getElementById('faq-empty');
+    var before = null; // which answers were open before the user started filtering
     input.addEventListener('input', function () {
       var q = input.value.trim().toLowerCase();
+      if (q && !before) before = items.map(function (d) { return d.open; });
       var shown = 0;
-      items.forEach(function (d) {
-        var hit = !q || d.textContent.toLowerCase().indexOf(q) !== -1;
+      items.forEach(function (d, i) {
+        // search only the visible language
+        var text = Array.prototype.slice.call(d.querySelectorAll('[data-l="' + lang() + '"]'))
+          .map(function (x) { return x.textContent; }).join(' ').toLowerCase() || d.textContent.toLowerCase();
+        var hit = !q || text.indexOf(q) !== -1;
         d.hidden = !hit;
         if (hit) shown++;
-        if (q && hit) d.open = true;
+        if (q) d.open = hit;
+        else if (before) d.open = before[i];
       });
+      if (!q) before = null;
       if (none) { none.hidden = shown !== 0; none.textContent = t('faqNone'); }
     });
   }

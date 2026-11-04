@@ -96,19 +96,20 @@ def header(current: str) -> str:
     for key, href, en, es in NAV:
         cur = ' aria-current="page"' if key == current else ""
         items.append(f'<li><a href="{href}"{cur}>{bi(en, es)}</a></li>')
-    items.append(f'<li class="mobile-only"><a href="{REPO}" rel="noopener">GitHub</a></li>')
     home_cur = ' aria-current="page"' if current == "home" else ""
+    items.insert(0, f'<li class="mobile-only"><a href="index.html"{home_cur}>{bi("Home", "Inicio")}</a></li>')
+    items.append(f'<li class="mobile-only"><a href="{REPO}" rel="noopener">GitHub</a></li>')
     return f"""<a class="skip-link" href="#main">{bi("Skip to content", "Saltar al contenido")}</a>
 <header class="site-header">
   <nav class="nav container" aria-label="Main" data-aria-en="Main" data-aria-es="Principal">
-    <a class="brand" href="index.html"{home_cur}><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>LINUX-C.O.S</span></a>
+    <a class="brand" href="index.html"{home_cur}><img src="assets/img/logo.svg" alt="Linux-C.O.S" width="30" height="30"><span aria-hidden="true">LINUX-C.O.S</span></a>
     <ul class="nav-links" id="primary-nav">
       {"".join(items)}
     </ul>
     <div class="nav-tools">
       <a class="icon-btn nav-gh" href="{REPO}" rel="noopener" aria-label="Linux-C.O.S on GitHub" data-aria-en="Linux-C.O.S on GitHub" data-aria-es="Linux-C.O.S en GitHub">{ICONS["github"]}</a>
-      <button class="icon-btn" id="lang-toggle" type="button" aria-label="Cambiar a español"><span class="lang-code">ES</span></button>
-      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch theme">{ICONS["sun"]}{ICONS["moon"]}</button>
+      <button class="icon-btn" id="lang-toggle" type="button"><span data-l="en" lang="es">ES<span class="visually-hidden">, español</span></span><span data-l="es" lang="en">EN<span class="visually-hidden">, English</span></span></button>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-pressed="false">{ICONS["sun"]}{ICONS["moon"]}<span class="visually-hidden">{bi("Light theme", "Tema claro")}</span></button>
       <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Open menu">{ICONS["menu"]}</button>
     </div>
   </nav>
@@ -120,7 +121,7 @@ def footer() -> str:
   <div class="container">
     <div class="footer-grid">
       <div>
-        <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="" width="30" height="30"><span>LINUX-C.O.S</span></a>
+        <a class="brand" href="index.html"><img src="assets/img/logo.svg" alt="Linux-C.O.S" width="30" height="30"><span aria-hidden="true">LINUX-C.O.S</span></a>
         <p>{bi("Cyber Offensive &amp; defensive Security. A Kali-based distribution with Parrot and BlackArch tools, a blue-team stack and hardening on by default.",
                "Cyber Offensive &amp; defensive Security. Una distribución basada en Kali con herramientas de Parrot y BlackArch, stack blue-team y hardening activado por defecto.")}</p>
         <p>{bi("This site makes no third-party requests and sets no cookies.", "Este sitio no hace peticiones a terceros ni usa cookies.")}</p>
@@ -151,7 +152,7 @@ def footer() -> str:
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© <span id="year">2026</span> Linux-C.O.S project · v0.1 “Génesis”</span>
+      <span>© <span id="year">2026</span> {bi("Linux-C.O.S project", "Proyecto Linux-C.O.S")} · v0.1 “Génesis”</span>
       <span>{bi("Kali, Parrot and BlackArch are trademarks of their respective owners; Linux-C.O.S is not affiliated with them.",
                "Kali, Parrot y BlackArch son marcas de sus respectivos dueños; Linux-C.O.S no está afiliado a ellos.")}</span>
     </div>
@@ -164,7 +165,8 @@ def render(path: Path) -> str:
     meta, body = parse(path)
     page = path.stem
     scripts = ["site.js"] + [s.strip() for s in meta.get("scripts", "").split(",") if s.strip()]
-    script_tags = "\n".join(f'<script src="assets/js/{s}" defer></script>' for s in scripts)
+    script_tags = "\n".join(
+        f'<script src="{s if s.startswith("assets/") else "assets/js/" + s}" defer></script>' for s in scripts)
     e = html.escape
     full_en = meta["title_en"] if page == "index" else f'{meta["title_en"]} · {SITE_NAME}'
     full_es = meta["title_es"] if page == "index" else f'{meta["title_es"]} · {SITE_NAME}'
@@ -201,7 +203,18 @@ def render(path: Path) -> str:
 """
 
 
+def with_base(text: str, base: str) -> str:
+    """Make relative href/src absolute under `base` (used for 404.html)."""
+    return re.sub(r'(href|src)="(?![a-z]+:|/|#|data:)([^"]*)"',
+                  lambda m: f'{m.group(1)}="{base}{m.group(2)}"', text)
+
+
 def main() -> int:
+    # --base /Linux-C.O.S/ : what the Pages workflow passes, from
+    # actions/configure-pages; only 404.html needs it
+    base = ""
+    if "--base" in sys.argv:
+        base = sys.argv[sys.argv.index("--base") + 1].rstrip("/") + "/"
     pages = sorted(SRC.glob("*.html"))
     if not pages:
         raise SystemExit(f"no pages in {SRC}")
@@ -209,6 +222,8 @@ def main() -> int:
     for p in pages:
         out = SITE / p.name
         text = render(p)
+        if base and p.stem == "404":
+            text = with_base(text, base)
         if "--check" in sys.argv[1:]:
             if not out.exists() or out.read_text() != text:
                 stale.append(out.name)
