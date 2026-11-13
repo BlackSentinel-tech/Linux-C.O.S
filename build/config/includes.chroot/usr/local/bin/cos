@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+# Linux-C.O.S -- the `cos` command. The implementation lives in
+# /usr/lib/linux-cos/ (cos_cli.py, cos_core.py) so it can be shared with the
+# COS Hub, the menu generator and the shell hooks.
+import os
+import sys
+
+sys.path.insert(0, os.environ.get("COS_LIB", "/usr/lib/linux-cos"))
+from cos_cli import main  # noqa: E402
+
+sys.exit(main(sys.argv[1:]))

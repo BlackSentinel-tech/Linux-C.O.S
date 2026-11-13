@@ -140,6 +140,11 @@ the BlackArch-as-container tradeoff.
   had drifted (e.g. `linux-cos-live-password` only existed in the hook). It
   is generated now: `python3 scripts/sync-usrlocal-hook.py` (CI checks it).
 
+## How it fits together
+
+See [`docs/DESIGN.md`](docs/DESIGN.md): one catalog, one `cos` command, one menu, one
+colour system (red / blue / dual), animated desktop, tested without booting the ISO.
+
 ## Layout
 
 ```
@@ -183,6 +188,14 @@ opt/linux-cos/blueteam-stacks/<stack>/{stack.meta,secrets.list,docker-compose.ym
 Edit the scripts under `usr/local/{bin,sbin}/` and then run
 `python3 scripts/sync-usrlocal-hook.py` -- the 0035 hook is generated from
 them. Boot artwork is rendered by `node scripts/render-boot-art.mjs`.
+
+## Rebuilding after a change (keeps the installed chroot)
+
+```bash
+./reset-stages.sh && COS_PROFILE=full COS_BUILDER_PLATFORM=linux/amd64 ./build.sh
+```
+`COS_BUILDER_PLATFORM=linux/amd64` is required on Apple Silicon (the builder image
+needs amd64-only GRUB packages) and runs near-native through Docker Desktop's Rosetta.
 
 ## Checking changes without building an ISO
 

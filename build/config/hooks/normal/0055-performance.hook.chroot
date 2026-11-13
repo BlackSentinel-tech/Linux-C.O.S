@@ -1,0 +1,32 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- boot speed and runtime performance. The tuning
+# files themselves (sysctl, zram, journald, udev, earlyoom) are plain files in
+# includes.chroot; this hook only turns services on/off.
+set -e
+
+echo "[linux-cos] performance: services"
+
+# compressed RAM swap + OOM guard + irq balancing + laptop power
+systemctl enable earlyoom.service || true
+systemctl enable irqbalance.service || true
+systemctl enable thermald.service || true
+systemctl enable tlp.service || true
+
+# slow, rarely useful at boot on a pentest box / live session
+systemctl disable NetworkManager-wait-online.service || true
+systemctl mask apt-daily.timer apt-daily-upgrade.timer 2>/dev/null || true
+systemctl disable e2scrub_all.timer 2>/dev/null || true
+systemctl disable man-db.timer 2>/dev/null || true
+systemctl disable ModemManager.service 2>/dev/null || true
+systemctl disable cups-browsed.service 2>/dev/null || true
+
+# Guest tools start only when a matching hypervisor is detected (their own
+# ConditionVirtualization); making sure they are enabled is all that is needed.
+for u in open-vm-tools vmtoolsd spice-vdagentd qemu-guest-agent vboxservice; do
+  systemctl enable "$u.service" 2>/dev/null || true
+done
+
+# initramfs: zstd is much faster to unpack than gzip
+if [ -f /etc/initramfs-tools/initramfs.conf ]; then
+  sed -i 's/^COMPRESS=.*/COMPRESS=zstd/' /etc/initramfs-tools/initramfs.conf
+fi

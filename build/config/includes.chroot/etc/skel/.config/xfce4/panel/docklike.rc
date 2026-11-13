@@ -1,0 +1,6 @@
+[user]
+pinned=linux-cos-installer;xfce4-terminal;thunar;firefox-esr;linux-cos-hub;linux-cos-ai;burpsuite;wireshark;kali-msfconsole;linux-cos-stacks
+indicatorStyle=1
+iconSize=40
+forceIconSize=true
+showPreviews=true

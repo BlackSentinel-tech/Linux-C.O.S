@@ -1,0 +1,20 @@
+recon	1	Reconnaissance	Reconocimiento	system-search	red
+vuln	2	Vulnerability Analysis	Análisis de vulnerabilidades	security-medium	red
+web	3	Web Applications	Aplicaciones web	applications-internet	red
+exploit	4	Exploitation	Explotación	application-x-executable	red
+post	5	Post-Exploitation	Post-explotación	utilities-terminal	red
+passwords	6	Passwords & Cracking	Contraseñas y cracking	dialog-password	red
+wireless	7	Wireless & RF	Inalámbrico y RF	network-wireless	red
+network	8	Network, Sniffing & Spoofing	Red, sniffing y spoofing	network-workgroup	both
+windows	9	Windows & Active Directory	Windows y Active Directory	computer	red
+social	10	Social Engineering	Ingeniería social	system-users	red
+reverse	11	Reverse Engineering & Binary	Ingeniería inversa y binarios	applications-debugging	both
+database	12	Databases	Bases de datos	network-server-database	red
+mobile	13	Mobile, Hardware & Auto	Móvil, hardware y automoción	phone	red
+cloud	14	Cloud & Containers	Nube y contenedores	weather-overcast	both
+crypto	15	Cryptography & Stego	Criptografía y esteganografía	emblem-system	both
+forensics	16	Forensics & Recovery	Forense y recuperación	drive-harddisk	blue
+defense	17	Defense & Detection	Defensa y detección	security-high	blue
+reporting	18	Reporting	Informes	x-office-document	both
+ai	19	AI & Automation	IA y automatización	applications-science	both
+utils	20	Utilities	Utilidades	applications-utilities	both

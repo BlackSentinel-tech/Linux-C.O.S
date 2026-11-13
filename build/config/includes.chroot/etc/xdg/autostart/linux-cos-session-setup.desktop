@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Linux-C.O.S session setup
-Comment=Applies the Linux-C.O.S wallpaper on every monitor and trusts the installer launcher
+Comment=Trusts the installer launcher on the desktop
 Exec=/usr/local/bin/linux-cos-session-setup
 OnlyShowIn=XFCE;
 NoDisplay=true

@@ -1,37 +1,36 @@
 #!/bin/sh
-# Linux-C.O.S build hook -- boot splash. Writing a Plymouth theme from
-# scratch (a real animation engine, "script") is a project on its own;
-# every practical custom-distro does the same thing we're doing here
-# instead: clone a solid stock theme (`spinner`, ships in plymouth-themes,
-# already in desktop-xfce.list.chroot) and swap its watermark for our logo.
+# Linux-C.O.S build hook -- boot splash. A real animated theme: the stock
+# `spinner` two-step theme (it ships the password-prompt artwork LUKS needs)
+# with its throbber frames replaced by ours -- a neon ring that rotates around
+# the shield (rendered by scripts/render-cos-assets.py, 72 frames).
 set -e
 
 SRC=/usr/share/plymouth/themes/spinner
 DST=/usr/share/plymouth/themes/linux-cos
+ART=/usr/share/linux-cos/plymouth
 
-if [ ! -d "$SRC" ]; then
-  echo "[linux-cos] WARNING: spinner plymouth theme not found, skipping boot splash branding"
+if [ ! -d "$SRC" ] || [ ! -f "$ART/throbber-0001.png" ]; then
+  echo "[linux-cos] WARNING: plymouth spinner theme or COS artwork missing, skipping boot splash"
   exit 0
 fi
 
-echo "[linux-cos] building the linux-cos plymouth theme from spinner"
+echo "[linux-cos] building the linux-cos plymouth theme"
+rm -rf "$DST"
 cp -r "$SRC" "$DST"
+rm -f "$DST"/throbber-*.png "$DST"/animation-*.png
+cp "$ART"/throbber-*.png "$ART/watermark.png" "$DST/"
 mv "$DST/spinner.plymouth" "$DST/linux-cos.plymouth"
-mv "$DST/spinner.script" "$DST/linux-cos.script" 2>/dev/null || true
+rm -f "$DST/spinner.script"
 
 sed -i \
   -e 's/^Name=.*/Name=Linux-C.O.S/' \
-  -e 's/^Description=.*/Description=Linux-C.O.S boot splash/' \
-  -e 's/ImageDir=.*/ImageDir=\/usr\/share\/plymouth\/themes\/linux-cos/' \
-  -e 's/ScriptFile=.*/ScriptFile=\/usr\/share\/plymouth\/themes\/linux-cos\/linux-cos.script/' \
+  -e 's/^Description=.*/Description=Linux-C.O.S animated boot splash/' \
+  -e 's|^ImageDir=.*|ImageDir=/usr/share/plymouth/themes/linux-cos|' \
+  -e 's|^ScriptFile=.*|ScriptFile=/usr/share/plymouth/themes/linux-cos/linux-cos.script|' \
   "$DST/linux-cos.plymouth"
+# the translated Name[xx]= lines still say "Spinner"
+sed -i '/^Name\[/d' "$DST/linux-cos.plymouth"
 
-cp /usr/share/backgrounds/linux-cos/logo.png "$DST/watermark.png"
-# Background: near-black navy to match the wallpaper and lightdm, instead of
-# spinner's default. `spinner` is a two-step theme -- its colors live in the
-# [two-step] section of the .plymouth file, not in a .script (an earlier
-# version of this hook sed'ed a .script file spinner doesn't ship, so the
-# color change silently never applied).
 set_twostep() { # set_twostep <key> <value>
   if grep -q "^$1=" "$DST/linux-cos.plymouth"; then
     sed -i "s|^$1=.*|$1=$2|" "$DST/linux-cos.plymouth"
@@ -39,9 +38,14 @@ set_twostep() { # set_twostep <key> <value>
     sed -i "/^\[[Tt]wo-[Ss]tep\]/a $1=$2" "$DST/linux-cos.plymouth"
   fi
 }
-set_twostep BackgroundStartColor 0x0a0f24
-set_twostep BackgroundEndColor 0x05070d
+set_twostep BackgroundStartColor 0x0b1020
+set_twostep BackgroundEndColor 0x02030a
+set_twostep HorizontalAlignment .5
+set_twostep VerticalAlignment .45
 set_twostep WatermarkHorizontalAlignment .5
-set_twostep WatermarkVerticalAlignment .42
+set_twostep WatermarkVerticalAlignment .45
+set_twostep ProgressBarBackgroundColor 0x1c2a52
+set_twostep ProgressBarForegroundColor 0x00e5ff
+set_twostep MessageBelowAnimation true
 
 plymouth-set-default-theme -R linux-cos

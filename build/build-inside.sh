@@ -23,10 +23,16 @@ echo "[linux-cos] syncing config into the build volume"
 # hence it looking "random" rather than a clean total wipe. If you add
 # another live-build-generated top-level path here in the future (check
 # `ls /build` inside the volume against this list), add it below too.
+# The patterns are ANCHORED ('/local', not 'local'): an unanchored 'local'
+# also matches config/includes.chroot/usr/local/, which is exactly why
+# /usr/local/{bin,sbin} used to arrive empty in the image (and why the 0035
+# hook has to exist at all).
 rsync -a --delete \
-    --exclude='.build' --exclude='local' --exclude='cache' --exclude='chroot' \
-    --exclude='chroot.packages.install' --exclude='chroot.packages.live' \
-    --exclude='output' --exclude='build.out' \
+    --exclude='/.build' --exclude='/local' --exclude='/cache' --exclude='/chroot' \
+    --exclude='/chroot.packages.install' --exclude='/chroot.packages.live' \
+    --exclude='/chroot.files' --exclude='/binary' --exclude='/binary.*' \
+    --exclude='/live-image-*' \
+    --exclude='/output' --exclude='/build.out' \
     /src/ /build/
 
 # The project website doubles as the offline, bilingual user guide

@@ -1,0 +1,6 @@
+# Linux-C.O.S: Qt applications use the same look as the GTK ones
+QT_QPA_PLATFORMTHEME=qt5ct
+export QT_QPA_PLATFORMTHEME
+# no GPU-less stutter from client-side effects when the compositor is software
+GTK_OVERLAY_SCROLLING=1
+export GTK_OVERLAY_SCROLLING

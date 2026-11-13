@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Linux-C.O.S desktop session
+Comment=Applies the colour mode and effects: compositor, HUD, wallpaper, theme
+Exec=/usr/local/bin/cos session start
+OnlyShowIn=XFCE;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+X-GNOME-Autostart-Delay=1

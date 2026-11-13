@@ -28,7 +28,7 @@ Presentation {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             width: parent.width * 0.9
-            text: "800+ Kali tools + Parrot extras, installed natively\n800+ herramientas de Kali + extras de Parrot, nativas"
+            text: "3,000+ tools, one system: Kali and Parrot native, BlackArch as plain commands\n3.000+ herramientas, un solo sistema: Kali y Parrot nativas, BlackArch como comandos normales"
         }
     }
 
@@ -49,7 +49,7 @@ Presentation {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             width: parent.width * 0.9
-            text: "blackarch-shell: BlackArch's 2,858 tools in a container (pacman -S <tool>)\nblackarch-shell: las 2.858 herramientas de BlackArch en un contenedor"
+            text: "Red team, blue team or both: switch the whole desktop with one click\nRed team, blue team o ambos: cambia todo el escritorio con un clic"
         }
     }
 
@@ -70,7 +70,7 @@ Presentation {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             width: parent.width * 0.9
-            text: "AppArmor, firewall and auditd on from the first boot -- this box defends itself too\nAppArmor, firewall y auditd activos desde el primer arranque"
+            text: "Hardened by default: AppArmor, firewall, auditd, full-disk encryption\nProtegido por defecto: AppArmor, cortafuegos, auditd, cifrado de disco completo"
         }
     }
 }

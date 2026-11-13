@@ -1,0 +1,7 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- one menu for every tool (Kali + Parrot +
+# BlackArch), generated from the unified catalog (see cos_menu.py).
+set -e
+echo "[linux-cos] generating the unified tools menu"
+COS_SHARE=/usr/share/linux-cos PYTHONPATH=/usr/lib/linux-cos python3 /usr/lib/linux-cos/cos_menu.py
+update-desktop-database -q /usr/share/applications 2>/dev/null || true

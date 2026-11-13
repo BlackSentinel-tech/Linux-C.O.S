@@ -47,3 +47,4 @@ cryptsetup-initramfs
 secure-delete
 libpam-tmpdir
 haveged
+zstd

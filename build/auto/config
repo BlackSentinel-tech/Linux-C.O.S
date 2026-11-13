@@ -33,6 +33,10 @@
 # shim/grub that --debian-installer live would have demanded. The host build
 # image needs mtools + dosfstools to assemble the EFI FAT image (see
 # ../Dockerfile), and grub-efi-amd64-bin is pulled from Kali's repo.
+# Mirrors: the official CDN host kali.download, not the http.kali.org redirector --
+# the redirector sometimes picks a mirror that answers 403 mid-build, which
+# fails a multi-hour run. squashfs uses zstd: it unpacks much faster than xz
+# (faster live boot) and compresses a 40 GB tree far faster at build time.
 set -e
 
 # Cross-building (arm64 host, e.g. Apple Silicon -> amd64 ISO) needs QEMU
@@ -64,18 +68,21 @@ lb config noauto \
     --updates false \
     --uefi-secure-boot disable \
     --bootloaders "syslinux,grub-efi" \
-    --mirror-bootstrap "https://http.kali.org/kali" \
-    --mirror-chroot "https://http.kali.org/kali" \
-    --mirror-binary "https://http.kali.org/kali" \
-    --parent-mirror-bootstrap "https://http.kali.org/kali" \
-    --parent-mirror-chroot "https://http.kali.org/kali" \
-    --parent-mirror-binary "https://http.kali.org/kali" \
+    --mirror-bootstrap "https://kali.download/kali" \
+    --mirror-chroot "https://kali.download/kali" \
+    --mirror-binary "https://kali.download/kali" \
+    --parent-mirror-bootstrap "https://kali.download/kali" \
+    --parent-mirror-chroot "https://kali.download/kali" \
+    --parent-mirror-binary "https://kali.download/kali" \
     --keyring-packages "kali-archive-keyring" \
     --debian-installer none \
     --iso-application "Linux-C.O.S" \
     --iso-publisher "Linux-C.O.S project" \
     --iso-volume "LINUX-C.O.S" \
     --linux-packages "linux-image" \
+    --chroot-filesystem squashfs \
+    --chroot-squashfs-compression-type zstd \
+    --chroot-squashfs-compression-level 15 \
     --memtest none \
     --bootappend-live "boot=live components username=kali hostname=linux-cos user-default-groups=${LIVE_GROUPS} splash quiet" \
     --apt-recommends true \
