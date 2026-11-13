@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xfwm4" version="1.0">
+  <property name="general" type="empty">
+    <property name="theme" type="string" value="COS-Dual"/>
+    <property name="title_font" type="string" value="Inter Semi-Bold 10"/>
+    <property name="title_alignment" type="string" value="center"/>
+    <property name="button_layout" type="string" value="O|HMC"/>
+    <property name="use_compositing" type="bool" value="false"/>
+    <property name="show_dock_shadow" type="bool" value="false"/>
+    <property name="workspace_count" type="int" value="4"/>
+    <property name="workspace_names" type="array">
+      <value type="string" value="01"/>
+      <value type="string" value="02"/>
+      <value type="string" value="03"/>
+      <value type="string" value="04"/>
+    </property>
+    <property name="easy_click" type="string" value="Alt"/>
+    <property name="snap_to_border" type="bool" value="true"/>
+    <property name="snap_to_windows" type="bool" value="true"/>
+    <property name="tile_on_move" type="bool" value="true"/>
+    <property name="box_move" type="bool" value="false"/>
+    <property name="box_resize" type="bool" value="false"/>
+    <property name="placement_mode" type="string" value="center"/>
+    <property name="double_click_action" type="string" value="maximize"/>
+    <property name="mousewheel_rollup" type="bool" value="false"/>
+  </property>
+</channel>

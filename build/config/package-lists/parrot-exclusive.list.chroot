@@ -5,7 +5,6 @@
 2ping
 awscli
 azure-cli
-backdoor-factory
 can-utils
 device-pharmer
 etherape
@@ -33,6 +32,10 @@ smbclient
 # published as an installable .deb): convoc2, king-phisher, logseq,
 # parrot-meta-sdr, rocket, rtlsdr-scanner.
 
+# Also removed (first CI build, no installation candidate on kali-rolling):
+# backdoor-factory (and, from base.list, apparmor-profiles-extra + rng-tools5
+# -- apparmor base profiles stay, haveged covers entropy).
+#
 # Also removed (Kali-rolling base, second real build attempt): afl, bluez-hcidump,
 # gscanbus, pev, rclone, s3backer -- not resolvable by these names from
 # Parrot's repo layered on Kali either (renamed/dropped/moved upstream).

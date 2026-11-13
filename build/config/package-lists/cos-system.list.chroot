@@ -1,0 +1,44 @@
+# Linux-C.O.S system layer: performance, VM/hardware compatibility, networking.
+# --- performance ---
+systemd-zram-generator
+earlyoom
+irqbalance
+thermald
+tlp
+# --- runs well as a guest (VirtualBox, VMware, QEMU/UTM/KVM, Hyper-V) ---
+open-vm-tools-desktop
+spice-vdagent
+spice-webdavd
+qemu-guest-agent
+virtualbox-guest-x11
+virtualbox-guest-utils
+hyperv-daemons
+xserver-xorg-video-fbdev
+xserver-xorg-input-libinput
+mesa-utils
+mesa-vulkan-drivers
+libgl1-mesa-dri
+# --- pentest-friendly networking ---
+network-manager-openvpn-gnome
+wireguard-tools
+openvpn
+ethtool
+usbutils
+pciutils
+rfkill
+iw
+wpasupplicant
+bluez
+blueman
+bind9-dnsutils
+whois
+traceroute
+socat
+netcat-traditional
+rlwrap
+lsof
+strace
+ltrace
+firefox-esr
+mousepad
+ristretto

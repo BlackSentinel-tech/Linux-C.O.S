@@ -1,0 +1,6 @@
+#!/bin/sh
+# Linux-C.O.S build hook -- derive the COS-Dual / COS-Red / COS-Blue GTK and
+# window-manager themes from Arc-Dark (see usr/lib/linux-cos/cos_theme.py).
+set -e
+echo "[linux-cos] building the COS themes"
+COS_SHARE=/usr/share/linux-cos python3 /usr/lib/linux-cos/cos_theme.py

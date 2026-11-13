@@ -177,6 +177,20 @@ esac
 docker_cmd exec "$TTY" -w "$HOME" "$NAME" "$@"
 LINUX_COS_EOF
 
+cat > /usr/local/bin/cos <<'LINUX_COS_EOF'
+#!/usr/bin/env python3
+# Linux-C.O.S -- the `cos` command. The implementation lives in
+# /usr/lib/linux-cos/ (cos_cli.py, cos_core.py) so it can be shared with the
+# COS Hub, the menu generator and the shell hooks.
+import os
+import sys
+
+sys.path.insert(0, os.environ.get("COS_LIB", "/usr/lib/linux-cos"))
+from cos_cli import main  # noqa: E402
+
+sys.exit(main(sys.argv[1:]))
+LINUX_COS_EOF
+
 cat > /usr/local/bin/cos-ai <<'LINUX_COS_EOF'
 #!/bin/sh
 # Linux-C.O.S -- local AI assistant for offensive and defensive security
@@ -459,6 +473,10 @@ esac
 if [ "$L" = es ]; then
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
+  T_COSS="estado del sistema, modo, efectos"
+  T_COSF="buscar entre más de 3.000 herramientas (Kali+Parrot+BlackArch)"
+  T_COSR="ejecutar una herramienta (nativa o BlackArch, igual)"
+  T_COSM="modo de color: red (ofensivo), blue (defensivo) o dual"
   T_KALI="categorías de Kali instaladas (herramientas: menú de aplicaciones)"
   T_BA="shell con las herramientas de BlackArch (contenedor)"
   T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú)"
@@ -478,6 +496,10 @@ if [ "$L" = es ]; then
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
+  T_COSS="system status, mode, effects"
+  T_COSF="search 3,000+ tools (Kali + Parrot + BlackArch)"
+  T_COSR="run a tool (native or BlackArch, same command)"
+  T_COSM="colour mode: red (offense), blue (defense) or dual"
   T_KALI="installed Kali tool categories (the tools are in the applications menu)"
   T_BA="shell with BlackArch's tools (container)"
   T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (menu)"
@@ -508,6 +530,8 @@ line() {
 
 offense() {
   printf '%s%s%s\n' "$B" "$T_OFF" "$R"
+  line "cos tools search sql" "$T_COSF"
+  line "cos run <tool> [args]" "$T_COSR"
   line "apt list --installed 'kali-tools-*'" "$T_KALI"
   line "blackarch-shell" "$T_BA"
   line "blackarch-shell --update" "docker pull blackarchlinux/blackarch"
@@ -522,6 +546,9 @@ defense() {
 }
 system() {
   printf '%s%s%s\n' "$B" "$T_SYS" "$R"
+  line "cos" "$T_COSS"
+  line "cos mode red|blue|dual" "$T_COSM"
+  line "cos hub" "COS Hub"
   line "sudo apt update && sudo apt full-upgrade" "$T_UPD"
   [ -d /run/live/medium ] && line "Install Linux-C.O.S (desktop icon)" "$T_INST"
   return 0
@@ -994,20 +1021,14 @@ LINUX_COS_EOF
 
 cat > /usr/local/bin/linux-cos-session-setup <<'LINUX_COS_EOF'
 #!/bin/sh
-# Linux-C.O.S -- runs once per user at XFCE login (etc/xdg/autostart/).
+# Linux-C.O.S -- runs at XFCE login (etc/xdg/autostart/).
 #
-# 1. Wallpaper on every monitor. The skel xfce4-desktop.xml can only name
-#    monitors it knows in advance (monitor0, monitorVirtual-1); real
-#    hardware shows up as monitoreDP-1, monitorHDMI-1, ... -- so read the
-#    connected outputs and set the property for each one.
-# 2. Trust the desktop "Install Linux-C.O.S" launcher. XFCE refuses to run
-#    an untrusted .desktop file from ~/Desktop and shows a scary dialog
-#    instead; trust = executable bit + a checksum in the file's metadata.
+# Trust the desktop "Install Linux-C.O.S" launcher. XFCE refuses to run an
+# untrusted .desktop file from ~/Desktop and shows a scary dialog instead;
+# trust = executable bit + a checksum in the file's metadata.
 #
-# Runs once per user (marker below) so a wallpaper the user picks later is
-# never overwritten.
-WALL=/usr/share/backgrounds/linux-cos/default.png
-STAMP=${XDG_CONFIG_HOME:-$HOME/.config}/linux-cos/session-setup-v1
+# (The wallpaper, compositor, HUD and colour mode are applied by
+# `cos session start`, see etc/xdg/autostart/linux-cos-session.desktop.)
 
 trust_launcher() {
   f=$1
@@ -1022,26 +1043,6 @@ trust_launcher() {
 
 # the launcher may be recreated by skel on a fresh live boot: trust it every time
 trust_launcher "$HOME/Desktop/linux-cos-installer.desktop"
-
-[ -f "$STAMP" ] && exit 0
-
-if command -v xfconf-query >/dev/null 2>&1 && [ -f "$WALL" ]; then
-  # give xfdesktop a moment to register its own properties first
-  sleep 2
-  outputs=$(xrandr --listactivemonitors 2>/dev/null | awk 'NR > 1 { print $NF }')
-  for out in $outputs monitor0; do
-    case "$out" in monitor*) prop=$out ;; *) prop=monitor$out ;; esac
-    for ws in 0 1 2 3; do
-      base=/backdrop/screen0/$prop/workspace$ws
-      xfconf-query -c xfce4-desktop -p "$base/last-image" -n -t string -s "$WALL" 2>/dev/null \
-        || xfconf-query -c xfce4-desktop -p "$base/last-image" -s "$WALL" 2>/dev/null || true
-      xfconf-query -c xfce4-desktop -p "$base/image-style" -n -t int -s 5 2>/dev/null \
-        || xfconf-query -c xfce4-desktop -p "$base/image-style" -s 5 2>/dev/null || true
-    done
-  done
-fi
-
-mkdir -p "$(dirname "$STAMP")" && date > "$STAMP"
 LINUX_COS_EOF
 
 cat > /usr/local/sbin/linux-cos-blackarch-pull <<'LINUX_COS_EOF'
@@ -1138,7 +1139,11 @@ cat > /usr/local/sbin/linux-cos-live-password <<'LINUX_COS_EOF'
 set -e
 if id kali >/dev/null 2>&1; then
   echo "kali:kali" | chpasswd
+  # zsh is the Linux-C.O.S shell (prompt, plugins and the BlackArch
+  # command-not-found hook live in its ~/.zshrc); live-config creates the
+  # account with bash.
+  if [ -x /usr/bin/zsh ]; then usermod -s /usr/bin/zsh kali || true; fi
 fi
 LINUX_COS_EOF
 
-chmod 0755 /usr/local/bin/blackarch-shell /usr/local/bin/cos-ai /usr/local/bin/cos-help /usr/local/bin/cos-pause /usr/local/bin/cos-stacks /usr/local/bin/linux-cos-session-setup /usr/local/sbin/linux-cos-blackarch-pull /usr/local/sbin/linux-cos-firstboot /usr/local/sbin/linux-cos-live-password
+chmod 0755 /usr/local/bin/blackarch-shell /usr/local/bin/cos /usr/local/bin/cos-ai /usr/local/bin/cos-help /usr/local/bin/cos-pause /usr/local/bin/cos-stacks /usr/local/bin/linux-cos-session-setup /usr/local/sbin/linux-cos-blackarch-pull /usr/local/sbin/linux-cos-firstboot /usr/local/sbin/linux-cos-live-password

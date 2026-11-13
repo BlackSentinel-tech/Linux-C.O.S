@@ -12,6 +12,7 @@
       <Category>X-Linux-COS</Category>
     </Include>
     <Layout>
+      <Filename>linux-cos-hub.desktop</Filename>
       <Filename>linux-cos-help.desktop</Filename>
       <Filename>linux-cos-ai.desktop</Filename>
       <Filename>linux-cos-blackarch-shell.desktop</Filename>

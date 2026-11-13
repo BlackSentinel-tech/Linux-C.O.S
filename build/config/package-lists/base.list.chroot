@@ -36,7 +36,6 @@ ufw
 gufw
 apparmor
 apparmor-profiles
-apparmor-profiles-extra
 apparmor-utils
 auditd
 audispd-plugins
@@ -47,5 +46,5 @@ cryptsetup
 cryptsetup-initramfs
 secure-delete
 libpam-tmpdir
-rng-tools5
 haveged
+zstd

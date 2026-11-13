@@ -45,6 +45,15 @@ esac
 exit 0
 EOF
 chmod +x "$WORK/bin/docker"
+# `sudo docker ...` (used when the docker socket is not writable) must reach
+# the fake docker too, or these tests only pass on machines with a docker socket
+cat > "$WORK/bin/sudo" <<'EOF'
+#!/bin/sh
+while [ "${1#-}" != "$1" ]; do shift; done
+exec "$@"
+EOF
+chmod +x "$WORK/bin/sudo"
+ln -s "$BIN/blackarch-shell" "$WORK/bin/blackarch-shell"
 
 export PATH="$WORK/bin:$PATH" HOME="$WORK/home" MOCK_LOG="$WORK/docker.log" \
        COS_STACKS_DIR="$INC/opt/linux-cos/blueteam-stacks" NO_COLOR=1
@@ -187,6 +196,56 @@ else
   echo "skip  cos-ai tests (python3 not available)"
 fi
 
+
+# --- cos: the unified tool layer ---------------------------------------------------
+COS="$BIN/cos"
+export COS_SHARE="$INC/usr/share/linux-cos" COS_LIB="$INC/usr/lib/linux-cos"
+if command -v python3 >/dev/null 2>&1; then
+  check "cos: status" 0 "Linux-C.O.S" python3 "$COS"
+  check "cos: help" 0 "cos tools" python3 "$COS" --help
+  check "cos: 20 unified categories" 0 "^20$" sh -c "python3 '$COS' tools cats | wc -l | tr -d ' '"
+  check "cos: one catalog, 3000+ tools" 0 "^[3-9][0-9]{3}$" python3 "$COS" tools --count
+  for src in kali parrot blackarch; do
+    check "cos: $src tools are in the catalog" 0 "^[1-9][0-9]*$" python3 "$COS" tools -s "$src" --count
+  done
+  check "cos: search finds sqlmap" 0 "sqlmap" python3 "$COS" tools search sqlmap
+  check "cos: info says where a BlackArch tool runs" 0 "BlackArch container" python3 "$COS" tools info 0d1n
+  check "cos: unknown tool" 1 "unknown tool" python3 "$COS" tools info definitely-not-a-tool
+  check "cos: unknown category rejected" 1 "no category" python3 "$COS" tools -c nope
+  check "cos: BlackArch tool without the image explains how" 127 "blackarch-shell --update" python3 "$COS" run 0d1n
+  export MOCK_IMAGE=1 MOCK_CONTAINER=running
+  : > "$MOCK_LOG"
+  check "cos: BlackArch tool runs in the container like a native one" 0 - python3 "$COS" run 0d1n -h
+  check "cos: ...through docker exec" 0 "docker exec .* 0d1n -h" cat "$MOCK_LOG"
+  : > "$MOCK_LOG"
+  check "cos: command-not-found hook runs BlackArch tools" 0 - python3 "$COS" _cnf 0d1n -h
+  check "cos: ...and reaches the container" 0 "docker exec .* 0d1n" cat "$MOCK_LOG"
+  unset MOCK_IMAGE MOCK_CONTAINER
+  check "cos: command-not-found ignores unknown commands" 127 - python3 "$COS" _cnf zzz-not-a-tool
+  check "cos: command-not-found ignores paths" 127 - python3 "$COS" _cnf ./0d1n
+  check "cos: mode red is saved" 0 "red" python3 "$COS" mode red
+  check "cos: ...and remembered" 0 "mode: +red" python3 "$COS" mode
+  check "cos: bad mode rejected" 1 "modes:" python3 "$COS" mode purple
+  check "cos: fx low is saved" 0 "low" python3 "$COS" fx low
+  check "cos: bad fx rejected" 1 "levels:" python3 "$COS" fx ultra
+  python3 "$COS" mode dual >/dev/null 2>&1; python3 "$COS" fx auto >/dev/null 2>&1
+  check "cos: unknown command" 1 "unknown command" python3 "$COS" frobnicate
+
+  # the unified menu generator, against a scratch root
+  MROOT="$WORK/menuroot"; mkdir -p "$MROOT/usr/share/applications"
+  printf '[Desktop Entry]\nName=nmap\nExec=nmap\nType=Application\n' > "$MROOT/usr/share/applications/kali-nmap.desktop"
+  check "cos menu: generates entries" 0 "categories" env COS_ROOT="$MROOT" PYTHONPATH="$COS_LIB" python3 "$COS_LIB/cos_menu.py"
+  menu="$MROOT/etc/xdg/menus/applications-merged/linux-cos-tools.menu"
+  check "cos menu: valid XML" 0 - python3 -c "import xml.dom.minidom; xml.dom.minidom.parse('$menu')"
+  check "cos menu: Kali's own entry regrouped, not duplicated" 0 "^1$" sh -c "grep -c 'kali-nmap.desktop' '$menu'"
+  check "cos menu: BlackArch tool gets a launcher" 0 "Exec=cos-pause cos run 0d1n" cat "$MROOT/usr/share/applications/cos-tool-0d1n.desktop"
+  printf '[Desktop Entry]\nName=Shodan CLI\nExec=sh -c "shodan host 1.1.1.1; bash"\nType=Application\n' > "$MROOT/usr/share/applications/shodan-launcher.desktop"
+  check "cos menu: a tool whose command starts with 'sh' is still found" 0 "^[1-9]" sh -c "COS_ROOT='$MROOT' PYTHONPATH='$COS_LIB' python3 -c \"import cos_menu; print(1 if cos_menu.index_existing('$MROOT/usr/share/applications').get('shodan') else 0)\""
+  check "palettes: dual, red and blue, valid JSON" 0 "^3$" python3 -c "import json;print(len(json.load(open('$COS_SHARE/palettes.json'))))"
+else
+  echo "skip  cos tests (python3 not available)"
+fi
+unset COS_SHARE COS_LIB
 
 echo
 echo "cli tests: $pass passed, $failed failed"

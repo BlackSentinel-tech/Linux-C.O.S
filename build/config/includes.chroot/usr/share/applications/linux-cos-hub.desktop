@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=COS Hub
+Name[es]=COS Hub
+GenericName=Control center
+GenericName[es]=Centro de control
+Comment=Dashboard: tools, mode, effects, stacks and AI in one place
+Comment[es]=Panel: herramientas, modo, efectos, stacks e IA en un solo lugar
+Exec=cos hub
+Icon=linux-cos
+Terminal=false
+Categories=X-Linux-COS;System;
+Keywords=hub;cos;dashboard;panel;control;tools;herramientas;
+StartupWMClass=cos-hub

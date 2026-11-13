@@ -1,56 +1,64 @@
 #!/bin/sh
 # Linux-C.O.S build hook -- distro identity. This is what makes it "its own
-# OS" rather than "Debian with extra tools": /etc/os-release, hostname,
-# login banner and MOTD all say Linux-C.O.S, not Debian/Kali/Parrot.
+# OS" rather than "Kali with extras": /etc/os-release, hostname, login banner
+# and MOTD all say Linux-C.O.S, not Debian/Kali/Parrot.
 set -e
 
 echo "[linux-cos] applying distro identity"
 
 echo "linux-cos" > /etc/hostname
 
-cat > /etc/os-release <<'EOF'
-PRETTY_NAME="Linux-C.O.S"
+cat > /etc/os-release <<'EOT'
+PRETTY_NAME="Linux-C.O.S 0.2 Génesis"
 NAME="Linux-C.O.S"
-VERSION="0.1 (Génesis)"
-VERSION_ID="0.1"
+VERSION="0.2 (Génesis)"
+VERSION_ID="0.2"
 VERSION_CODENAME=genesis
 ID=linux-cos
-ID_LIKE=debian
+ID_LIKE="kali debian"
 HOME_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S"
 SUPPORT_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md"
 BUG_REPORT_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/issues"
 DOCUMENTATION_URL="https://github.com/BlackSentinel-tech/Linux-C.O.S/blob/main/build/README.md"
 LOGO=linux-cos
-ANSI_COLOR="1;34"
-EOF
+ANSI_COLOR="1;36"
+EOT
 # Kali (like Debian) already ships /etc/os-release as a symlink to
 # /usr/lib/os-release -- writing the file above already updated both.
-# Copying one onto the other here would just be `cp` erroring that they're
-# the same file.
 
-cat > /etc/issue <<'EOF'
-Linux-C.O.S 0.1 "Génesis" \n \l
+cat > /etc/lsb-release <<'EOT'
+DISTRIB_ID=Linux-C.O.S
+DISTRIB_RELEASE=0.2
+DISTRIB_CODENAME=genesis
+DISTRIB_DESCRIPTION="Linux-C.O.S 0.2 Génesis"
+EOT
 
-Cyber Offensive & defensive Security -- red team, blue team, forensics,
-all in one. Built on Kali + Parrot (native) + BlackArch (containerized).
+cat > /etc/issue <<'EOT'
+Linux-C.O.S 0.2 "Génesis" \n \l
 
-EOF
+Cyber Offensive & defensive Security -- one system: Kali base, Parrot and
+BlackArch tools, blue-team stack, local AI.   Type 'cos' to begin.
+
+EOT
 cp /etc/issue /etc/issue.net
 
 mkdir -p /etc/update-motd.d
-cat > /etc/update-motd.d/00-linux-cos <<'EOF'
+cat > /etc/update-motd.d/00-linux-cos <<'EOT'
 #!/bin/sh
 echo ""
 echo "  Linux-C.O.S -- Cyber Offensive & defensive Security"
-echo "  Inicio rapido / quick start:  cos-help"
-echo "  Ofensiva / offense:           apt list --installed 'kali-tools-*'  |  blackarch-shell"
-echo "  Defensa / defense:            cos-stacks  |  sudo ufw status verbose"
-echo "  falco/sysdig: sudo apt install falco sysdig (build their driver against THIS kernel)"
+echo "  cos                    estado / status          cos hub        panel / dashboard"
+echo "  cos tools search <x>   3,000+ herramientas      cos mode red|blue|dual"
+echo "  cos run <tool>         Kali, Parrot y BlackArch como comandos normales"
+echo "  cos stack | cos ai | cos shell"
 echo ""
-EOF
+EOT
 chmod +x /etc/update-motd.d/00-linux-cos
 
-# LOGO=linux-cos in os-release: give icon themes a file to resolve it to
-mkdir -p /usr/share/icons/hicolor/256x256/apps
-cp /usr/share/backgrounds/linux-cos/logo.png /usr/share/icons/hicolor/256x256/apps/linux-cos.png
+# LOGO=linux-cos in os-release: give icon themes a file to resolve it to.
+# (The shield artwork at every size ships in includes.chroot/usr/share/icons/hicolor.)
 gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true
+
+# Kali's apt/menu tree would list every tool a second time under Kali's own
+# categories; the unified menu (0070) replaces it.
+rm -f /etc/xdg/menus/applications-merged/kali-applications.menu

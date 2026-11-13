@@ -10,6 +10,35 @@ an OS that is hardened by default.
 
 ---
 
+## One system: the `cos` command
+
+Kali is the base. Parrot's tools are native packages from the same apt. BlackArch's
+tools live in a container -- but you never have to think about that: **every
+tool, from every source, is one command.**
+
+```
+cos                       status of this system
+cos tools search sql      find a tool   (3,000+ in one catalog, 20 categories)
+cos tools -c web          list a category        cos tools cats
+cos run <tool> [args]     run it -- native, or from the BlackArch container
+nikto -h host             typing a BlackArch tool's name just works too
+cos mode red|blue|dual    red team / blue team / both colour mode
+cos fx auto|high|low|off  visual effects (auto: light in VMs, full on real hardware)
+cos hub                   the COS Hub dashboard         (Super+H)
+cos doctor                is this system healthy?
+```
+
+The applications menu has the same 20 categories (01 Reconnaissance ... 20
+Utilities) with Kali, Parrot and BlackArch tools side by side.
+Keys: **Super+Space** launcher, **Super+Enter** terminal, **Super+1 / 2 / 3**
+red / blue / dual.
+
+*Effects.* `high` = compositor blur, rounded corners, animations, the live
+wallpaper and the HUD. `low` = light effects for VMs and old machines. `off` =
+no compositor. `auto` picks `low` inside a virtual machine.
+
+---
+
 ## 1. Live session
 
 | | |

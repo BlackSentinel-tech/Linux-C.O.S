@@ -24,6 +24,10 @@ esac
 if [ "$L" = es ]; then
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Ofensiva"; T_DEF="Defensiva"; T_SYS="Sistema"; T_MORE="Más ayuda"
+  T_COSS="estado del sistema, modo, efectos"
+  T_COSF="buscar entre más de 3.000 herramientas (Kali+Parrot+BlackArch)"
+  T_COSR="ejecutar una herramienta (nativa o BlackArch, igual)"
+  T_COSM="modo de color: red (ofensivo), blue (defensivo) o dual"
   T_KALI="categorías de Kali instaladas (herramientas: menú de aplicaciones)"
   T_BA="shell con las herramientas de BlackArch (contenedor)"
   T_STACKS="TheHive/Cortex, MISP, Wazuh bajo demanda (menú)"
@@ -43,6 +47,10 @@ if [ "$L" = es ]; then
 else
   T_TITLE="Linux-C.O.S -- Cyber Offensive & defensive Security"
   T_OFF="Offense"; T_DEF="Defense"; T_SYS="System"; T_MORE="More help"
+  T_COSS="system status, mode, effects"
+  T_COSF="search 3,000+ tools (Kali + Parrot + BlackArch)"
+  T_COSR="run a tool (native or BlackArch, same command)"
+  T_COSM="colour mode: red (offense), blue (defense) or dual"
   T_KALI="installed Kali tool categories (the tools are in the applications menu)"
   T_BA="shell with BlackArch's tools (container)"
   T_STACKS="TheHive/Cortex, MISP, Wazuh on demand (menu)"
@@ -73,6 +81,8 @@ line() {
 
 offense() {
   printf '%s%s%s\n' "$B" "$T_OFF" "$R"
+  line "cos tools search sql" "$T_COSF"
+  line "cos run <tool> [args]" "$T_COSR"
   line "apt list --installed 'kali-tools-*'" "$T_KALI"
   line "blackarch-shell" "$T_BA"
   line "blackarch-shell --update" "docker pull blackarchlinux/blackarch"
@@ -87,6 +97,9 @@ defense() {
 }
 system() {
   printf '%s%s%s\n' "$B" "$T_SYS" "$R"
+  line "cos" "$T_COSS"
+  line "cos mode red|blue|dual" "$T_COSM"
+  line "cos hub" "COS Hub"
   line "sudo apt update && sudo apt full-upgrade" "$T_UPD"
   [ -d /run/live/medium ] && line "Install Linux-C.O.S (desktop icon)" "$T_INST"
   return 0

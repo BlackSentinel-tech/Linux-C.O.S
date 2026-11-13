@@ -1,0 +1,17 @@
+{
+  "dual": {
+    "name": "Dual", "bg": "#060914", "surface": "#0b1020", "surface2": "#111a33", "border": "#1c2a52",
+    "fg": "#e8eeff", "dim": "#7f8db8", "accent": "#00e5ff", "accent2": "#ff2e63",
+    "ok": "#2dff9d", "warn": "#ffc857", "bad": "#ff2e63"
+  },
+  "red": {
+    "name": "Red Team", "bg": "#0d0609", "surface": "#150a10", "surface2": "#1f0f18", "border": "#4a1626",
+    "fg": "#ffeef1", "dim": "#b88a93", "accent": "#ff2e4d", "accent2": "#ff8a3d",
+    "ok": "#2dff9d", "warn": "#ffc857", "bad": "#ff2e4d"
+  },
+  "blue": {
+    "name": "Blue Team", "bg": "#040a18", "surface": "#07122a", "surface2": "#0c1c40", "border": "#173a7a",
+    "fg": "#e6f0ff", "dim": "#7f9bd0", "accent": "#3d8bff", "accent2": "#00e5ff",
+    "ok": "#2dff9d", "warn": "#ffc857", "bad": "#ff2e63"
+  }
+}
