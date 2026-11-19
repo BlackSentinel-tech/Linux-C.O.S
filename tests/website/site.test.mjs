@@ -308,8 +308,12 @@ test('security posture: strict CSP, no third-party requests', async () => {
 test('menu and header buttons do not make the page jump', async () => {
   const page = await newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
   await page.goto(`${base}/features.html`);
-  await page.evaluate(() => window.scrollTo(0, 1500));
+  // site.css sets `scroll-behavior: smooth`, so a plain scrollTo() animates
+  // for a few hundred ms and the anchor would be measured mid-scroll. Jump
+  // instantly, then check we really are where we asked to be.
+  await page.evaluate(() => window.scrollTo({ top: 1500, left: 0, behavior: 'instant' }));
   await page.waitForTimeout(100);
+  assert.equal(await page.evaluate(() => Math.round(window.scrollY)), 1500, 'scrolled to the starting position');
   // where the section being read sits on screen (switching language changes
   // the text above it, so compare its position, not raw scrollY)
   await page.evaluate(() => { window.__anchor = document.elementFromPoint(195, 420).closest('h2, h3, p, li, tr, .card') || document.elementFromPoint(195, 420); });
