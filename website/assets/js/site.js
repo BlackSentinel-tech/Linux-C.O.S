@@ -343,7 +343,27 @@
     initToTop();
 
     var lb = document.getElementById('lang-toggle');
-    if (lb) lb.addEventListener('click', function () { applyLang(lang() === 'es' ? 'en' : 'es', true); });
+    if (lb) lb.addEventListener('click', function () {
+      // Spanish text is longer, so switching language reflows everything above
+      // the reader. Chromium's scroll anchoring only partly compensates (and
+      // not at all while the menu locks the body), so pin the block the reader
+      // is looking at to the same place on screen.
+      // elementsFromPoint, not elementFromPoint: the open mobile menu covers
+      // the page and would otherwise be picked as the reference.
+      var main = document.querySelector('main');
+      var ref = null;
+      document.elementsFromPoint(window.innerWidth / 2, window.innerHeight / 2).some(function (n) {
+        var block = main && main.contains(n) && n.closest('h2, h3, p, li, tr, .card');
+        if (block) ref = block;
+        return !!block;
+      });
+      var before = ref ? ref.getBoundingClientRect().top : 0;
+      applyLang(lang() === 'es' ? 'en' : 'es', true);
+      if (ref && ref.getClientRects().length) {
+        var drift = ref.getBoundingClientRect().top - before;
+        if (drift) window.scrollBy({ top: drift, left: 0, behavior: 'instant' });
+      }
+    });
     var tb = document.getElementById('theme-toggle');
     if (tb) tb.addEventListener('click', function () {
       var next = currentTheme() === 'dark' ? 'light' : 'dark';
